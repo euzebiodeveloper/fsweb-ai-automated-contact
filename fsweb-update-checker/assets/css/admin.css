@@ -1,0 +1,251 @@
+/**
+ * FSWEB Update Checker — Admin Styles
+ *
+ * Styles for the version rollback modal (thickbox) and the
+ * plugin details "View Details" overlay (screenshots grid).
+ */
+
+/* ------------------------------------------------------------------ */
+/*  Plugin row — version selector badge                               */
+/* ------------------------------------------------------------------ */
+.plugin-title .fsweb-version-selector {
+	margin-left: 8px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Thickbox loading state                                             */
+/* ------------------------------------------------------------------ */
+#TB_window.thickbox-loading .wrap {
+	opacity: 0.5;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Rollback modal (Previous Versions)                                 */
+/* ------------------------------------------------------------------ */
+
+/* Modal body */
+.fsweb-rollback-body {
+	margin: 0;
+	padding: 20px 25px;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	background: #f0f0f1;
+	min-height: 100vh;
+	color: #3c434a;
+}
+
+.fsweb-rollback-body h2 {
+	margin: 0 0 10px;
+	font-size: 20px;
+	font-weight: 600;
+	color: #1d2327;
+}
+
+.fsweb-rollback-body > p {
+	margin: 0 0 18px;
+	font-size: 13px;
+	color: #646970;
+}
+
+/* Version table — card-like container */
+.fsweb-rollback-body .rollback-table {
+	margin: 0 0 20px;
+	border-collapse: collapse;
+	width: 100%;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	overflow: hidden;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+	outline: none;
+}
+
+.fsweb-rollback-body .rollback-table * {
+	outline: none;
+}
+
+.fsweb-rollback-body .rollback-table input[type="radio"]:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+.fsweb-rollback-body .rollback-table thead th {
+	background: #f6f7f7;
+	border-bottom: 1px solid #c3c4c7;
+	padding: 10px 12px;
+	font-size: 13px;
+	font-weight: 600;
+	text-align: left;
+	color: #2c3338;
+}
+
+.fsweb-rollback-body .rollback-table tbody td {
+	padding: 10px 12px;
+	border-bottom: 1px solid #e2e4e7;
+	font-size: 13px;
+	vertical-align: middle;
+}
+
+.fsweb-rollback-body .rollback-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.fsweb-rollback-body .rollback-table tbody tr:hover {
+	background: #f6f7f7;
+}
+
+.fsweb-rollback-body .rollback-table tbody tr.current-version:hover {
+	background: #e7f5e0;
+}
+
+/* Select column — centered radio */
+.fsweb-rollback-body .rollback-table td:first-child,
+.fsweb-rollback-body .rollback-table th:first-child {
+	width: 60px;
+	text-align: center;
+}
+
+/* Date column */
+.fsweb-rollback-body .rollback-table td:nth-child(3) {
+	white-space: nowrap;
+	color: #646970;
+	font-size: 12px;
+}
+
+/* Notes column — italic if empty */
+.fsweb-rollback-body .rollback-table td:last-child {
+	color: #50575e;
+	max-width: 240px;
+}
+
+/* Current version highlight */
+.fsweb-rollback-body .current-version {
+	background: #f0f8e8 !important;
+}
+
+.fsweb-rollback-body .current-label {
+	color: #46b450;
+	font-weight: 600;
+	font-size: 12px;
+}
+
+/* Install result messages */
+#fsweb-install-result {
+	margin: 15px 0;
+	padding: 12px 15px;
+	display: none;
+	border-radius: 4px;
+	font-size: 13px;
+}
+
+#fsweb-install-result p {
+	margin: 0;
+}
+
+#fsweb-install-result.success {
+	display: block;
+	background: #ecf7ed;
+	border-left: 4px solid #46b450;
+	color: #1e6e1e;
+}
+
+#fsweb-install-result.error {
+	display: block;
+	background: #fbeaea;
+	border-left: 4px solid #dc3232;
+	color: #8b0000;
+}
+
+/* Footer with install + close buttons */
+.rollback-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 0;
+	padding-top: 8px;
+}
+
+.rollback-footer .button-primary:disabled {
+	opacity: 0.6;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Screenshots grid — 3-col responsive (plugin details overlay)       */
+/* ------------------------------------------------------------------ */
+#section-screenshots ol {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 20px;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#section-screenshots ol li {
+	display: flex;
+	margin: 0;
+	text-align: center;
+	box-shadow: none !important;
+}
+
+#section-screenshots ol li:focus,
+#section-screenshots ol li:focus-visible {
+	outline: none;
+	box-shadow: none;
+}
+
+#section-screenshots ol li a {
+	display: flex;
+	outline: none;
+	box-shadow: none !important;
+}
+
+#section-screenshots ol li a:focus,
+#section-screenshots ol li a:focus-visible {
+	outline: none;
+	box-shadow: none;
+}
+
+#plugin-information #section-screenshots ol li img,
+#section-screenshots ol li img {
+	display: block;
+	max-width: 100%;
+	width: 100%;
+	height: auto;
+	margin: 0 !important;
+	padding: 0;
+	border-radius: 4px;
+	box-shadow: none !important;
+	outline: none;
+}
+
+#section-screenshots ol li p {
+	margin: 8px 0 0;
+	font-size: 13px;
+	color: #555;
+}
+
+@media (max-width: 782px) {
+	#section-screenshots ol {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 480px) {
+	#section-screenshots ol {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/*  Inline update-message notice icons                                 */
+/* ------------------------------------------------------------------ */
+
+/* Success — green checkmark (WordPress puts ::before on <p>, not <div>) */
+.plugin-update-tr .update-message.notice-success p::before {
+	color: #00a32a !important;
+}
+
+/* Error — red */
+.plugin-update-tr .update-message.notice-error p::before {
+	color: #d63638 !important;
+}

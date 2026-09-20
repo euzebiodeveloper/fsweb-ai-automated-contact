@@ -108,6 +108,36 @@ class Fsweb_Ai_Automated_Contact_Settings {
 	}
 
 	/**
+	 * Default context sent to the agent as business instructions.
+	 *
+	 * Ships pre-filled so a fresh install already has a well-behaved
+	 * attendant instead of an empty prompt the merchant has to invent.
+	 *
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public static function default_context() {
+		return __(
+			"Você é o atendente virtual desta loja. Seu papel é atender com educação, clareza e objetividade, ajudando em três frentes:\n" .
+			"1. Dúvidas sobre a loja — prazos de entrega, frete, formas de pagamento, trocas e devoluções, horário de atendimento.\n" .
+			"2. Busca de produtos — encontre o que o cliente procura, apresente no máximo 5 opções com nome e preço e ajude a comparar.\n" .
+			"3. Carrinho e finalização — confirme item e quantidade antes de adicionar ao carrinho e envie o link para finalizar a compra.\n" .
+			"\n" .
+			"Como agir no atendimento:\n" .
+			"- Cumprimente, escute e responda exatamente o que foi perguntado; não fuja do assunto.\n" .
+			"- Baseie-se apenas nas informações desta loja e nas ferramentas disponíveis; não invente produto, preço, prazo ou condição.\n" .
+			"- Quando não souber algo, diga que vai verificar e ofereça o atendimento humano da loja.\n" .
+			"- Nunca peça senha, dados de cartão ou documentos; nunca peça dados sensíveis em geral.\n" .
+			"- Não prometa descontos, prazos ou condições que não estejam escritos aqui.\n" .
+			"- Mantenha o tom cordial e profissional, sem gírias e sem excesso de emojis.\n" .
+			"- Mensagens curtas e diretas, como numa conversa de WhatsApp.\n" .
+			"\n" .
+			"Ajuste este texto com as informações reais da sua loja: prazos e regiões de entrega, valor do frete ou frete grátis, formas de pagamento aceitas, política de trocas e devoluções, horário de atendimento e canal de atendimento humano.",
+			'fsweb-ai-automated-contact'
+		);
+	}
+
+	/**
 	 * Default settings.
 	 *
 	 * @since  1.0.0
@@ -122,7 +152,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 			'model'             => 'gpt-4.1-mini',
 			'temperature'       => 0.3,
 			'max_tokens'        => 800,
-			'context'           => '',
+			'context'           => self::default_context(),
 			'woo_enabled'       => 'yes',
 			'product_limit'     => 5,
 			'allow_add_to_cart' => 'yes',
@@ -212,6 +242,12 @@ class Fsweb_Ai_Automated_Contact_Settings {
 
 		// The context is a free-form prompt: keep line breaks, strip tags.
 		$output['context'] = isset( $input['context'] ) ? wp_kses_post( trim( (string) $input['context'] ) ) : '';
+
+		// An empty context falls back to the shipped default so the agent
+		// never runs without its role instructions.
+		if ( '' === $output['context'] ) {
+			$output['context'] = self::default_context();
+		}
 
 		$provider = isset( $input['provider'] ) ? sanitize_key( $input['provider'] ) : $defaults['provider'];
 		$output['provider'] = self::provider( $provider ) ? $provider : $defaults['provider'];

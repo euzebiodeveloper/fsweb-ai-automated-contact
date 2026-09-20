@@ -131,6 +131,8 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			array(
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 				'nonce'    => wp_create_nonce( 'fsweb_aic_admin_action' ),
+				'providers' => $this->providers_for_js(),
+				'default_context' => Fsweb_Ai_Automated_Contact_Settings::default_context(),
 				'license'  => array(
 					'status'  => $this->license->get_status(),
 					'expires' => $this->license->get_expires(),
@@ -152,6 +154,25 @@ class Fsweb_Ai_Automated_Contact_Admin {
 				),
 			)
 		);
+	}
+
+	/**
+	 * Provider catalogue shaped for the admin script.
+	 *
+	 * @since  1.0.0
+	 * @return array<string,array<string,mixed>>
+	 */
+	private function providers_for_js() {
+		$out = array();
+
+		foreach ( Fsweb_Ai_Automated_Contact_Settings::providers() as $id => $provider ) {
+			$out[ $id ] = array(
+				'label'  => $provider['label'],
+				'models' => array_values( $provider['models'] ),
+			);
+		}
+
+		return $out;
 	}
 
 	/**
@@ -490,38 +511,50 @@ class Fsweb_Ai_Automated_Contact_Admin {
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php esc_html_e( 'Chaves de API', 'fsweb-ai-automated-contact' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Chave de API', 'fsweb-ai-automated-contact' ); ?></th>
 									<td>
 										<?php foreach ( $providers as $id => $provider ) : ?>
-											<?php $credentials = $settings['providers'][ $id ]; ?>
-											<p class="fsweb-aic-field">
-												<label for="fsweb-aic-key-<?php echo esc_attr( $id ); ?>">
-													<strong><?php echo esc_html( $provider['label'] ); ?></strong>
-												</label>
-												<input type="password" class="regular-text" id="fsweb-aic-key-<?php echo esc_attr( $id ); ?>"
-													name="<?php echo esc_attr( $option ); ?>[providers][<?php echo esc_attr( $id ); ?>][api_key]"
-													value="<?php echo esc_attr( $credentials['api_key'] ); ?>"
-													autocomplete="new-password">
-												<?php if ( ! empty( $provider['keys_url'] ) ) : ?>
-													<a href="<?php echo esc_url( $provider['keys_url'] ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'obter chave', 'fsweb-ai-automated-contact' ); ?></a>
+											<?php
+											$credentials = $settings['providers'][ $id ];
+											$is_current  = ( $settings['provider'] === $id );
+											?>
+											<div class="fsweb-aic-credentials" data-provider="<?php echo esc_attr( $id ); ?>"<?php echo $is_current ? '' : ' hidden'; ?>>
+												<p class="fsweb-aic-field">
+													<label for="fsweb-aic-key-<?php echo esc_attr( $id ); ?>">
+														<?php
+														printf(
+															/* translators: %s: provider name. */
+															esc_html__( 'Chave da API — %s', 'fsweb-ai-automated-contact' ),
+															esc_html( $provider['label'] )
+														);
+														?>
+													</label>
+													<input type="password" class="regular-text" id="fsweb-aic-key-<?php echo esc_attr( $id ); ?>"
+														name="<?php echo esc_attr( $option ); ?>[providers][<?php echo esc_attr( $id ); ?>][api_key]"
+														value="<?php echo esc_attr( $credentials['api_key'] ); ?>"
+														autocomplete="new-password">
+													<?php if ( ! empty( $provider['keys_url'] ) ) : ?>
+														<a href="<?php echo esc_url( $provider['keys_url'] ); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'obter chave', 'fsweb-ai-automated-contact' ); ?></a>
+													<?php endif; ?>
+												</p>
+												<?php if ( 'custom' === $id ) : ?>
+													<p class="fsweb-aic-field">
+														<label for="fsweb-aic-base-url"><?php esc_html_e( 'URL base (compatível com OpenAI)', 'fsweb-ai-automated-contact' ); ?></label>
+														<input type="url" class="regular-text" id="fsweb-aic-base-url"
+															name="<?php echo esc_attr( $option ); ?>[providers][custom][base_url]"
+															value="<?php echo esc_attr( $credentials['base_url'] ); ?>"
+															placeholder="https://api.exemplo.com/v1">
+													</p>
+													<p class="fsweb-aic-field">
+														<label for="fsweb-aic-custom-model"><?php esc_html_e( 'Modelo padrão deste provedor', 'fsweb-ai-automated-contact' ); ?></label>
+														<input type="text" class="regular-text" id="fsweb-aic-custom-model"
+															name="<?php echo esc_attr( $option ); ?>[providers][custom][model]"
+															value="<?php echo esc_attr( $credentials['model'] ); ?>">
+													</p>
 												<?php endif; ?>
-											</p>
-											<?php if ( 'custom' === $id ) : ?>
-												<p class="fsweb-aic-field">
-													<label for="fsweb-aic-base-url"><?php esc_html_e( 'URL base (compatível com OpenAI)', 'fsweb-ai-automated-contact' ); ?></label>
-													<input type="url" class="regular-text" id="fsweb-aic-base-url"
-														name="<?php echo esc_attr( $option ); ?>[providers][custom][base_url]"
-														value="<?php echo esc_attr( $credentials['base_url'] ); ?>"
-														placeholder="https://api.exemplo.com/v1">
-												</p>
-												<p class="fsweb-aic-field">
-													<label for="fsweb-aic-custom-model"><?php esc_html_e( 'Modelo padrão do provedor custom', 'fsweb-ai-automated-contact' ); ?></label>
-													<input type="text" class="regular-text" id="fsweb-aic-custom-model"
-														name="<?php echo esc_attr( $option ); ?>[providers][custom][model]"
-														value="<?php echo esc_attr( $credentials['model'] ); ?>">
-												</p>
-											<?php endif; ?>
+											</div>
 										<?php endforeach; ?>
+										<p class="description"><?php esc_html_e( 'O atendente usa um provedor por vez: só os campos do provedor selecionado acima aparecem aqui.', 'fsweb-ai-automated-contact' ); ?></p>
 										<p class="description"><?php esc_html_e( 'As chaves ficam salvas apenas neste site e nunca são enviadas ao navegador do visitante.', 'fsweb-ai-automated-contact' ); ?></p>
 									</td>
 								</tr>
@@ -559,7 +592,11 @@ class Fsweb_Ai_Automated_Contact_Admin {
 						</div>
 						<div class="fsweb-aic-card__body">
 							<p class="description"><?php esc_html_e( 'Escreva aqui tudo que a IA deve saber: produtos e categorias principais, prazos de entrega, formas de pagamento, trocas e devoluções, horário de atendimento, tom de voz. Este texto é enviado como contexto prioritário do atendente.', 'fsweb-ai-automated-contact' ); ?></p>
-							<textarea class="large-text code" rows="12" id="fsweb-aic-context" name="<?php echo esc_attr( $option ); ?>[context]" placeholder="<?php esc_attr_e( "Ex.:\n- Entregamos para todo o Brasil em 3 a 7 dias úteis.\n- Frete grátis acima de R$ 299.\n- Trocas em até 7 dias após o recebimento.\n- Não vendemos para fora do Brasil.", 'fsweb-ai-automated-contact' ); ?>"><?php echo esc_textarea( $settings['context'] ); ?></textarea>
+							<textarea class="large-text code" rows="14" id="fsweb-aic-context" name="<?php echo esc_attr( $option ); ?>[context]"><?php echo esc_textarea( $settings['context'] ); ?></textarea>
+							<p>
+								<button type="button" class="button" id="fsweb-aic-context-reset"><?php esc_html_e( 'Restaurar texto padrão', 'fsweb-ai-automated-contact' ); ?></button>
+								<span class="description"><?php esc_html_e( 'Recarrega o texto original com as regras de atendimento.', 'fsweb-ai-automated-contact' ); ?></span>
+							</p>
 						</div>
 					</div>
 

@@ -195,13 +195,34 @@
 			} );
 	} );
 
-	// Show only the model suggestions of the selected provider.
-	$( document ).on( 'change', '#fsweb-aic-provider', function () {
-		var provider = $( this ).val();
-
-		$( '#fsweb-aic-model-list option' ).each( function () {
-			var $option = $( this );
-			$option.prop( 'disabled', $option.data( 'provider' ) !== provider );
+	// Only the credentials of the selected provider are shown, so it is
+	// clear that one AI is used at a time.
+	function syncProvider( provider ) {
+		$( '.fsweb-aic-credentials' ).each( function () {
+			var $group = $( this );
+			$group.prop( 'hidden', $group.data( 'provider' ) !== provider );
 		} );
+
+		var models = ( config.providers && config.providers[ provider ] && config.providers[ provider ].models ) || [];
+		var $list = $( '#fsweb-aic-model-list' );
+
+		$list.empty();
+
+		$.each( models, function ( index, model ) {
+			$( '<option>' ).attr( 'value', model ).appendTo( $list );
+		} );
+	}
+
+	$( document ).on( 'change', '#fsweb-aic-provider', function () {
+		syncProvider( $( this ).val() );
+	} );
+
+	syncProvider( $( '#fsweb-aic-provider' ).val() );
+
+	// Restore the shipped context text.
+	$( document ).on( 'click', '#fsweb-aic-context-reset', function () {
+		if ( config.default_context ) {
+			$( '#fsweb-aic-context' ).val( config.default_context );
+		}
 	} );
 } )( jQuery );

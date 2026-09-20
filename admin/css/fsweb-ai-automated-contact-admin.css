@@ -180,9 +180,35 @@
 /* Two-column form layout used on the settings screen. */
 .fsweb-aic-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 20px;
 	align-items: start;
+}
+
+@media (max-width: 1100px) {
+	.fsweb-aic-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Never let a field push past its card. */
+.fsweb-aic-card__body input[type="text"],
+.fsweb-aic-card__body input[type="url"],
+.fsweb-aic-card__body input[type="password"],
+.fsweb-aic-card__body input[type="number"],
+.fsweb-aic-card__body select,
+.fsweb-aic-card__body textarea {
+	max-width: 100%;
+}
+
+.fsweb-aic-card__body .regular-text,
+.fsweb-aic-card__body textarea.large-text {
+	width: 100%;
+}
+
+/* Credentials of the providers that are not selected stay out of the way. */
+.fsweb-aic-credentials[hidden] {
+	display: none;
 }
 
 /* ------------------------------------------------------------------ */
@@ -193,8 +219,8 @@
 }
 
 .fsweb-aic-card .form-table th {
-	width: 200px;
-	padding: 12px 24px 12px 0;
+	width: 180px;
+	padding: 12px 20px 12px 0;
 	vertical-align: top;
 }
 

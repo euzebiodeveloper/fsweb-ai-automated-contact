@@ -211,6 +211,20 @@
 	display: none;
 }
 
+/* Model picker: a styled select plus a free-text fallback for new models. */
+.fsweb-aic-model-select {
+	min-width: 280px;
+	max-width: 100%;
+}
+
+.fsweb-aic-model-custom {
+	margin-top: 10px;
+}
+
+.fsweb-aic-model-custom[hidden] {
+	display: none;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Form table
 /* ------------------------------------------------------------------ */

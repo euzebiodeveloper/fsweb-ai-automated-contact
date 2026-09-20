@@ -143,6 +143,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 					'deactivating'       => __( 'Desativando…', 'fsweb-ai-automated-contact' ),
 					'validating'         => __( 'Verificando…', 'fsweb-ai-automated-contact' ),
 					'testing'            => __( 'Testando…', 'fsweb-ai-automated-contact' ),
+					'custom_model'       => __( 'Outro modelo (digitar)', 'fsweb-ai-automated-contact' ),
 					'empty_key'          => __( 'Informe uma chave de licença.', 'fsweb-ai-automated-contact' ),
 					'network_error'      => __( 'Erro de rede. Tente novamente.', 'fsweb-ai-automated-contact' ),
 					'lifetime'           => __( 'Vitalícia', 'fsweb-ai-automated-contact' ),
@@ -497,17 +498,20 @@ class Fsweb_Ai_Automated_Contact_Admin {
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><label for="fsweb-aic-model"><?php esc_html_e( 'Modelo', 'fsweb-ai-automated-contact' ); ?></label></th>
+									<th scope="row"><label for="fsweb-aic-model-select"><?php esc_html_e( 'Modelo', 'fsweb-ai-automated-contact' ); ?></label></th>
 									<td>
-										<input type="text" class="regular-text" id="fsweb-aic-model" name="<?php echo esc_attr( $option ); ?>[model]" value="<?php echo esc_attr( $settings['model'] ); ?>" list="fsweb-aic-model-list" autocomplete="off">
-										<datalist id="fsweb-aic-model-list">
-											<?php foreach ( $providers as $id => $provider ) : ?>
-												<?php foreach ( $provider['models'] as $model ) : ?>
-													<option value="<?php echo esc_attr( $model ); ?>" data-provider="<?php echo esc_attr( $id ); ?>"></option>
-												<?php endforeach; ?>
-											<?php endforeach; ?>
-										</datalist>
-										<p class="description"><?php esc_html_e( 'Escolha um modelo da lista ou digite um modelo específico.', 'fsweb-ai-automated-contact' ); ?></p>
+										<select id="fsweb-aic-model-select" class="fsweb-aic-model-select"></select>
+
+										<div class="fsweb-aic-model-custom" id="fsweb-aic-model-custom" hidden>
+											<label class="screen-reader-text" for="fsweb-aic-model"><?php esc_html_e( 'Nome do modelo', 'fsweb-ai-automated-contact' ); ?></label>
+											<input type="text" class="regular-text" id="fsweb-aic-model"
+												name="<?php echo esc_attr( $option ); ?>[model]"
+												value="<?php echo esc_attr( $settings['model'] ); ?>"
+												placeholder="<?php esc_attr_e( 'ex.: gpt-5.4-mini', 'fsweb-ai-automated-contact' ); ?>"
+												autocomplete="off">
+										</div>
+
+										<p class="description"><?php esc_html_e( 'A lista traz os modelos atuais do provedor escolhido. Para usar um modelo específico ou recém-lançado, selecione "Outro modelo" e digite o nome.', 'fsweb-ai-automated-contact' ); ?></p>
 									</td>
 								</tr>
 								<tr>

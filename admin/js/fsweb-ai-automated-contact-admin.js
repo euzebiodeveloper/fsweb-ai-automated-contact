@@ -196,7 +196,8 @@
 	} );
 
 	// Only the credentials of the selected provider are shown, so it is
-	// clear that one AI is used at a time.
+	// clear that one AI is used at a time. The model list is rebuilt for
+	// the chosen provider, with a free-text fallback for new models.
 	function syncProvider( provider ) {
 		$( '.fsweb-aic-credentials' ).each( function () {
 			var $group = $( this );
@@ -204,17 +205,57 @@
 		} );
 
 		var models = ( config.providers && config.providers[ provider ] && config.providers[ provider ].models ) || [];
-		var $list = $( '#fsweb-aic-model-list' );
+		var $select = $( '#fsweb-aic-model-select' );
+		var $input = $( '#fsweb-aic-model' );
+		var $custom = $( '#fsweb-aic-model-custom' );
+		var current = $.trim( $input.val() );
 
-		$list.empty();
+		if ( ! $select.length ) {
+			return;
+		}
+
+		$select.empty();
 
 		$.each( models, function ( index, model ) {
-			$( '<option>' ).attr( 'value', model ).appendTo( $list );
+			$( '<option>' ).attr( 'value', model ).text( model ).appendTo( $select );
 		} );
+
+		$( '<option>' ).attr( 'value', '__custom__' ).text( config.i18n.custom_model ).appendTo( $select );
+
+		if ( current && models.indexOf( current ) !== -1 ) {
+			$select.val( current );
+			$custom.prop( 'hidden', true );
+			return;
+		}
+
+		if ( models.length ) {
+			$select.val( models[ 0 ] );
+			$input.val( models[ 0 ] );
+			$custom.prop( 'hidden', true );
+			return;
+		}
+
+		$select.val( '__custom__' );
+		$custom.prop( 'hidden', false );
 	}
 
 	$( document ).on( 'change', '#fsweb-aic-provider', function () {
 		syncProvider( $( this ).val() );
+	} );
+
+	$( document ).on( 'change', '#fsweb-aic-model-select', function () {
+		var value = $( this ).val();
+		var $input = $( '#fsweb-aic-model' );
+		var $custom = $( '#fsweb-aic-model-custom' );
+
+		if ( '__custom__' === value ) {
+			$custom.prop( 'hidden', false );
+			$input.trigger( 'focus' );
+			return;
+		}
+
+		$input.val( value );
+		$custom.prop( 'hidden', true );
 	} );
 
 	syncProvider( $( '#fsweb-aic-provider' ).val() );

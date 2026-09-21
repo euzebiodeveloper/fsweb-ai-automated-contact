@@ -4,9 +4,13 @@
  * WooCommerce tool set exposed to the AI agent.
  *
  * The agent is a support agent: it may READ the catalogue and ADD items to the
- * cart, and nothing else. Every tool defined here is a whitelisted wordpress
+ * cart, and nothing else. Every tool defined here is a whitelisted WordPress
  * function with sanitized arguments — there is no generic "run this" tool, so
  * the model cannot update, delete or publish anything on the site.
+ *
+ * Only products that are in stock are offered, and products with options
+ * (colour, size…) are presented as variations so the customer picks one before
+ * anything is added to the cart.
  *
  * @link       https://flowsyncweb.com
  * @since      1.0.0
@@ -37,6 +41,9 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 	/**
 	 * Neutral tool definitions for the provider clients.
 	 *
+	 * Descriptions are written in English because they are the contract with
+	 * the model, not merchant or customer facing copy.
+	 *
 	 * @since  1.0.0
 	 * @return array
 	 */
@@ -47,52 +54,55 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 			return array();
 		}
 
-		$limit = (int) $settings['product_limit'];
-
 		$tools = array(
 			array(
-				'name'        => 'buscar_produtos',
-				'description' => 'Busca produtos na loja por termo, nome ou palavra-chave. Use sempre que o cliente mencionar um produto que quer encontrar. Retorna id, nome, preço formatado, disponibilidade, link e resumo.',
+				'name'        => 'search_products',
+				'description' => 'Search the store catalogue by keyword. Returns only products that are in stock, with id, name, price, availability, image, url and a short summary. Use it whenever the customer looks for a product. Use order "recent" when the customer asks for new arrivals.',
 				'parameters'  => array(
 					'type'       => 'object',
 					'properties' => array(
-						'termo' => array(
+						'term'  => array(
 							'type'        => 'string',
-							'description' => 'Termo de busca em português (ex.: "fone de ouvido bluetooth").',
+							'description' => 'Search term in the customer language (e.g. "bluetooth headphone").',
 						),
-						'limite' => array(
+						'limit' => array(
 							'type'        => 'integer',
-							'description' => 'Quantidade máxima de produtos a retornar (1 a 10).',
+							'description' => 'Maximum number of products to return (1 to 10).',
+						),
+						'order' => array(
+							'type'        => 'string',
+							'enum'        => array( 'relevance', 'recent' ),
+							'description' => 'relevance (default) or recent for the newest products.',
 						),
 					),
-					'required'   => array( 'termo' ),
+					'required'   => array( 'term' ),
 				),
 			),
 			array(
-				'name'        => 'detalhes_produto',
-				'description' => 'Retorna descrição, variações, estoque, preço e link de um produto específico pelo id.',
+				'name'        => 'product_details',
+				'description' => 'Full details of one product: description, stock, price, link, attributes and, for products with options, the list of variations (colour, size…) with their ids, prices and availability. Call this before offering a product that has options.',
 				'parameters'  => array(
 					'type'       => 'object',
 					'properties' => array(
-						'produto_id' => array(
+						'product_id' => array(
 							'type'        => 'integer',
-							'description' => 'ID do produto.',
+							'description' => 'Product id.',
 						),
 					),
-					'required'   => array( 'produto_id' ),
+					'required'   => array( 'product_id' ),
 				),
 			),
 			array(
-				'name'        => 'ver_carrinho',
-				'description' => 'Retorna o conteúdo atual do carrinho do cliente, o total e os links do carrinho e do checkout.',
+				'name'        => 'view_cart',
+				'description' => 'Current cart of the customer, with items, total and the cart and checkout links.',
 				'parameters'  => array(
 					'type'       => 'object',
 					'properties' => array(),
 				),
 			),
 			array(
-				'name'        => 'info_da_loja',
-				'description' => 'Retorna informações gerais da loja: nome, moeda, formas de pagamento habilitadas e endereço da loja. Use para dúvidas gerais.',
+				'name'        => 'store_info',
+				'description' => 'General store information: name, currency, available payment methods and store url. Use it for general questions.',
 				'parameters'  => array(
 					'type'       => 'object',
 					'properties' => array(),
@@ -102,26 +112,28 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 
 		if ( 'yes' === $settings['allow_add_to_cart'] ) {
 			$tools[] = array(
-				'name'        => 'adicionar_ao_carrinho',
-				'description' => 'Adiciona um produto ao carrinho do cliente. Use SOMENTE depois de o cliente confirmar que quer adicionar. Retorna o carrinho atualizado e o link para finalizar a compra.',
+				'name'        => 'add_to_cart',
+				'description' => 'Add a product to the customer cart. Use it ONLY after the customer confirms the item. For products with options, pass the chosen variation_id — if the product has options and no variation_id is given, the tool answers with the available variations so you can ask the customer.',
 				'parameters'  => array(
 					'type'       => 'object',
 					'properties' => array(
-						'produto_id' => array(
+						'product_id'   => array(
 							'type'        => 'integer',
-							'description' => 'ID do produto a adicionar.',
+							'description' => 'Product id to add.',
 						),
-						'quantidade' => array(
+						'variation_id' => array(
 							'type'        => 'integer',
-							'description' => 'Quantidade (1 a 10). Padrão 1.',
+							'description' => 'Variation id, when the product has options.',
+						),
+						'quantity'     => array(
+							'type'        => 'integer',
+							'description' => 'Quantity (1 to 10). Defaults to 1.',
 						),
 					),
-					'required'   => array( 'produto_id' ),
+					'required'   => array( 'product_id' ),
 				),
 			);
 		}
-
-		unset( $limit );
 
 		return $tools;
 	}
@@ -131,66 +143,78 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 	 *
 	 * @since  1.0.0
 	 * @param  string $name Tool name.
-	 * @param  array  $args Sanitized-by-contract arguments from the model.
+	 * @param  array  $args Arguments from the model.
 	 * @return array<string,mixed> Result payload (always serializable).
 	 */
 	public function execute( $name, $args ) {
 		$args = is_array( $args ) ? $args : array();
 
 		switch ( $name ) {
-			case 'buscar_produtos':
+			case 'search_products':
 				return $this->search_products( $args );
-			case 'detalhes_produto':
+			case 'product_details':
 				return $this->product_details( $args );
-			case 'adicionar_ao_carrinho':
+			case 'add_to_cart':
 				return $this->add_to_cart( $args );
-			case 'ver_carrinho':
-				return $this->view_cart();
-			case 'info_da_loja':
+			case 'view_cart':
+				return $this->cart_payload();
+			case 'store_info':
 				return $this->store_info();
 			default:
 				return array(
-					'erro' => 'ferramenta_desconhecida',
+					'error' => 'unknown_tool',
 				);
 		}
 	}
 
 	/**
-	 * Search published products.
+	 * Search published products that are in stock.
 	 *
 	 * @since  1.0.0
 	 * @param  array $args Tool arguments.
 	 * @return array<string,mixed>
 	 */
 	private function search_products( array $args ) {
-		$term  = isset( $args['termo'] ) ? sanitize_text_field( $args['termo'] ) : '';
-		$limit = isset( $args['limite'] ) ? absint( $args['limite'] ) : (int) Fsweb_Ai_Automated_Contact_Settings::get( 'product_limit', 5 );
+		$term  = isset( $args['term'] ) ? sanitize_text_field( $args['term'] ) : '';
+		$limit = isset( $args['limit'] ) ? absint( $args['limit'] ) : (int) Fsweb_Ai_Automated_Contact_Settings::get( 'product_limit', 5 );
 		$limit = max( 1, min( 10, $limit ) );
+		$order = isset( $args['order'] ) ? sanitize_key( $args['order'] ) : 'relevance';
 
 		if ( '' === $term ) {
 			return array(
-				'erro'    => 'termo_obrigatorio',
-				'mensagem' => __( 'Provide a search term.', 'fsweb-ai-automated-contact' ),
+				'error'   => 'term_required',
+				'message' => __( 'Provide a search term.', 'fsweb-ai-automated-contact' ),
 			);
 		}
 
-		$query = new WP_Query(
-			array(
-				'post_type'           => 'product',
-				'post_status'         => 'publish',
-				's'                   => $term,
-				'posts_per_page'      => $limit,
-				'ignore_sticky_posts' => true,
-				'no_found_rows'       => true,
-			)
+		$query_args = array(
+			'post_type'           => 'product',
+			'post_status'         => 'publish',
+			's'                   => $term,
+			'posts_per_page'      => $limit,
+			'ignore_sticky_posts' => true,
+			'no_found_rows'       => true,
+			// Never offer something the customer cannot buy.
+			'meta_query'          => array(
+				array(
+					'key'   => '_stock_status',
+					'value' => 'instock',
+				),
+			),
 		);
 
+		if ( 'recent' === $order ) {
+			$query_args['orderby'] = 'date';
+			$query_args['order']   = 'DESC';
+		}
+
+		$query    = new WP_Query( $query_args );
 		$products = array();
 
 		foreach ( $query->posts as $post ) {
 			$product = function_exists( 'wc_get_product' ) ? wc_get_product( $post->ID ) : null;
 
-			if ( ! $product || ! $product->is_visible() ) {
+			if ( ! $product || ! $product->is_visible() || ! $product->is_in_stock() ) {
 				continue;
 			}
 
@@ -201,53 +225,57 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 
 		if ( empty( $products ) ) {
 			return array(
-				'encontrados' => 0,
-				'mensagem'    => __( 'No product found for that term. Try another word.', 'fsweb-ai-automated-contact' ),
+				'found'   => 0,
+				'message' => __( 'No product found for that term. Try another word.', 'fsweb-ai-automated-contact' ),
 			);
 		}
 
 		return array(
-			'encontrados' => count( $products ),
-			'produtos'    => $products,
+			'found'    => count( $products ),
+			'order'    => $order,
+			'products' => $products,
 		);
 	}
 
 	/**
-	 * Details for a single product.
+	 * Details for a single product, variations included.
 	 *
 	 * @since  1.0.0
 	 * @param  array $args Tool arguments.
 	 * @return array<string,mixed>
 	 */
 	private function product_details( array $args ) {
-		$product_id = isset( $args['produto_id'] ) ? absint( $args['produto_id'] ) : 0;
+		$product_id = isset( $args['product_id'] ) ? absint( $args['product_id'] ) : 0;
 		$product    = $product_id && function_exists( 'wc_get_product' ) ? wc_get_product( $product_id ) : null;
 
 		if ( ! $product || 'publish' !== get_post_status( $product_id ) ) {
 			return array(
-				'erro'     => 'produto_nao_encontrado',
-				'mensagem' => __( 'Product not found.', 'fsweb-ai-automated-contact' ),
+				'error'   => 'product_not_found',
+				'message' => __( 'Product not found.', 'fsweb-ai-automated-contact' ),
 			);
 		}
 
-		$data                = $this->summarize( $product );
-		$data['descricao']   = wp_strip_all_tags( (string) $product->get_short_description() );
-		$data['categorias']  = wp_get_post_terms( $product_id, 'product_cat', array( 'fields' => 'names' ) );
-		$data['atributos']   = $this->product_attributes( $product );
-		$data['avaliacoes']  = (int) $product->get_review_count();
+		$data = $this->summarize( $product );
 
-		if ( is_wp_error( $data['categorias'] ) ) {
-			$data['categorias'] = array();
+		$data['description'] = wp_strip_all_tags( (string) $product->get_short_description() );
+		$data['categories']  = wp_get_post_terms( $product_id, 'product_cat', array( 'fields' => 'names' ) );
+		$data['attributes']  = $this->product_attributes( $product );
+		$data['reviews']     = (int) $product->get_review_count();
+
+		if ( is_wp_error( $data['categories'] ) ) {
+			$data['categories'] = array();
+		}
+
+		if ( $product->is_type( 'variable' ) ) {
+			$data['variations'] = $this->variations_payload( $product );
+			$data['has_options'] = true;
 		}
 
 		return $data;
 	}
 
 	/**
-	 * Add a product to the WooCommerce cart of the current session.
-	 *
-	 * Returns the cart contents plus the cart and checkout permalinks, so the
-	 * widget can send the customer straight to checkout.
+	 * Add a product (or a chosen variation) to the customer cart.
 	 *
 	 * @since  1.0.0
 	 * @param  array $args Tool arguments.
@@ -258,19 +286,20 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 
 		if ( 'yes' !== $settings['allow_add_to_cart'] ) {
 			return array(
-				'erro'     => 'adicao_desabilitada',
-				'mensagem' => __( 'Adding to the cart is disabled in this store.', 'fsweb-ai-automated-contact' ),
+				'error'   => 'cart_disabled',
+				'message' => __( 'Adding to the cart is disabled in this store.', 'fsweb-ai-automated-contact' ),
 			);
 		}
 
-		$product_id = isset( $args['produto_id'] ) ? absint( $args['produto_id'] ) : 0;
-		$quantity   = isset( $args['quantidade'] ) ? absint( $args['quantidade'] ) : 1;
-		$quantity   = max( 1, min( 10, $quantity ) );
+		$product_id   = isset( $args['product_id'] ) ? absint( $args['product_id'] ) : 0;
+		$variation_id = isset( $args['variation_id'] ) ? absint( $args['variation_id'] ) : 0;
+		$quantity     = isset( $args['quantity'] ) ? absint( $args['quantity'] ) : 1;
+		$quantity     = max( 1, min( 10, $quantity ) );
 
 		if ( ! function_exists( 'wc_get_product' ) || ! $product_id ) {
 			return array(
-				'erro'     => 'produto_invalido',
-				'mensagem' => __( 'Invalid product.', 'fsweb-ai-automated-contact' ),
+				'error'   => 'invalid_product',
+				'message' => __( 'Invalid product.', 'fsweb-ai-automated-contact' ),
 			);
 		}
 
@@ -278,18 +307,37 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 
 		if ( ! $product || ! $product->is_purchasable() || ! $product->is_in_stock() ) {
 			return array(
-				'erro'     => 'produto_indisponivel',
-				'mensagem' => __( 'This product is not available for purchase right now.', 'fsweb-ai-automated-contact' ),
+				'error'   => 'product_unavailable',
+				'message' => __( 'This product is not available for purchase right now.', 'fsweb-ai-automated-contact' ),
 			);
 		}
 
+		// Products with options: the customer must pick one first.
 		if ( $product->is_type( 'variable' ) ) {
-			return array(
-				'erro'        => 'produto_variavel',
-				'mensagem'    => __( 'This product has variations. Send the product link so the customer can pick one.', 'fsweb-ai-automated-contact' ),
-				'produto_id'  => $product_id,
-				'link'        => get_permalink( $product_id ),
-			);
+			$variations = $this->variations_payload( $product );
+
+			if ( ! $variation_id ) {
+				return array(
+					'error'      => 'choose_variation',
+					'message'    => __( 'This product has options. Show them to the customer, ask which one they want, then add the chosen variation.', 'fsweb-ai-automated-contact' ),
+					'product_id' => $product_id,
+					'options'    => $variations,
+					'url'        => get_permalink( $product_id ),
+				);
+			}
+
+			$variation = wc_get_product( $variation_id );
+
+			if ( ! $variation
+				|| (int) $variation->get_parent_id() !== $product_id
+				|| ! $variation->is_purchasable()
+				|| ! $variation->is_in_stock() ) {
+				return array(
+					'error'   => 'variation_unavailable',
+					'message' => __( 'That option is not available right now. Offer another one from the list.', 'fsweb-ai-automated-contact' ),
+					'options' => $variations,
+				);
+			}
 		}
 
 		$added = false;
@@ -299,7 +347,7 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		}
 
 		if ( function_exists( 'WC' ) && WC()->cart ) {
-			$key = WC()->cart->add_to_cart( $product_id, $quantity );
+			$key = WC()->cart->add_to_cart( $product_id, $quantity, $variation_id );
 
 			if ( $key ) {
 				$added = true;
@@ -308,8 +356,8 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 
 		$cart = $this->cart_payload();
 
-		$cart['adicionado'] = $added;
-		$cart['produto']    = $this->summarize( $product );
+		$cart['added']   = $added;
+		$cart['product'] = $this->summarize( $variation_id ? wc_get_product( $variation_id ) : $product );
 
 		if ( ! $added ) {
 			// The REST session has no cart: give the client a direct link.
@@ -320,22 +368,12 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 				),
 				function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/' )
 			);
-			$cart['mensagem']     = __( 'The cart could not be changed from the chat. Send the link so the customer can add the product.', 'fsweb-ai-automated-contact' );
+			$cart['message'] = __( 'The cart could not be changed from the chat. Send the link so the customer can add the product.', 'fsweb-ai-automated-contact' );
 		} else {
-			$cart['mensagem'] = __( 'Product added to the cart.', 'fsweb-ai-automated-contact' );
+			$cart['message'] = __( 'Product added to the cart.', 'fsweb-ai-automated-contact' );
 		}
 
 		return $cart;
-	}
-
-	/**
-	 * Current cart contents.
-	 *
-	 * @since  1.0.0
-	 * @return array<string,mixed>
-	 */
-	private function view_cart() {
-		return $this->cart_payload();
 	}
 
 	/**
@@ -346,36 +384,38 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 	 */
 	private function store_info() {
 		$data = array(
-			'loja'    => get_bloginfo( 'name' ),
-			'url'     => home_url( '/' ),
-			'moeda'   => function_exists( 'get_woocommerce_currency' ) ? get_woocommerce_currency() : '',
-			'idioma'  => get_bloginfo( 'language' ),
-			'contato' => sanitize_email( get_option( 'admin_email' ) ),
+			'store'    => get_bloginfo( 'name' ),
+			'url'      => home_url( '/' ),
+			'currency' => function_exists( 'get_woocommerce_currency' ) ? get_woocommerce_currency() : '',
+			'language' => get_bloginfo( 'language' ),
+			'contact'  => sanitize_email( get_option( 'admin_email' ) ),
 		);
 
 		if ( function_exists( 'WC' ) && WC()->payment_gateways() ) {
 			$methods = array();
+
 			foreach ( WC()->payment_gateways()->get_available_payment_gateways() as $gateway ) {
 				$methods[] = wp_strip_all_tags( $gateway->get_title() );
 			}
-			$data['pagamentos'] = array_values( array_unique( $methods ) );
+
+			$data['payments'] = array_values( array_unique( $methods ) );
 		}
 
 		return $data;
 	}
 
 	/**
-	 * Cart payload shared by the cart and add-to-cart tools.
+	 * Cart payload.
 	 *
 	 * @since  1.0.0
 	 * @return array<string,mixed>
 	 */
 	private function cart_payload() {
 		$payload = array(
-			'itens'        => array(),
-			'quantidade'   => 0,
+			'items'        => array(),
+			'count'        => 0,
 			'total'        => '',
-			'carrinho_url' => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '',
+			'cart_url'     => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '',
 			'checkout_url' => function_exists( 'wc_get_checkout_url' ) ? wc_get_checkout_url() : '',
 		);
 
@@ -386,16 +426,16 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		foreach ( WC()->cart->get_cart() as $item ) {
 			$product = isset( $item['data'] ) ? $item['data'] : null;
 
-			$payload['itens'][] = array(
-				'produto_id' => isset( $item['product_id'] ) ? (int) $item['product_id'] : 0,
-				'nome'       => $product ? $product->get_name() : '',
-				'quantidade' => isset( $item['quantity'] ) ? (int) $item['quantity'] : 0,
+			$payload['items'][] = array(
+				'product_id' => isset( $item['product_id'] ) ? (int) $item['product_id'] : 0,
+				'name'       => $product ? $product->get_name() : '',
+				'quantity'   => isset( $item['quantity'] ) ? (int) $item['quantity'] : 0,
 				'subtotal'   => function_exists( 'wc_price' ) && $product ? wp_strip_all_tags( wc_price( (float) $item['line_subtotal'] ) ) : '',
 			);
 		}
 
-		$payload['quantidade'] = (int) WC()->cart->get_cart_contents_count();
-		$payload['total']      = wp_strip_all_tags( WC()->cart->get_cart_total() );
+		$payload['count'] = (int) WC()->cart->get_cart_contents_count();
+		$payload['total'] = wp_strip_all_tags( WC()->cart->get_cart_total() );
 
 		return $payload;
 	}
@@ -404,26 +444,58 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 	 * Compact product payload used inside tool results.
 	 *
 	 * @since  1.0.0
-	 * @param  \WC_Product $product Product object.
+	 * @param  \WC_Product|null $product Product object.
 	 * @return array<string,mixed>
 	 */
 	private function summarize( $product ) {
+		if ( ! $product || ! is_object( $product ) ) {
+			return array();
+		}
+
 		$image_id = (int) $product->get_image_id();
 
 		return array(
-			'produto_id'  => (int) $product->get_id(),
-			'nome'        => wp_strip_all_tags( $product->get_name() ),
-			'preco'       => wp_strip_all_tags( $product->get_price_html() ),
-			'disponivel'  => $product->is_in_stock(),
-			'link'        => get_permalink( $product->get_id() ),
-			'imagem'      => $image_id ? wp_get_attachment_image_url( $image_id, 'woocommerce_thumbnail' ) : '',
-			'resumo'      => wp_trim_words( wp_strip_all_tags( (string) $product->get_short_description() ), 24 ),
-			'em_promocao' => $product->is_on_sale(),
+			'product_id' => (int) $product->get_id(),
+			'name'       => wp_strip_all_tags( $product->get_name() ),
+			'price'      => wp_strip_all_tags( $product->get_price_html() ),
+			'available'  => $product->is_in_stock(),
+			'url'        => get_permalink( $product->get_id() ),
+			'image'      => $image_id ? wp_get_attachment_image_url( $image_id, 'woocommerce_thumbnail' ) : '',
+			'summary'    => wp_trim_words( wp_strip_all_tags( (string) $product->get_short_description() ), 24 ),
+			'on_sale'    => $product->is_on_sale(),
 		);
 	}
 
 	/**
-	 * Visible attributes of a product (variations included).
+	 * Purchasable variations of a product with options.
+	 *
+	 * @since  1.0.0
+	 * @param  \WC_Product $product Variable product.
+	 * @return array<int,array<string,mixed>>
+	 */
+	private function variations_payload( $product ) {
+		$variations = array();
+
+		foreach ( $product->get_children() as $child_id ) {
+			$variation = wc_get_product( $child_id );
+
+			if ( ! $variation || ! $variation->is_purchasable() || ! $variation->is_in_stock() ) {
+				continue;
+			}
+
+			$variations[] = array(
+				'variation_id' => (int) $child_id,
+				'label'        => wp_strip_all_tags( wc_get_formatted_variation( $variation, true ) ),
+				'price'        => wp_strip_all_tags( $variation->get_price_html() ),
+				'available'    => true,
+			);
+		}
+
+		return $variations;
+	}
+
+	/**
+	 * Visible attributes of a product.
 	 *
 	 * @since  1.0.0
 	 * @param  \WC_Product $product Product object.
@@ -447,25 +519,6 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 			}
 
 			$out[ $name ] = implode( ', ', array_map( 'wp_strip_all_tags', (array) $raw ) );
-		}
-
-		if ( $product->is_type( 'variable' ) ) {
-			$variations = array();
-
-			foreach ( $product->get_children() as $child_id ) {
-				$variation = wc_get_product( $child_id );
-
-				if ( $variation && $variation->is_purchasable() ) {
-					$variations[] = array(
-						'variacao_id' => (int) $child_id,
-						'nome'        => wp_strip_all_tags( wc_get_formatted_variation( $variation, true ) ),
-						'preco'       => wp_strip_all_tags( $variation->get_price_html() ),
-						'disponivel'  => $variation->is_in_stock(),
-					);
-				}
-			}
-
-			$out['variacoes'] = $variations;
 		}
 
 		return $out;

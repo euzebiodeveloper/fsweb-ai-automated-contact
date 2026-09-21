@@ -170,6 +170,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 			'custom_css'        => '',
 			'privacy_note'      => __( 'Automated AI support. Do not send sensitive data.', 'fsweb-ai-automated-contact' ),
 			'rate_limit'        => 30,
+			'debug_log'         => 'no',
 			'providers'         => array(
 				'openai'    => array( 'api_key' => '' ),
 				'anthropic' => array( 'api_key' => '' ),
@@ -277,6 +278,8 @@ class Fsweb_Ai_Automated_Contact_Settings {
 		$rate_limit = isset( $input['rate_limit'] ) ? absint( $input['rate_limit'] ) : (int) $defaults['rate_limit'];
 		$output['rate_limit'] = max( 1, min( 300, $rate_limit ) );
 
+		$output['debug_log'] = ( isset( $input['debug_log'] ) && 'yes' === $input['debug_log'] ) ? 'yes' : 'no';
+
 		$output['position'] = ( isset( $input['position'] ) && 'left' === $input['position'] ) ? 'left' : 'right';
 
 		foreach ( array( 'accent_color', 'color_title', 'color_icon', 'chat_background', 'chat_text', 'bubble_agent' ) as $color_key ) {
@@ -321,6 +324,37 @@ class Fsweb_Ai_Automated_Contact_Settings {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Whether the merchant turned the debug log on.
+	 *
+	 * @since  1.0.0
+	 * @return bool
+	 */
+	public static function is_debug() {
+		return ( 'yes' === self::get( 'debug_log', 'no' ) );
+	}
+
+	/**
+	 * Write a diagnostic line to the WooCommerce log.
+	 *
+	 * Nothing is written unless the debug option is on, and it never touches
+	 * error_log(): the output goes to WooCommerce → Status → Logs under the
+	 * plugin's own source, where the merchant already looks for logs.
+	 *
+	 * @since  1.0.0
+	 * @param  string $message Message to record.
+	 * @return void
+	 */
+	public static function log( $message ) {
+		if ( ! self::is_debug() || ! function_exists( 'wc_get_logger' ) ) {
+			return;
+		}
+
+		$source = defined( 'FSWEB_AI_AUTOMATED_CONTACT_SLUG' ) ? FSWEB_AI_AUTOMATED_CONTACT_SLUG : 'fsweb-ai-automated-contact';
+
+		wc_get_logger()->debug( (string) $message, array( 'source' => $source ) );
 	}
 
 	/**

@@ -153,6 +153,15 @@ msgstr "Ativar widget"
 msgid "Show the chat on the site"
 msgstr "Exibir o chat no site"
 
+msgid "Debug log"
+msgstr "Log de depuração"
+
+msgid "Record cart and provider diagnostics"
+msgstr "Registrar diagnósticos do carrinho e do provedor"
+
+msgid "The entries show up in WooCommerce → Status → Logs, under the source \"fsweb-ai-automated-contact\". Leave it off on a live store."
+msgstr "Os registros aparecem em WooCommerce → Status → Logs, na origem \"fsweb-ai-automated-contact\". Deixe desligado em loja em produção."
+
 msgid "Assistant name"
 msgstr "Nome do atendente"
 

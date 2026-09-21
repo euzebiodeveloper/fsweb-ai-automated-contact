@@ -470,6 +470,16 @@ class Fsweb_Ai_Automated_Contact_Admin {
 									</td>
 								</tr>
 								<tr>
+									<th scope="row"><?php esc_html_e( 'Debug log', 'fsweb-ai-automated-contact' ); ?></th>
+									<td>
+										<label>
+											<input type="checkbox" name="<?php echo esc_attr( $option ); ?>[debug_log]" value="yes" <?php checked( 'yes', $settings['debug_log'] ); ?>>
+											<?php esc_html_e( 'Record cart and provider diagnostics', 'fsweb-ai-automated-contact' ); ?>
+										</label>
+										<p class="description"><?php esc_html_e( 'The entries show up in WooCommerce → Status → Logs, under the source "fsweb-ai-automated-contact". Leave it off on a live store.', 'fsweb-ai-automated-contact' ); ?></p>
+									</td>
+								</tr>
+								<tr>
 									<th scope="row"><label for="fsweb-aic-agent-name"><?php esc_html_e( 'Assistant name', 'fsweb-ai-automated-contact' ); ?></label></th>
 									<td><input type="text" class="regular-text" id="fsweb-aic-agent-name" name="<?php echo esc_attr( $option ); ?>[agent_name]" value="<?php echo esc_attr( $settings['agent_name'] ); ?>"></td>
 								</tr>

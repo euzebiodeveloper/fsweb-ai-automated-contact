@@ -201,6 +201,29 @@
 			} );
 	} );
 
+	// The "Current setup" line follows whatever is selected on screen.
+	function syncCurrentSetup() {
+		var $target = $( '#fsweb-aic-current-setup' );
+
+		if ( ! $target.length || ! config.i18n.current_setup ) {
+			return;
+		}
+
+		var provider = $( '#fsweb-aic-provider' ).val() || '';
+		var model = $.trim( $( '#fsweb-aic-model' ).val() );
+		var customModel = $.trim( $( '#fsweb-aic-custom-model' ).val() );
+
+		if ( 'custom' === provider && customModel ) {
+			model = customModel;
+		}
+
+		$target.text(
+			config.i18n
+				.current_setup.replace( '%1$s', provider )
+				.replace( '%2$s', model )
+		);
+	}
+
 	// Only the credentials of the selected provider are shown, so it is
 	// clear that one AI is used at a time. The model list is rebuilt for
 	// the chosen provider, with a free-text fallback for new models.
@@ -231,6 +254,7 @@
 		if ( current && models.indexOf( current ) !== -1 ) {
 			$select.val( current );
 			$custom.prop( 'hidden', true );
+			syncCurrentSetup();
 			return;
 		}
 
@@ -238,11 +262,13 @@
 			$select.val( models[ 0 ] );
 			$input.val( models[ 0 ] );
 			$custom.prop( 'hidden', true );
+			syncCurrentSetup();
 			return;
 		}
 
 		$select.val( '__custom__' );
 		$custom.prop( 'hidden', false );
+		syncCurrentSetup();
 	}
 
 	$( document ).on( 'change', '#fsweb-aic-provider', function () {
@@ -257,12 +283,17 @@
 		if ( '__custom__' === value ) {
 			$custom.prop( 'hidden', false );
 			$input.trigger( 'focus' );
+			syncCurrentSetup();
 			return;
 		}
 
 		$input.val( value );
 		$custom.prop( 'hidden', true );
+		syncCurrentSetup();
 	} );
+
+	$( document ).on( 'input', '#fsweb-aic-model, #fsweb-aic-custom-model', syncCurrentSetup );
+	syncCurrentSetup();
 
 	syncProvider( $( '#fsweb-aic-provider' ).val() );
 

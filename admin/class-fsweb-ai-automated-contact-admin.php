@@ -144,6 +144,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 					'validating'         => __( 'Verifying…', 'fsweb-ai-automated-contact' ),
 					'testing'            => __( 'Testing…', 'fsweb-ai-automated-contact' ),
 					'custom_model'       => __( 'Other model (type it)', 'fsweb-ai-automated-contact' ),
+					'current_setup'      => __( 'Current setup: %1$s / %2$s', 'fsweb-ai-automated-contact' ),
 					'empty_key'          => __( 'Enter a license key.', 'fsweb-ai-automated-contact' ),
 					'network_error'      => __( 'Network error. Please try again.', 'fsweb-ai-automated-contact' ),
 					'lifetime'           => __( 'Lifetime', 'fsweb-ai-automated-contact' ),
@@ -581,9 +582,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 										<span class="spinner" id="fsweb-aic-test-spinner" style="float:none;margin:0 0 0 6px;"></span>
 										<p class="fsweb-aic-test-result" id="fsweb-aic-test-result"></p>
 										<p class="description"><?php esc_html_e( 'The test uses the values currently on screen — no need to save first.', 'fsweb-ai-automated-contact' ); ?></p>
-										<?php if ( ! empty( $endpoint['model'] ) ) : ?>
-											<p class="description"><?php echo esc_html( sprintf( /* translators: 1: provider id, 2: model. */ __( 'Current setup: %1$s / %2$s', 'fsweb-ai-automated-contact' ), $endpoint['provider'], $endpoint['model'] ) ); ?></p>
-										<?php endif; ?>
+										<p class="description" id="fsweb-aic-current-setup"><?php echo esc_html( sprintf( /* translators: 1: provider id, 2: model. */ __( 'Current setup: %1$s / %2$s', 'fsweb-ai-automated-contact' ), $endpoint['provider'], $endpoint['model'] ) ); ?></p>
 									</td>
 								</tr>
 							</table>

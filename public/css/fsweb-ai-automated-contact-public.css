@@ -361,6 +361,53 @@
 	align-items: center !important;
 }
 
+/* The cards must never spill out of the panel: themes like to unlock
+   overflow, which pushed the product list outside the chat box. */
+.fsweb-aic-widget .fsweb-aic-panel:not([hidden]) {
+	width: min(380px, calc(100vw - 28px)) !important;
+	height: min(620px, calc(100vh - 40px)) !important;
+	overflow: hidden !important;
+}
+
+@supports (height: 100dvh) {
+	.fsweb-aic-widget .fsweb-aic-panel:not([hidden]) {
+		height: min(620px, calc(100dvh - 40px)) !important;
+	}
+}
+
+.fsweb-aic-widget .fsweb-aic-messages {
+	overflow-y: auto !important;
+	overflow-x: hidden !important;
+}
+
+/* Product card extras: short description and the second action. */
+.fsweb-aic-product__summary {
+	color: var(--fsweb-aic-chat-text);
+	display: block;
+	font-size: 12px;
+	line-height: 1.4;
+	margin-top: 2px;
+	opacity: 0.7;
+}
+
+.fsweb-aic-product__button {
+	background: var(--fsweb-aic-accent);
+	border: 0;
+	border-radius: 999px;
+	color: var(--fsweb-aic-title);
+	cursor: pointer;
+	font: inherit;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1;
+	padding: 7px 12px;
+}
+
+.fsweb-aic-product__button:hover,
+.fsweb-aic-product__button:focus-visible {
+	filter: brightness(0.92);
+}
+
 /* The panel is flex only while it is visible: `hidden` must always win,
    otherwise the ball and the chat show up at the same time. */
 .fsweb-aic-widget .fsweb-aic-panel[hidden] {

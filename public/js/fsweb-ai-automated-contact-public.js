@@ -61,6 +61,29 @@
 		return config.i18n && config.i18n[ key ] ? config.i18n[ key ] : fallback;
 	}
 
+	// Remember that the visitor opened a product page: the chat reopens there
+	// so the conversation carries on.
+	function markReopen() {
+		try {
+			window.sessionStorage.setItem( STORAGE_KEY + '_reopen', '1' );
+		} catch ( error ) {
+			// Storage unavailable: the page still opens, just without the chat.
+		}
+	}
+
+	function shouldReopen() {
+		try {
+			if ( window.sessionStorage.getItem( STORAGE_KEY + '_reopen' ) ) {
+				window.sessionStorage.removeItem( STORAGE_KEY + '_reopen' );
+				return true;
+			}
+		} catch ( error ) {
+			// Storage unavailable.
+		}
+
+		return false;
+	}
+
 	function scrollToBottom() {
 		messages.scrollTop = messages.scrollHeight;
 	}
@@ -146,6 +169,13 @@
 			price.textContent = product.price || '';
 			info.appendChild( price );
 
+			if ( product.summary ) {
+				var summary = document.createElement( 'span' );
+				summary.className = 'fsweb-aic-product__summary';
+				summary.textContent = product.summary;
+				info.appendChild( summary );
+			}
+
 			var actions = document.createElement( 'div' );
 			actions.className = 'fsweb-aic-product__actions';
 
@@ -153,8 +183,11 @@
 				var link = document.createElement( 'a' );
 				link.className = 'fsweb-aic-product__link';
 				link.href = product.url;
-				link.target = '_blank';
-				link.rel = 'noopener';
+				// Same tab, and the chat reopens on the next page so the
+				// conversation continues instead of a blank tab.
+				link.addEventListener( 'click', function () {
+					markReopen();
+				} );
 				link.textContent = text( 'view_product', 'View product' );
 				actions.appendChild( link );
 			}
@@ -164,6 +197,21 @@
 				out.className = 'fsweb-aic-product__price';
 				out.textContent = text( 'out_of_stock', 'Out of stock' );
 				actions.appendChild( out );
+			} else if ( product.product_id ) {
+				var addButton = document.createElement( 'button' );
+				addButton.type = 'button';
+				addButton.className = 'fsweb-aic-product__button';
+				addButton.textContent = text( 'add_to_cart', 'Add to cart' );
+				addButton.addEventListener( 'click', function () {
+					var request = ( config.i18n.add_request || 'Please add product id %s to my cart' ).replace( '%s', product.product_id );
+
+					if ( product.name ) {
+						request += ' (' + product.name + ')';
+					}
+
+					send( request );
+				} );
+				actions.appendChild( addButton );
 			}
 
 			info.appendChild( actions );
@@ -399,5 +447,9 @@
 		greeted = true;
 	}
 
-	maybeAutoOpen();
+	if ( shouldReopen() ) {
+		openPanel();
+	} else {
+		maybeAutoOpen();
+	}
 } )();

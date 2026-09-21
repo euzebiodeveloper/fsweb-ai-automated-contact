@@ -238,6 +238,7 @@ class Fsweb_Ai_Automated_Contact_Public {
 					'typing'       => __( 'typing…', 'fsweb-ai-automated-contact' ),
 					'error'        => __( 'I could not answer right now. Please try again in a moment.', 'fsweb-ai-automated-contact' ),
 					'add_to_cart'  => __( 'Add to cart', 'fsweb-ai-automated-contact' ),
+					'add_request'  => __( 'Please add product id %s to my cart', 'fsweb-ai-automated-contact' ),
 					'go_checkout'  => __( 'Checkout', 'fsweb-ai-automated-contact' ),
 					'view_product' => __( 'View product', 'fsweb-ai-automated-contact' ),
 					'cart_updated' => __( 'Cart updated', 'fsweb-ai-automated-contact' ),

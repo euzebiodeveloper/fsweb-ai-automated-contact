@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-21T00:31:55+00:00\n"
+"POT-Creation-Date: 2026-09-21T00:46:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fsweb-ai-automated-contact\n"
@@ -669,11 +669,11 @@ msgid "Never ask for sensitive data (passwords, card details, full tax IDs). Nev
 msgstr ""
 
 #: includes/class-fsweb-ai-automated-contact-chat.php:196
-msgid "Use the available tools to check the catalogue before stating anything about products. Before adding anything to the cart, confirm the item and quantity with the customer; after adding, share the checkout link."
+msgid "Use the available tools to check the catalogue before stating anything about products. Only offer products that are in stock. When a product has options (colour, size…), show the available options and ask the customer which one they want before adding anything to the cart. Confirm the item and quantity, then share the checkout link."
 msgstr ""
 
 #: includes/class-fsweb-ai-automated-contact-chat.php:197
-msgid "When listing products, show at most 5 options with name and price, then ask which one the customer wants."
+msgid "When listing products, show at most 5 options with name, price and image, then ask which one the customer wants. If the customer asks for new arrivals, search with order \"recent\"."
 msgstr ""
 
 #: includes/class-fsweb-ai-automated-contact-chat.php:199
@@ -820,39 +820,43 @@ msgstr ""
 msgid "Automated AI support. Do not send sensitive data."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-woo-tools.php:173
+#: includes/class-fsweb-ai-automated-contact-woo-tools.php:186
 msgid "Provide a search term."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-woo-tools.php:205
+#: includes/class-fsweb-ai-automated-contact-woo-tools.php:229
 msgid "No product found for that term. Try another word."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-woo-tools.php:229
+#: includes/class-fsweb-ai-automated-contact-woo-tools.php:254
 msgid "Product not found."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-woo-tools.php:262
+#: includes/class-fsweb-ai-automated-contact-woo-tools.php:290
 msgid "Adding to the cart is disabled in this store."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-woo-tools.php:273
+#: includes/class-fsweb-ai-automated-contact-woo-tools.php:302
 msgid "Invalid product."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-woo-tools.php:282
+#: includes/class-fsweb-ai-automated-contact-woo-tools.php:311
 msgid "This product is not available for purchase right now."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-woo-tools.php:289
-msgid "This product has variations. Send the product link so the customer can pick one."
+#: includes/class-fsweb-ai-automated-contact-woo-tools.php:322
+msgid "This product has options. Show them to the customer, ask which one they want, then add the chosen variation."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-woo-tools.php:323
+#: includes/class-fsweb-ai-automated-contact-woo-tools.php:337
+msgid "That option is not available right now. Offer another one from the list."
+msgstr ""
+
+#: includes/class-fsweb-ai-automated-contact-woo-tools.php:371
 msgid "The cart could not be changed from the chat. Send the link so the customer can add the product."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-woo-tools.php:325
+#: includes/class-fsweb-ai-automated-contact-woo-tools.php:373
 msgid "Product added to the cart."
 msgstr ""
 
@@ -898,6 +902,10 @@ msgstr ""
 
 #: public/class-fsweb-ai-automated-contact-public.php:243
 msgid "Cart updated"
+msgstr ""
+
+#: public/class-fsweb-ai-automated-contact-public.php:244
+msgid "Out of stock"
 msgstr ""
 
 #: public/partials/fsweb-ai-automated-contact-widget.php:47

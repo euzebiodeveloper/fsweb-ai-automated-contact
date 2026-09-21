@@ -387,6 +387,8 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		$quantity     = max( 1, min( 10, $quantity ) );
 
 		if ( ! function_exists( 'wc_get_product' ) || ! $product_id ) {
+			error_log( sprintf( '[FSWEB AIC] add_to_cart recusado: produto_id invalido (%s)', wp_json_encode( $args ) ) );
+
 			return array(
 				'error'   => 'invalid_product',
 				'message' => __( 'Invalid product.', 'fsweb-ai-automated-contact' ),
@@ -396,6 +398,8 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		$product = wc_get_product( $product_id );
 
 		if ( ! $product || ! $product->is_purchasable() || ! $product->is_in_stock() ) {
+			error_log( sprintf( '[FSWEB AIC] add_to_cart recusado: produto %d indisponivel ou inexistente', $product_id ) );
+
 			return array(
 				'error'   => 'product_unavailable',
 				'message' => __( 'This product is not available for purchase right now.', 'fsweb-ai-automated-contact' ),
@@ -444,21 +448,36 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		}
 
 		$notices = array();
+		$before  = ( function_exists( 'WC' ) && WC()->cart ) ? (int) WC()->cart->get_cart_contents_count() : -1;
 
 		if ( function_exists( 'WC' ) && WC()->cart ) {
 			$key = WC()->cart->add_to_cart( $product_id, $quantity, $variation_id );
 
 			if ( $key ) {
 				$added = true;
+
+				error_log(
+					sprintf(
+						'[FSWEB AIC] add_to_cart ok: produto=%d variacao=%d qtd=%d | antes=%d depois=%d | sessao=%s',
+						$product_id,
+						$variation_id,
+						$quantity,
+						$before,
+						(int) WC()->cart->get_cart_contents_count(),
+						WC()->session && WC()->session->has_session() ? 'com sessao' : 'SEM sessao'
+					)
+				);
 			} else {
 				$notices = function_exists( 'wc_get_notices' ) ? wc_get_notices( 'error' ) : array();
 
 				error_log(
 					sprintf(
-						'[FSWEB AIC] add_to_cart falhou: produto=%d variacao=%d qtd=%d | %s',
+						'[FSWEB AIC] add_to_cart falhou: produto=%d variacao=%d qtd=%d | sessao=%s | antes=%d | %s',
 						$product_id,
 						$variation_id,
 						$quantity,
+						( function_exists( 'WC' ) && WC()->session && WC()->session->has_session() ) ? 'com sessao' : 'SEM sessao',
+						$before,
 						wp_json_encode( $notices )
 					)
 				);

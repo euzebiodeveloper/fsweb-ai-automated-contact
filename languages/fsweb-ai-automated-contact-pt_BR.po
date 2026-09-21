@@ -42,6 +42,15 @@ msgstr "Testando…"
 msgid "Other model (type it)"
 msgstr "Outro modelo (digitar)"
 
+msgid "Choose image"
+msgstr "Escolher imagem"
+
+msgid "Use this image"
+msgstr "Usar esta imagem"
+
+msgid "Current setup: %1$s / %2$s"
+msgstr "Configuração atual: %1$s / %2$s"
+
 msgid "Enter a license key."
 msgstr "Informe uma chave de licença."
 
@@ -213,9 +222,6 @@ msgstr "Testar agora"
 msgid "The test uses the values currently on screen — no need to save first."
 msgstr "O teste usa os valores que estão na tela — não precisa salvar antes."
 
-msgid "Current setup: %1$s / %2$s"
-msgstr "Configuração atual: %1$s / %2$s"
-
 msgid "Store context (instructions for the AI)"
 msgstr "Contexto da loja (instruções para a IA)"
 
@@ -249,8 +255,44 @@ msgstr "Produtos por busca"
 msgid "Appearance"
 msgstr "Aparência"
 
-msgid "Accent colour"
-msgstr "Cor de destaque"
+msgid "Chat icon"
+msgstr "Ícone do chat"
+
+msgid "Chat bubble"
+msgstr "Balão de chat"
+
+msgid "Initial letter"
+msgstr "Letra inicial"
+
+msgid "Robot"
+msgstr "Robô"
+
+msgid "Custom image"
+msgstr "Imagem personalizada"
+
+msgid "Clear"
+msgstr "Limpar"
+
+msgid "Shown on the floating button and in the chat header."
+msgstr "Aparece no botão flutuante e no cabeçalho do chat."
+
+msgid "Colours"
+msgstr "Cores"
+
+msgid "Primary"
+msgstr "Primária"
+
+msgid "Title &amp; icon"
+msgstr "Título e ícone"
+
+msgid "Chat background"
+msgstr "Fundo do chat"
+
+msgid "Chat text"
+msgstr "Texto do chat"
+
+msgid "Hi! How can I help?"
+msgstr "Olá! Como posso ajudar?"
 
 msgid "Position"
 msgstr "Posição"
@@ -260,6 +302,24 @@ msgstr "Direita"
 
 msgid "Left"
 msgstr "Esquerda"
+
+msgid "Auto open"
+msgstr "Abrir automaticamente"
+
+msgid "Open the chat automatically for new visitors"
+msgstr "Abrir o chat automaticamente para novos visitantes"
+
+msgid "Delay (seconds)"
+msgstr "Atraso (segundos)"
+
+msgid "Opens once per visit, after the delay, and only if the customer has not opened it yet."
+msgstr "Abre uma vez por visita, após o atraso, e só se o cliente ainda não tiver aberto."
+
+msgid "Custom CSS"
+msgstr "CSS personalizado"
+
+msgid "Optional: extra styles for the widget, applied after the plugin CSS."
+msgstr "Opcional: estilos extras para o widget, aplicados depois do CSS do plugin."
 
 msgid "Save settings"
 msgstr "Salvar configurações"
@@ -314,6 +374,12 @@ msgstr "Ative o WooCommerce no chat"
 
 msgid "With catalogue access enabled, the AI searches products, shows price and availability, adds to the cart (after confirmation) and sends the customer to checkout."
 msgstr "Com o catálogo liberado, a IA busca produtos, mostra preço e disponibilidade, adiciona ao carrinho (mediante confirmação) e envia o cliente ao checkout."
+
+msgid "Style the widget"
+msgstr "Estilize o widget"
+
+msgid "Choose the icon, the colours and whether the chat opens by itself. You can also fine-tune it with custom CSS."
+msgstr "Escolha o ícone, as cores e se o chat abre sozinho. Você também pode ajustar com CSS personalizado."
 
 msgid "Test and enable the widget"
 msgstr "Teste e ative o widget"

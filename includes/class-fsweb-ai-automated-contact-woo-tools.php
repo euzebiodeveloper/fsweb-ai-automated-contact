@@ -402,6 +402,13 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 			);
 		}
 
+		// A variation id only exists for products with options. A stray value
+		// (the model often sends one) makes WooCommerce reject the whole add,
+		// which looked like "the cart refuses the second product".
+		if ( ! $product->is_type( 'variable' ) ) {
+			$variation_id = 0;
+		}
+
 		// Products with options: the customer must pick one first.
 		if ( $product->is_type( 'variable' ) ) {
 			$variations = $this->variations_payload( $product );
@@ -436,11 +443,29 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 			wc_load_cart();
 		}
 
+		$notices = array();
+
 		if ( function_exists( 'WC' ) && WC()->cart ) {
 			$key = WC()->cart->add_to_cart( $product_id, $quantity, $variation_id );
 
 			if ( $key ) {
 				$added = true;
+			} else {
+				$notices = function_exists( 'wc_get_notices' ) ? wc_get_notices( 'error' ) : array();
+
+				error_log(
+					sprintf(
+						'[FSWEB AIC] add_to_cart falhou: produto=%d variacao=%d qtd=%d | %s',
+						$product_id,
+						$variation_id,
+						$quantity,
+						wp_json_encode( $notices )
+					)
+				);
+
+				if ( function_exists( 'wc_clear_notices' ) ) {
+					wc_clear_notices();
+				}
 			}
 		}
 
@@ -459,6 +484,10 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 				function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/' )
 			);
 			$cart['message'] = __( 'The cart could not be changed from the chat. Send the link so the customer can add the product.', 'fsweb-ai-automated-contact' );
+
+			if ( ! empty( $notices ) ) {
+				$cart['notices'] = $notices;
+			}
 		} else {
 			$cart['message'] = __( 'Product added to the cart.', 'fsweb-ai-automated-contact' );
 		}

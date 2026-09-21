@@ -477,6 +477,15 @@ msgstr "Os produtos que você consulta aparecem para o cliente como cards com im
 msgid "Focus on helping the customer buy: suggest the products, ask if they want to add one to the cart, and confirm the item and quantity before adding. Only talk about categories when the customer actually asks what the store sells."
 msgstr "Foque em ajudar o cliente a comprar: sugira os produtos, pergunte se ele quer adicionar algum ao carrinho e confirme o item e a quantidade antes de adicionar. Só fale de categorias quando o cliente realmente perguntar o que a loja vende."
 
+msgid "Never paste URLs or links in your messages: the chat shows the buttons for the product and for the checkout, so the customer does not need the address."
+msgstr "Nunca escreva URLs nem links nas suas mensagens: o chat já mostra os botões do produto e do checkout, então o cliente não precisa do endereço."
+
+msgid "After adding an item to the cart, do not close the sale: suggest one complementary product and ask whether they want anything else. Call send_checkout only when the customer says they are done (something like \"no, that is all\")."
+msgstr "Depois de adicionar um item ao carrinho, não feche a venda: sugira um produto complementar e pergunte se o cliente quer mais alguma coisa. Chame send_checkout apenas quando o cliente disser que terminou (algo como \"não, é só isso\")."
+
+msgid "You may use **bold** to highlight a product name or a price. Keep answers short."
+msgstr "Você pode usar **negrito** para destacar o nome de um produto ou um preço. Mantenha as respostas curtas."
+
 msgid "If the customer asks what the store sells or wants to browse without naming a product, call list_categories or search without a term to show the newest items in stock, then ask what they are looking for. Never answer that you cannot show the catalogue."
 msgstr "Se o cliente perguntar o que a loja vende ou quiser navegar sem citar um produto, chame list_categories ou busque sem termo para mostrar os itens em estoque mais recentes, e então pergunte o que ele procura. Nunca responda que não pode mostrar o catálogo."
 
@@ -602,6 +611,9 @@ msgstr "Não foi possível alterar o carrinho pelo chat. Envie o link para o cli
 
 msgid "Product added to the cart."
 msgstr "Produto adicionado ao carrinho."
+
+msgid "Ready to finish the purchase."
+msgstr "Pronto para finalizar a compra."
 
 msgid "Type your message…"
 msgstr "Escreva sua mensagem…"

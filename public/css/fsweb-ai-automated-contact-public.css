@@ -1,8 +1,13 @@
 /**
  * Public chat widget styles.
  *
- * Colours come from the plugin settings as CSS variables set inline by the
- * public class:
+ * Layout follows the standard support-widget pattern (Crisp / Tawk / joinchat):
+ * a round launcher sits in the corner; when the conversation opens the launcher
+ * disappears and the panel takes over that same corner, so nothing floats on
+ * top of the screen.
+ *
+ * Colours come from the settings as CSS variables, set inline by the public
+ * class:
  *   --fsweb-aic-accent     primary colour (launcher, header, user bubbles, CTA)
  *   --fsweb-aic-title      header text and icon colour
  *   --fsweb-aic-chat-bg    conversation background
@@ -18,10 +23,14 @@
 	--fsweb-aic-chat-text: #16202c;
 	--fsweb-aic-agent-bubble: #ffffff;
 	--fsweb-aic-radius: 18px;
-	--fsweb-aic-shadow: 0 18px 48px rgba(16, 30, 54, 0.22);
+	--fsweb-aic-shadow: 0 16px 44px rgba(16, 30, 54, 0.24);
 	position: fixed;
-	bottom: 22px;
+	right: 20px;
+	bottom: 20px;
 	z-index: 2147483000;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
 	font-size: 15px;
 	line-height: 1.5;
 	color: var(--fsweb-aic-chat-text);
@@ -29,12 +38,10 @@
 	-webkit-font-smoothing: antialiased;
 }
 
-.fsweb-aic-widget--right {
-	right: 22px;
-}
-
 .fsweb-aic-widget--left {
-	left: 22px;
+	right: auto;
+	left: 20px;
+	align-items: flex-start;
 }
 
 .fsweb-aic-widget[hidden] {
@@ -48,9 +55,9 @@
 }
 
 .fsweb-aic-svg {
+	display: block;
 	width: 100%;
 	height: 100%;
-	display: block;
 }
 
 /* ---------------------------------------------------------------- Launcher */
@@ -62,7 +69,7 @@
 	justify-content: center;
 	width: 58px;
 	height: 58px;
-	margin: 0 0 0 auto;
+	margin: 0;
 	padding: 0;
 	border: 0;
 	/* Round ball, even against themes that flatten buttons. */
@@ -71,28 +78,35 @@
 	color: var(--fsweb-aic-title);
 	cursor: pointer;
 	line-height: 0;
-	box-shadow: 0 10px 26px rgba(16, 30, 54, 0.28);
-	transition: transform 0.18s ease, box-shadow 0.18s ease;
+	box-shadow: 0 8px 22px rgba(16, 30, 54, 0.26);
+	transition: filter 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 	appearance: none;
 }
 
-.fsweb-aic-widget--left .fsweb-aic-launcher {
-	margin-left: 0;
-	margin-right: auto;
-}
-
+/* Hover and press darken the ball, like every chat widget does. */
 .fsweb-aic-launcher:hover,
 .fsweb-aic-launcher:focus-visible {
-	transform: translateY(-2px);
-	box-shadow: 0 16px 32px rgba(16, 30, 54, 0.34);
+	filter: brightness(0.9);
+	transform: translateY(-1px);
+	box-shadow: 0 12px 26px rgba(16, 30, 54, 0.3);
+}
+
+.fsweb-aic-launcher:active {
+	filter: brightness(0.82);
+	transform: translateY(0);
+}
+
+/* While the conversation is open the ball steps aside for the panel. */
+.fsweb-aic-widget.is-open .fsweb-aic-launcher {
+	display: none;
 }
 
 .fsweb-aic-launcher__icon {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 30px;
-	height: 30px;
+	width: 26px;
+	height: 26px;
 	overflow: hidden;
 	border-radius: 50%;
 }
@@ -104,7 +118,7 @@
 }
 
 .fsweb-aic-initial {
-	font-size: 20px;
+	font-size: 19px;
 	font-weight: 700;
 	line-height: 1;
 	text-transform: uppercase;
@@ -131,14 +145,21 @@
 .fsweb-aic-panel {
 	display: flex;
 	flex-direction: column;
-	width: min(380px, calc(100vw - 32px));
-	height: min(560px, calc(100vh - 120px));
-	margin-bottom: 14px;
+	width: min(380px, calc(100vw - 28px));
+	height: min(620px, calc(100vh - 40px));
+	max-height: calc(100vh - 40px);
 	overflow: hidden;
 	border-radius: var(--fsweb-aic-radius);
 	background: var(--fsweb-aic-chat-bg);
 	box-shadow: var(--fsweb-aic-shadow);
-	animation: fsweb-aic-in 0.2s ease-out;
+	animation: fsweb-aic-in 0.18s ease-out;
+}
+
+@supports (height: 100dvh) {
+	.fsweb-aic-panel {
+		height: min(620px, calc(100dvh - 40px));
+		max-height: calc(100dvh - 40px);
+	}
 }
 
 .fsweb-aic-panel[hidden] {
@@ -148,7 +169,7 @@
 @keyframes fsweb-aic-in {
 	from {
 		opacity: 0;
-		transform: translateY(12px) scale(0.98);
+		transform: translateY(10px) scale(0.98);
 	}
 
 	to {
@@ -161,10 +182,11 @@
 
 .fsweb-aic-header {
 	display: flex;
+	flex: 0 0 auto;
 	align-items: center;
 	justify-content: space-between;
 	gap: 10px;
-	padding: 12px 12px 12px 16px;
+	padding: 12px 10px 12px 14px;
 	background: var(--fsweb-aic-accent);
 	color: var(--fsweb-aic-title);
 }
@@ -181,13 +203,13 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 38px;
-	height: 38px;
+	width: 36px;
+	height: 36px;
 	overflow: hidden;
 	border-radius: 50%;
-	background: rgba(255, 255, 255, 0.22);
-	color: var(--fsweb-aic-title);
-	font-size: 16px;
+	/* Light disc with the icon in the brand colour: always readable. */
+	background: rgba(255, 255, 255, 0.94);
+	color: var(--fsweb-aic-accent);
 }
 
 .fsweb-aic-header__avatar img {
@@ -197,8 +219,8 @@
 }
 
 .fsweb-aic-header__avatar .fsweb-aic-svg {
-	width: 22px;
-	height: 22px;
+	width: 20px;
+	height: 20px;
 }
 
 .fsweb-aic-header__text {
@@ -212,7 +234,7 @@
 	color: var(--fsweb-aic-title);
 	font-size: 15px;
 	font-weight: 600;
-	line-height: 1.2;
+	line-height: 1.25;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
@@ -221,41 +243,40 @@
 	color: var(--fsweb-aic-title);
 	font-size: 12px;
 	line-height: 1.3;
-	opacity: 0.78;
+	opacity: 0.8;
 }
 
 .fsweb-aic-header__actions {
 	display: flex;
 	flex: 0 0 auto;
-	gap: 6px;
+	gap: 4px;
 }
 
 .fsweb-aic-icon-button {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 34px;
-	height: 34px;
+	width: 32px;
+	height: 32px;
 	padding: 0;
 	border: 0;
 	border-radius: 50% !important;
-	background: rgba(255, 255, 255, 0.18);
+	background: transparent;
 	color: var(--fsweb-aic-title);
 	cursor: pointer;
 	line-height: 0;
-	transition: background 0.15s ease, transform 0.15s ease;
+	transition: background 0.15s ease;
 	appearance: none;
 }
 
 .fsweb-aic-icon-button:hover,
 .fsweb-aic-icon-button:focus-visible {
-	background: rgba(255, 255, 255, 0.34);
-	transform: scale(1.06);
+	background: rgba(255, 255, 255, 0.22);
 }
 
 .fsweb-aic-icon-button svg {
-	width: 16px;
-	height: 16px;
+	width: 17px;
+	height: 17px;
 }
 
 /* ------------------------------------------------------------------ Thread */
@@ -423,7 +444,8 @@
 /* ---------------------------------------------------------------- Composer */
 
 .fsweb-aic-composer {
-	padding: 10px 12px 8px;
+	flex: 0 0 auto;
+	padding: 10px 12px 6px;
 	border-top: 1px solid rgba(16, 30, 54, 0.08);
 	background: #fff;
 }
@@ -432,31 +454,36 @@
 	display: flex;
 	align-items: flex-end;
 	gap: 8px;
-	padding: 4px 4px 4px 14px;
+	padding: 5px 5px 5px 14px;
 	border: 1px solid rgba(16, 30, 54, 0.14);
-	border-radius: 22px;
+	border-radius: 21px;
 	background: var(--fsweb-aic-chat-bg);
-	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+	transition: border-color 0.15s ease;
 }
 
 .fsweb-aic-composer__field:focus-within {
 	border-color: var(--fsweb-aic-accent);
-	box-shadow: 0 0 0 2px rgba(16, 30, 54, 0.04);
 }
 
+/* One line by default; the script grows it up to the cap. */
 .fsweb-aic-input {
 	flex: 1 1 auto;
+	width: 100%;
+	height: 32px;
 	max-height: 108px;
-	min-height: 34px;
-	padding: 7px 0;
-	border: 0;
-	background: transparent;
+	min-height: 0;
+	margin: 0;
+	padding: 5px 0;
+	border: 0 !important;
+	border-radius: 0;
+	background: transparent !important;
+	box-shadow: none !important;
 	color: var(--fsweb-aic-chat-text);
 	font: inherit;
-	line-height: 1.4;
+	line-height: 22px;
 	resize: none;
 	outline: none;
-	box-shadow: none;
+	overflow-y: auto;
 	appearance: none;
 }
 
@@ -470,8 +497,8 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	width: 38px;
-	height: 38px;
+	width: 32px;
+	height: 32px;
 	padding: 0;
 	border: 0;
 	border-radius: 50% !important;
@@ -479,28 +506,30 @@
 	color: var(--fsweb-aic-title);
 	cursor: pointer;
 	line-height: 0;
-	transition: transform 0.15s ease, opacity 0.15s ease;
+	transition: filter 0.15s ease;
 	appearance: none;
 }
 
 .fsweb-aic-send svg {
-	width: 18px;
-	height: 18px;
+	width: 16px;
+	height: 16px;
 }
 
 .fsweb-aic-send:hover,
 .fsweb-aic-send:focus-visible {
-	transform: scale(1.06);
+	filter: brightness(0.9);
 }
 
 .fsweb-aic-send[disabled] {
-	opacity: 0.5;
+	filter: grayscale(0.4);
+	opacity: 0.55;
 	cursor: not-allowed;
 }
 
 .fsweb-aic-disclaimer {
+	flex: 0 0 auto;
 	margin: 0;
-	padding: 6px 14px 10px;
+	padding: 4px 14px 10px;
 	background: #fff;
 	color: var(--fsweb-aic-chat-text);
 	font-size: 11px;
@@ -513,20 +542,25 @@
 
 @media (max-width: 480px) {
 	.fsweb-aic-widget {
+		right: 14px;
 		bottom: 14px;
 	}
 
-	.fsweb-aic-widget--right {
-		right: 14px;
-	}
-
 	.fsweb-aic-widget--left {
+		right: auto;
 		left: 14px;
 	}
 
 	.fsweb-aic-panel {
 		width: calc(100vw - 24px);
-		height: calc(100vh - 104px);
+		height: auto;
+		max-height: calc(100vh - 100px);
+	}
+
+	@supports (height: 100dvh) {
+		.fsweb-aic-panel {
+			max-height: calc(100dvh - 100px);
+		}
 	}
 }
 

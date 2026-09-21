@@ -224,6 +224,7 @@
 
 	function openPanel() {
 		panel.hidden = false;
+		widget.classList.add( 'is-open' );
 		launcher.setAttribute( 'aria-expanded', 'true' );
 
 		if ( badge ) {
@@ -236,6 +237,7 @@
 
 	function closePanel() {
 		panel.hidden = true;
+		widget.classList.remove( 'is-open' );
 		launcher.setAttribute( 'aria-expanded', 'false' );
 	}
 

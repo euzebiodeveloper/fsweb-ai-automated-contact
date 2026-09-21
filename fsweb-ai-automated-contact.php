@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       AI Automated Contact
  * Plugin URI:        https://flowsyncweb.com
- * Description:       Atendente virtual com IA para WooCommerce: tira dúvidas, encontra produtos, monta o carrinho e leva o cliente ao checkout.
+ * Description:       AI-powered virtual assistant for WooCommerce: answers questions, finds products, builds the cart and takes the customer to checkout.
  * Version:           1.0.0
  * Author:            Flow Sync Web
  * Author URI:        https://flowsyncweb.com/

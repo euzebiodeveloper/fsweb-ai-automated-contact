@@ -110,7 +110,7 @@ class Fsweb_Ai_Automated_Contact_Rest {
 		if ( ! fsweb_ai_automated_contact_license_is_active() ) {
 			return new WP_Error(
 				'fsweb_aic_license_inactive',
-				__( 'O atendente virtual não está ativo nesta loja.', 'fsweb-ai-automated-contact' ),
+				__( 'The virtual assistant is not active in this store.', 'fsweb-ai-automated-contact' ),
 				array( 'status' => 403 )
 			);
 		}
@@ -120,7 +120,7 @@ class Fsweb_Ai_Automated_Contact_Rest {
 		if ( 'yes' !== $settings['enabled'] ) {
 			return new WP_Error(
 				'fsweb_aic_disabled',
-				__( 'O atendente virtual está desativado.', 'fsweb-ai-automated-contact' ),
+				__( 'The virtual assistant is disabled.', 'fsweb-ai-automated-contact' ),
 				array( 'status' => 403 )
 			);
 		}

@@ -24,7 +24,7 @@ $fsweb_aic_initial  = function_exists( 'mb_substr' ) ? mb_substr( $settings['age
 ?>
 <div class="fsweb-aic-widget <?php echo esc_attr( $fsweb_aic_position ); ?>" id="fsweb-aic-widget" hidden>
 	<button type="button" class="fsweb-aic-launcher" id="fsweb-aic-launcher" aria-expanded="false" aria-controls="fsweb-aic-panel">
-		<span class="screen-reader-text"><?php esc_html_e( 'Abrir atendimento', 'fsweb-ai-automated-contact' ); ?></span>
+		<span class="screen-reader-text"><?php esc_html_e( 'Open chat', 'fsweb-ai-automated-contact' ); ?></span>
 		<svg class="fsweb-aic-launcher__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
 			<path d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-5 4V6a2 2 0 0 1 2-2Z" fill="currentColor"></path>
 			<circle cx="8.5" cy="10.5" r="1.3" fill="#fff"></circle>
@@ -40,14 +40,14 @@ $fsweb_aic_initial  = function_exists( 'mb_substr' ) ? mb_substr( $settings['age
 				<span class="fsweb-aic-header__avatar" aria-hidden="true"><?php echo esc_html( $fsweb_aic_initial ); ?></span>
 				<div>
 					<strong class="fsweb-aic-header__name"><?php echo esc_html( $settings['agent_name'] ); ?></strong>
-					<span class="fsweb-aic-header__status"><?php esc_html_e( 'Atendimento online', 'fsweb-ai-automated-contact' ); ?></span>
+					<span class="fsweb-aic-header__status"><?php esc_html_e( 'Online support', 'fsweb-ai-automated-contact' ); ?></span>
 				</div>
 			</div>
 			<div class="fsweb-aic-header__actions">
-				<button type="button" class="fsweb-aic-icon-button" id="fsweb-aic-reset" aria-label="<?php esc_attr_e( 'Nova conversa', 'fsweb-ai-automated-contact' ); ?>">
+				<button type="button" class="fsweb-aic-icon-button" id="fsweb-aic-reset" aria-label="<?php esc_attr_e( 'New conversation', 'fsweb-ai-automated-contact' ); ?>">
 					<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7Z" fill="currentColor"></path></svg>
 				</button>
-				<button type="button" class="fsweb-aic-icon-button" id="fsweb-aic-close" aria-label="<?php esc_attr_e( 'Fechar', 'fsweb-ai-automated-contact' ); ?>">
+				<button type="button" class="fsweb-aic-icon-button" id="fsweb-aic-close" aria-label="<?php esc_attr_e( 'Close', 'fsweb-ai-automated-contact' ); ?>">
 					<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"></path></svg>
 				</button>
 			</div>
@@ -56,10 +56,10 @@ $fsweb_aic_initial  = function_exists( 'mb_substr' ) ? mb_substr( $settings['age
 		<div class="fsweb-aic-messages" id="fsweb-aic-messages" role="log" aria-live="polite"></div>
 
 		<form class="fsweb-aic-composer" id="fsweb-aic-composer">
-			<label class="screen-reader-text" for="fsweb-aic-input"><?php esc_html_e( 'Escreva sua mensagem', 'fsweb-ai-automated-contact' ); ?></label>
+			<label class="screen-reader-text" for="fsweb-aic-input"><?php esc_html_e( 'Type your message', 'fsweb-ai-automated-contact' ); ?></label>
 			<textarea id="fsweb-aic-input" class="fsweb-aic-input" rows="1" maxlength="2000"
-				placeholder="<?php esc_attr_e( 'Escreva sua mensagem…', 'fsweb-ai-automated-contact' ); ?>"></textarea>
-			<button type="submit" class="fsweb-aic-send" id="fsweb-aic-send" aria-label="<?php esc_attr_e( 'Enviar', 'fsweb-ai-automated-contact' ); ?>">
+				placeholder="<?php esc_attr_e( 'Type your message…', 'fsweb-ai-automated-contact' ); ?>"></textarea>
+			<button type="submit" class="fsweb-aic-send" id="fsweb-aic-send" aria-label="<?php esc_attr_e( 'Send', 'fsweb-ai-automated-contact' ); ?>">
 				<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 20l18-8L3 4v6l12 2-12 2v6Z" fill="currentColor"></path></svg>
 			</button>
 		</form>

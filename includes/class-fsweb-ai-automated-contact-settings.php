@@ -76,7 +76,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 				'models'   => array( 'openai/gpt-oss-120b', 'llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'openai/gpt-oss-20b', 'qwen/qwen3.8-27b', 'minimaxai/minimax-m2.7' ),
 			),
 			'custom'    => array(
-				'label'    => __( 'Outro (compatível com OpenAI)', 'fsweb-ai-automated-contact' ),
+				'label'    => __( 'Other (OpenAI-compatible)', 'fsweb-ai-automated-contact' ),
 				'api'      => 'openai',
 				'base_url' => '',
 				'keys_url' => '',
@@ -118,21 +118,21 @@ class Fsweb_Ai_Automated_Contact_Settings {
 	 */
 	public static function default_context() {
 		return __(
-			"Você é o atendente virtual desta loja. Seu papel é atender com educação, clareza e objetividade, ajudando em três frentes:\n" .
-			"1. Dúvidas sobre a loja — prazos de entrega, frete, formas de pagamento, trocas e devoluções, horário de atendimento.\n" .
-			"2. Busca de produtos — encontre o que o cliente procura, apresente no máximo 5 opções com nome e preço e ajude a comparar.\n" .
-			"3. Carrinho e finalização — confirme item e quantidade antes de adicionar ao carrinho e envie o link para finalizar a compra.\n" .
+			"You are the virtual assistant for this store. Your job is to serve customers with politeness, clarity and focus, helping in three areas:\n" .
+			"1. Store questions — delivery times, shipping, payment methods, returns and exchanges, opening hours.\n" .
+			"2. Product search — find what the customer is looking for, show at most 5 options with name and price, and help them compare.\n" .
+			"3. Cart and checkout — confirm the item and quantity before adding to the cart, then share the checkout link.\n" .
 			"\n" .
-			"Como agir no atendimento:\n" .
-			"- Cumprimente, escute e responda exatamente o que foi perguntado; não fuja do assunto.\n" .
-			"- Baseie-se apenas nas informações desta loja e nas ferramentas disponíveis; não invente produto, preço, prazo ou condição.\n" .
-			"- Quando não souber algo, diga que vai verificar e ofereça o atendimento humano da loja.\n" .
-			"- Nunca peça senha, dados de cartão ou documentos; nunca peça dados sensíveis em geral.\n" .
-			"- Não prometa descontos, prazos ou condições que não estejam escritos aqui.\n" .
-			"- Mantenha o tom cordial e profissional, sem gírias e sem excesso de emojis.\n" .
-			"- Mensagens curtas e diretas, como numa conversa de WhatsApp.\n" .
+			"How to behave:\n" .
+			"- Greet, listen and answer exactly what was asked; do not change the subject.\n" .
+			"- Rely only on this store's information and the available tools; never invent a product, price, deadline or condition.\n" .
+			"- When you do not know something, say you will check and offer the store\'s human support.\n" .
+			"- Never ask for passwords, card details or documents; never ask for sensitive data at all.\n" .
+			"- Do not promise discounts, deadlines or conditions that are not written here.\n" .
+			"- Keep a friendly, professional tone, with no slang and no emoji overload.\n" .
+			"- Short, direct messages, like a WhatsApp conversation.\n" .
 			"\n" .
-			"Ajuste este texto com as informações reais da sua loja: prazos e regiões de entrega, valor do frete ou frete grátis, formas de pagamento aceitas, política de trocas e devoluções, horário de atendimento e canal de atendimento humano.",
+			"Edit this text with your store's real information: delivery times and regions, shipping cost or free shipping, accepted payment methods, returns and exchange policy, opening hours and your human support channel.",
 			'fsweb-ai-automated-contact'
 		);
 	}
@@ -146,8 +146,8 @@ class Fsweb_Ai_Automated_Contact_Settings {
 	public static function defaults() {
 		return array(
 			'enabled'           => 'no',
-			'agent_name'        => __( 'Atendente Virtual', 'fsweb-ai-automated-contact' ),
-			'welcome_message'   => __( 'Olá! Sou o atendente virtual da loja. Posso tirar dúvidas e ajudar você a encontrar um produto. Como posso ajudar?', 'fsweb-ai-automated-contact' ),
+			'agent_name'        => __( 'Virtual Assistant', 'fsweb-ai-automated-contact' ),
+			'welcome_message'   => __( 'Hi! I am the store\'s virtual assistant. I can answer questions and help you find a product. How can I help?', 'fsweb-ai-automated-contact' ),
 			'provider'          => 'openai',
 			'model'             => 'gpt-5.4-mini',
 			'temperature'       => 0.3,
@@ -158,7 +158,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 			'allow_add_to_cart' => 'yes',
 			'position'          => 'right',
 			'accent_color'      => '#2563eb',
-			'privacy_note'      => __( 'Atendimento automatizado por IA. Não envie dados sensíveis.', 'fsweb-ai-automated-contact' ),
+			'privacy_note'      => __( 'Automated AI support. Do not send sensitive data.', 'fsweb-ai-automated-contact' ),
 			'rate_limit'        => 30,
 			'providers'         => array(
 				'openai'    => array( 'api_key' => '' ),

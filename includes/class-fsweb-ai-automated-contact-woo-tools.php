@@ -170,7 +170,7 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		if ( '' === $term ) {
 			return array(
 				'erro'    => 'termo_obrigatorio',
-				'mensagem' => __( 'Informe um termo de busca.', 'fsweb-ai-automated-contact' ),
+				'mensagem' => __( 'Provide a search term.', 'fsweb-ai-automated-contact' ),
 			);
 		}
 
@@ -202,7 +202,7 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		if ( empty( $products ) ) {
 			return array(
 				'encontrados' => 0,
-				'mensagem'    => __( 'Nenhum produto encontrado para esse termo. Tente outra palavra.', 'fsweb-ai-automated-contact' ),
+				'mensagem'    => __( 'No product found for that term. Try another word.', 'fsweb-ai-automated-contact' ),
 			);
 		}
 
@@ -226,7 +226,7 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		if ( ! $product || 'publish' !== get_post_status( $product_id ) ) {
 			return array(
 				'erro'     => 'produto_nao_encontrado',
-				'mensagem' => __( 'Produto não encontrado.', 'fsweb-ai-automated-contact' ),
+				'mensagem' => __( 'Product not found.', 'fsweb-ai-automated-contact' ),
 			);
 		}
 
@@ -259,7 +259,7 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		if ( 'yes' !== $settings['allow_add_to_cart'] ) {
 			return array(
 				'erro'     => 'adicao_desabilitada',
-				'mensagem' => __( 'A adição ao carrinho está desabilitada nesta loja.', 'fsweb-ai-automated-contact' ),
+				'mensagem' => __( 'Adding to the cart is disabled in this store.', 'fsweb-ai-automated-contact' ),
 			);
 		}
 
@@ -270,7 +270,7 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		if ( ! function_exists( 'wc_get_product' ) || ! $product_id ) {
 			return array(
 				'erro'     => 'produto_invalido',
-				'mensagem' => __( 'Produto inválido.', 'fsweb-ai-automated-contact' ),
+				'mensagem' => __( 'Invalid product.', 'fsweb-ai-automated-contact' ),
 			);
 		}
 
@@ -279,14 +279,14 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		if ( ! $product || ! $product->is_purchasable() || ! $product->is_in_stock() ) {
 			return array(
 				'erro'     => 'produto_indisponivel',
-				'mensagem' => __( 'Este produto não está disponível para compra no momento.', 'fsweb-ai-automated-contact' ),
+				'mensagem' => __( 'This product is not available for purchase right now.', 'fsweb-ai-automated-contact' ),
 			);
 		}
 
 		if ( $product->is_type( 'variable' ) ) {
 			return array(
 				'erro'        => 'produto_variavel',
-				'mensagem'    => __( 'Este produto tem variações. Envie o link do produto para o cliente escolher a variação.', 'fsweb-ai-automated-contact' ),
+				'mensagem'    => __( 'This product has variations. Send the product link so the customer can pick one.', 'fsweb-ai-automated-contact' ),
 				'produto_id'  => $product_id,
 				'link'        => get_permalink( $product_id ),
 			);
@@ -320,9 +320,9 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 				),
 				function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : home_url( '/' )
 			);
-			$cart['mensagem']     = __( 'Não foi possível alterar o carrinho pelo chat. Envie o link para o cliente adicionar o produto.', 'fsweb-ai-automated-contact' );
+			$cart['mensagem']     = __( 'The cart could not be changed from the chat. Send the link so the customer can add the product.', 'fsweb-ai-automated-contact' );
 		} else {
-			$cart['mensagem'] = __( 'Produto adicionado ao carrinho.', 'fsweb-ai-automated-contact' );
+			$cart['mensagem'] = __( 'Product added to the cart.', 'fsweb-ai-automated-contact' );
 		}
 
 		return $cart;

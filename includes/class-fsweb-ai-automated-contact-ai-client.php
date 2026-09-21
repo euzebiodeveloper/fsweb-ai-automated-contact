@@ -69,7 +69,7 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 		if ( ! $this->is_ready() ) {
 			return new WP_Error(
 				'fsweb_aic_not_configured',
-				__( 'Nenhum provedor de IA configurado. Informe a chave da API nas configurações.', 'fsweb-ai-automated-contact' )
+				__( 'No AI provider configured. Add the API key in the settings.', 'fsweb-ai-automated-contact' )
 			);
 		}
 
@@ -218,7 +218,7 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 				'fsweb_aic_http_error',
 				sprintf(
 					/* translators: %s: transport error message. */
-					__( 'Falha ao contatar o provedor de IA: %s', 'fsweb-ai-automated-contact' ),
+					__( 'Failed to reach the AI provider: %s', 'fsweb-ai-automated-contact' ),
 					$response->get_error_message()
 				)
 			);
@@ -230,7 +230,7 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 		if ( ! is_array( $body ) ) {
 			return new WP_Error(
 				'fsweb_aic_invalid_response',
-				__( 'O provedor de IA retornou uma resposta inválida.', 'fsweb-ai-automated-contact' )
+				__( 'The AI provider returned an invalid response.', 'fsweb-ai-automated-contact' )
 			);
 		}
 
@@ -245,9 +245,9 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 				'fsweb_aic_provider_error',
 				sprintf(
 					/* translators: 1: HTTP status code, 2: provider message. */
-					__( 'Provedor de IA retornou erro %1$d: %2$s', 'fsweb-ai-automated-contact' ),
+					__( 'The AI provider returned error %1$d: %2$s', 'fsweb-ai-automated-contact' ),
 					$code,
-					$message ? $message : __( 'sem detalhes', 'fsweb-ai-automated-contact' )
+					$message ? $message : __( 'no details', 'fsweb-ai-automated-contact' )
 				)
 			);
 		}

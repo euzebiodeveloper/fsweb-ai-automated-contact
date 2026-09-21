@@ -90,10 +90,10 @@ class Fsweb_Ai_Automated_Contact_Public {
 			case 'telegram':
 				return '<svg class="fsweb-aic-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M21.9 4.3 19 19.2c-.2 1-.8 1.2-1.6.8l-4.4-3.3-2.1 2c-.2.3-.4.4-.9.4l.3-4.5 8.2-7.4c.4-.3-.1-.5-.6-.2L7.8 13.2 3.4 11.8c-1-.3-1-1 .2-1.4l17-6.6c.8-.3 1.5.2 1.3 1.5z"/></svg>';
 			case 'robot':
-				return '<svg class="fsweb-aic-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v1h3a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h3V4a1 1 0 0 1 1-1zm-3 5a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-1zm6 0a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-1zm-5 5v1h4v-1h-4zm6.5 5.5h1a2.5 2.5 0 0 1-2.5 2.5h-6A2.5 2.5 0 0 1 6.5 18.5h1a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5z"/></svg>';
+				return '<svg class="fsweb-aic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.5" y="8" width="17" height="12.5" rx="3.5"/><path d="M12 4.2V8"/><circle cx="12" cy="3.2" r="1.2" fill="currentColor" stroke="none"/><circle cx="9" cy="13" r="1.15" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r="1.15" fill="currentColor" stroke="none"/><path d="M9.5 17.2h5"/></svg>';
 			case 'chat':
 			default:
-				return '<svg class="fsweb-aic-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M4.5 3h15A2.5 2.5 0 0 1 22 5.5v9A2.5 2.5 0 0 1 19.5 17H9.6l-4.9 3.7A1 1 0 0 1 3 19.9V5.5A2.5 2.5 0 0 1 4.5 3z"/><circle cx="8.6" cy="10" r="1.3" fill="#fff"/><circle cx="12" cy="10" r="1.3" fill="#fff"/><circle cx="15.4" cy="10" r="1.3" fill="#fff"/></svg>';
+				return '<svg class="fsweb-aic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 11.6c0 4.6-4 8.3-8.9 8.3-1 0-2-.16-2.9-.45L4.2 21l1.35-4.2A8 8 0 0 1 3.2 11.6c0-4.6 4-8.3 8.9-8.3S21 7 21 11.6Z"/><circle cx="8.6" cy="11.6" r="1.1" fill="currentColor" stroke="none"/><circle cx="12.1" cy="11.6" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.6" cy="11.6" r="1.1" fill="currentColor" stroke="none"/></svg>';
 		}
 	}
 

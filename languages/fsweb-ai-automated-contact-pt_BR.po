@@ -474,6 +474,9 @@ msgstr "Use as ferramentas para consultar o catálogo antes de afirmar qualquer 
 msgid "When listing products, show at most 5 options with name, price and image, then ask which one the customer wants. If the customer asks for new arrivals, search with order \"recent\"."
 msgstr "Ao listar produtos, mostre no máximo 5 opções com nome, preço e imagem, e pergunte qual o cliente quer. Se o cliente pedir novidades, busque com a ordem \"recent\"."
 
+msgid "If the customer asks what the store sells or wants to browse without naming a product, call list_categories and present the main categories (or search without a term to show the newest items in stock), then ask what they are looking for. Never answer that you cannot show the catalogue."
+msgstr "Se o cliente perguntar o que a loja vende ou quiser navegar sem citar um produto, chame list_categories e apresente as principais categorias (ou busque sem termo para mostrar os itens em estoque mais recentes) e então pergunte o que ele procura. Nunca responda que não pode mostrar o catálogo."
+
 msgid "You have no catalogue access right now: answer only from the store context and apologise for not being able to look up products."
 msgstr "Neste momento você não tem acesso ao catálogo: responda apenas com base no contexto da loja e peça desculpas por não poder consultar produtos."
 
@@ -567,8 +570,8 @@ msgstr "Olá! Sou o atendente virtual da loja. Posso tirar dúvidas e ajudar voc
 msgid "Automated AI support. Do not send sensitive data."
 msgstr "Atendimento automatizado por IA. Não envie dados sensíveis."
 
-msgid "Provide a search term."
-msgstr "Informe um termo de busca."
+msgid "No product in stock for this filter."
+msgstr "Nenhum produto em estoque para esse filtro."
 
 msgid "No product found for that term. Try another word."
 msgstr "Nenhum produto encontrado para esse termo. Tente outra palavra."

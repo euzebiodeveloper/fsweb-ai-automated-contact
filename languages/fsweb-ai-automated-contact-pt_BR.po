@@ -291,6 +291,9 @@ msgstr "Fundo do chat"
 msgid "Chat text"
 msgstr "Texto do chat"
 
+msgid "Assistant bubble"
+msgstr "Balão do atendente"
+
 msgid "Hi! How can I help?"
 msgstr "Olá! Como posso ajudar?"
 

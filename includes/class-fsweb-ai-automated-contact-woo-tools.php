@@ -57,25 +57,36 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		$tools = array(
 			array(
 				'name'        => 'search_products',
-				'description' => 'Search the store catalogue by keyword. Returns only products that are in stock, with id, name, price, availability, image, url and a short summary. Use it whenever the customer looks for a product. Use order "recent" when the customer asks for new arrivals.',
+				'description' => 'Search the store catalogue and returns the products that are in stock, with id, name, price, availability, image, url and a short summary. Pass a term to search by keyword, or omit the term to browse the catalogue (newest first) — use that when the customer asks what the store sells or wants to see options. You can also filter by category. Use order "recent" when the customer asks for new arrivals.',
 				'parameters'  => array(
 					'type'       => 'object',
 					'properties' => array(
-						'term'  => array(
+						'term'     => array(
 							'type'        => 'string',
-							'description' => 'Search term in the customer language (e.g. "bluetooth headphone").',
+							'description' => 'Search term in the customer language (e.g. "bluetooth headphone"). Omit it to browse the catalogue instead of searching.',
 						),
-						'limit' => array(
+						'category' => array(
+							'type'        => 'string',
+							'description' => 'Product category slug or name to restrict the results (e.g. "headphones").',
+						),
+						'limit'    => array(
 							'type'        => 'integer',
 							'description' => 'Maximum number of products to return (1 to 10).',
 						),
-						'order' => array(
+						'order'    => array(
 							'type'        => 'string',
 							'enum'        => array( 'relevance', 'recent' ),
-							'description' => 'relevance (default) or recent for the newest products.',
+							'description' => 'relevance (default) or recent for the newest products. Browsing without a term always returns the newest first.',
 						),
 					),
-					'required'   => array( 'term' ),
+				),
+			),
+			array(
+				'name'        => 'list_categories',
+				'description' => 'List the store product categories with the number of products in each. Use it when the customer asks what the store sells, or to guide them before searching.',
+				'parameters'  => array(
+					'type'       => 'object',
+					'properties' => array(),
 				),
 			),
 			array(
@@ -152,6 +163,8 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		switch ( $name ) {
 			case 'search_products':
 				return $this->search_products( $args );
+			case 'list_categories':
+				return $this->list_categories();
 			case 'product_details':
 				return $this->product_details( $args );
 			case 'add_to_cart':
@@ -175,22 +188,15 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 	 * @return array<string,mixed>
 	 */
 	private function search_products( array $args ) {
-		$term  = isset( $args['term'] ) ? sanitize_text_field( $args['term'] ) : '';
-		$limit = isset( $args['limit'] ) ? absint( $args['limit'] ) : (int) Fsweb_Ai_Automated_Contact_Settings::get( 'product_limit', 5 );
-		$limit = max( 1, min( 10, $limit ) );
-		$order = isset( $args['order'] ) ? sanitize_key( $args['order'] ) : 'relevance';
-
-		if ( '' === $term ) {
-			return array(
-				'error'   => 'term_required',
-				'message' => __( 'Provide a search term.', 'fsweb-ai-automated-contact' ),
-			);
-		}
+		$term     = isset( $args['term'] ) ? sanitize_text_field( $args['term'] ) : '';
+		$category = isset( $args['category'] ) ? sanitize_text_field( $args['category'] ) : '';
+		$limit    = isset( $args['limit'] ) ? absint( $args['limit'] ) : (int) Fsweb_Ai_Automated_Contact_Settings::get( 'product_limit', 5 );
+		$limit    = max( 1, min( 10, $limit ) );
+		$order    = isset( $args['order'] ) ? sanitize_key( $args['order'] ) : 'relevance';
 
 		$query_args = array(
 			'post_type'           => 'product',
 			'post_status'         => 'publish',
-			's'                   => $term,
 			'posts_per_page'      => $limit,
 			'ignore_sticky_posts' => true,
 			'no_found_rows'       => true,
@@ -203,9 +209,32 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 			),
 		);
 
-		if ( 'recent' === $order ) {
+		if ( '' !== $term ) {
+			$query_args['s'] = $term;
+		}
+
+		// No keyword means "show me the catalogue": newest first.
+		if ( '' === $term || 'recent' === $order ) {
 			$query_args['orderby'] = 'date';
 			$query_args['order']   = 'DESC';
+		}
+
+		if ( '' !== $category ) {
+			$term_object = get_term_by( 'slug', sanitize_title( $category ), 'product_cat' );
+
+			if ( ! $term_object ) {
+				$term_object = get_term_by( 'name', $category, 'product_cat' );
+			}
+
+			if ( $term_object ) {
+				$query_args['tax_query'] = array(
+					array(
+						'taxonomy' => 'product_cat',
+						'field'    => 'term_id',
+						'terms'    => array( (int) $term_object->term_id ),
+					),
+				);
+			}
 		}
 
 		$query    = new WP_Query( $query_args );
@@ -224,16 +253,66 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		wp_reset_postdata();
 
 		if ( empty( $products ) ) {
+			$categories = $this->list_categories();
+
 			return array(
-				'found'   => 0,
-				'message' => __( 'No product found for that term. Try another word.', 'fsweb-ai-automated-contact' ),
+				'found'      => 0,
+				'message'    => '' === $term
+					? __( 'No product in stock for this filter.', 'fsweb-ai-automated-contact' )
+					: __( 'No product found for that term. Try another word.', 'fsweb-ai-automated-contact' ),
+				'categories' => isset( $categories['categories'] ) ? $categories['categories'] : array(),
 			);
 		}
 
 		return array(
 			'found'    => count( $products ),
-			'order'    => $order,
+			'order'    => '' === $term ? 'recent' : $order,
 			'products' => $products,
+		);
+	}
+
+	/**
+	 * Product categories with how many products each one holds.
+	 *
+	 * @since  1.0.0
+	 * @return array<string,mixed>
+	 */
+	private function list_categories() {
+		$terms = get_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'hide_empty' => true,
+				'number'     => 15,
+				'orderby'    => 'count',
+				'order'      => 'DESC',
+			)
+		);
+
+		if ( is_wp_error( $terms ) || empty( $terms ) ) {
+			return array(
+				'found'      => 0,
+				'categories' => array(),
+			);
+		}
+
+		$categories = array();
+
+		foreach ( $terms as $term ) {
+			// Skip the WooCommerce catch-all bucket.
+			if ( 'uncategorized' === $term->slug ) {
+				continue;
+			}
+
+			$categories[] = array(
+				'name'  => wp_strip_all_tags( $term->name ),
+				'slug'  => $term->slug,
+				'total' => (int) $term->count,
+			);
+		}
+
+		return array(
+			'found'      => count( $categories ),
+			'categories' => $categories,
 		);
 	}
 

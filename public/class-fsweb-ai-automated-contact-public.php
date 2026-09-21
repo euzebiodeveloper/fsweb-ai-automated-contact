@@ -176,11 +176,12 @@ class Fsweb_Ai_Automated_Contact_Public {
 		$settings = $this->settings;
 
 		$css = sprintf(
-			'.fsweb-aic-widget{--fsweb-aic-accent:%1$s;--fsweb-aic-title:%2$s;--fsweb-aic-chat-bg:%3$s;--fsweb-aic-chat-text:%4$s;}',
+			'.fsweb-aic-widget{--fsweb-aic-accent:%1$s;--fsweb-aic-title:%2$s;--fsweb-aic-chat-bg:%3$s;--fsweb-aic-chat-text:%4$s;--fsweb-aic-agent-bubble:%5$s;}',
 			esc_html( $settings['accent_color'] ),
 			esc_html( $settings['color_title'] ),
 			esc_html( $settings['chat_background'] ),
-			esc_html( $settings['chat_text'] )
+			esc_html( $settings['chat_text'] ),
+			esc_html( $settings['bubble_agent'] )
 		);
 
 		wp_add_inline_style( $this->plugin_name, $css );

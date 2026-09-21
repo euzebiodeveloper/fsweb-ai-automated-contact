@@ -160,7 +160,8 @@ class Fsweb_Ai_Automated_Contact_Settings {
 			'accent_color'      => '#6e8b54',
 			'color_title'       => '#ffffff',
 			'color_icon'        => '#ffffff',
-			'chat_background'   => '#f6f8fc',
+			'chat_background'   => '#eef2ea',
+			'bubble_agent'      => '#ffffff',
 			'chat_text'         => '#16202c',
 			'avatar_type'       => 'chat',
 			'avatar_image'      => '',
@@ -278,7 +279,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 
 		$output['position'] = ( isset( $input['position'] ) && 'left' === $input['position'] ) ? 'left' : 'right';
 
-		foreach ( array( 'accent_color', 'color_title', 'color_icon', 'chat_background', 'chat_text' ) as $color_key ) {
+		foreach ( array( 'accent_color', 'color_title', 'color_icon', 'chat_background', 'chat_text', 'bubble_agent' ) as $color_key ) {
 			$color = isset( $input[ $color_key ] ) ? sanitize_hex_color( $input[ $color_key ] ) : '';
 			$output[ $color_key ] = $color ? $color : $defaults[ $color_key ];
 		}

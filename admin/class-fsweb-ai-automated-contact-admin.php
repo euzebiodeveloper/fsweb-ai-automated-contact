@@ -682,6 +682,8 @@ class Fsweb_Ai_Automated_Contact_Admin {
 												<input type="color" id="fsweb-aic-color-bg" name="<?php echo esc_attr( $option ); ?>[chat_background]" value="<?php echo esc_attr( $settings['chat_background'] ); ?>"></label>
 											<label><span><?php esc_html_e( 'Chat text', 'fsweb-ai-automated-contact' ); ?></span>
 												<input type="color" id="fsweb-aic-color-text" name="<?php echo esc_attr( $option ); ?>[chat_text]" value="<?php echo esc_attr( $settings['chat_text'] ); ?>"></label>
+											<label><span><?php esc_html_e( 'Assistant bubble', 'fsweb-ai-automated-contact' ); ?></span>
+												<input type="color" id="fsweb-aic-color-bubble" name="<?php echo esc_attr( $option ); ?>[bubble_agent]" value="<?php echo esc_attr( $settings['bubble_agent'] ); ?>"></label>
 										</div>
 										<div class="fsweb-aic-preview" id="fsweb-aic-preview">
 											<div class="fsweb-aic-preview__panel">

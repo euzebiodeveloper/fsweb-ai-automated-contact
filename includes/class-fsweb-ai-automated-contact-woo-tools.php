@@ -509,14 +509,33 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 				'product_id' => isset( $item['product_id'] ) ? (int) $item['product_id'] : 0,
 				'name'       => $product ? $product->get_name() : '',
 				'quantity'   => isset( $item['quantity'] ) ? (int) $item['quantity'] : 0,
-				'subtotal'   => function_exists( 'wc_price' ) && $product ? wp_strip_all_tags( wc_price( (float) $item['line_subtotal'] ) ) : '',
+				'subtotal'   => function_exists( 'wc_price' ) && $product ? $this->plain_text( wc_price( (float) $item['line_subtotal'] ) ) : '',
 			);
 		}
 
 		$payload['count'] = (int) WC()->cart->get_cart_contents_count();
-		$payload['total'] = wp_strip_all_tags( WC()->cart->get_cart_total() );
+		$payload['total'] = $this->plain_text( WC()->cart->get_cart_total() );
 
 		return $payload;
+	}
+
+	/**
+	 * Turn a WooCommerce price HTML string into plain readable text.
+	 *
+	 * `wp_strip_all_tags()` leaves HTML entities behind — the currency symbol
+	 * arrives as `&#82;&#36;` and the card ended up showing that literally.
+	 *
+	 * @since  1.0.0
+	 * @param  string $html Price HTML.
+	 * @return string
+	 */
+	private function plain_text( $html ) {
+		$text = wp_strip_all_tags( (string) $html );
+		$text = html_entity_decode( $text, ENT_QUOTES, 'UTF-8' );
+		$text = preg_replace( '/\xC2\xA0|\x{00A0}/u', ' ', $text );
+		$text = preg_replace( '/\s+/u', ' ', $text );
+
+		return trim( (string) $text );
 	}
 
 	/**
@@ -536,7 +555,7 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		return array(
 			'product_id' => (int) $product->get_id(),
 			'name'       => wp_strip_all_tags( $product->get_name() ),
-			'price'      => wp_strip_all_tags( $product->get_price_html() ),
+			'price'      => $this->plain_text( $product->get_price_html() ),
 			'available'  => $product->is_in_stock(),
 			'url'        => get_permalink( $product->get_id() ),
 			'image'      => $image_id ? wp_get_attachment_image_url( $image_id, 'woocommerce_thumbnail' ) : '',
@@ -565,7 +584,7 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 			$variations[] = array(
 				'variation_id' => (int) $child_id,
 				'label'        => wp_strip_all_tags( wc_get_formatted_variation( $variation, true ) ),
-				'price'        => wp_strip_all_tags( $variation->get_price_html() ),
+				'price'        => $this->plain_text( $variation->get_price_html() ),
 				'available'    => true,
 			);
 		}

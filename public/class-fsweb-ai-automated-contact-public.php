@@ -165,11 +165,15 @@ class Fsweb_Ai_Automated_Contact_Public {
 
 		$this->should_render = true;
 
+		// Version the asset by its modification time: without that, browsers keep
+		// serving the previous CSS/JS after every update.
+		$stylesheet = plugin_dir_path( __FILE__ ) . 'css/fsweb-ai-automated-contact-public.css';
+
 		wp_enqueue_style(
 			$this->plugin_name,
 			plugin_dir_url( __FILE__ ) . 'css/fsweb-ai-automated-contact-public.css',
 			array(),
-			$this->version,
+			file_exists( $stylesheet ) ? (string) filemtime( $stylesheet ) : $this->version,
 			'all'
 		);
 
@@ -203,11 +207,13 @@ class Fsweb_Ai_Automated_Contact_Public {
 			return;
 		}
 
+		$script = plugin_dir_path( __FILE__ ) . 'js/fsweb-ai-automated-contact-public.js';
+
 		wp_enqueue_script(
 			$this->plugin_name,
 			plugin_dir_url( __FILE__ ) . 'js/fsweb-ai-automated-contact-public.js',
 			array(),
-			$this->version,
+			file_exists( $script ) ? (string) filemtime( $script ) : $this->version,
 			true
 		);
 

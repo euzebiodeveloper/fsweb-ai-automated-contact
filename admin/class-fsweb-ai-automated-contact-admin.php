@@ -97,11 +97,14 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			return;
 		}
 
+		// Version by modification time so the admin never runs on cached assets.
+		$stylesheet = plugin_dir_path( __FILE__ ) . 'css/fsweb-ai-automated-contact-admin.css';
+
 		wp_enqueue_style(
 			$this->plugin_name,
 			plugin_dir_url( __FILE__ ) . 'css/fsweb-ai-automated-contact-admin.css',
 			array(),
-			$this->version,
+			file_exists( $stylesheet ) ? (string) filemtime( $stylesheet ) : $this->version,
 			'all'
 		);
 	}
@@ -120,11 +123,13 @@ class Fsweb_Ai_Automated_Contact_Admin {
 		// Needed by the avatar picker on the settings screen.
 		wp_enqueue_media();
 
+		$script = plugin_dir_path( __FILE__ ) . 'js/fsweb-ai-automated-contact-admin.js';
+
 		wp_enqueue_script(
 			$this->plugin_name,
 			plugin_dir_url( __FILE__ ) . 'js/fsweb-ai-automated-contact-admin.js',
 			array( 'jquery' ),
-			$this->version,
+			file_exists( $script ) ? (string) filemtime( $script ) : $this->version,
 			true
 		);
 

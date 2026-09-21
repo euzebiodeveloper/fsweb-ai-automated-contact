@@ -38,6 +38,7 @@
 	var history = [];
 	var busy = false;
 	var greeted = false;
+	var lastProductsKey = '';
 
 	function readHistory() {
 		try {
@@ -135,6 +136,18 @@
 		if ( ! products || ! products.length ) {
 			return;
 		}
+
+		// Do not repeat the same shelf twice in a row: the agent often looks
+		// the same products up again while answering a follow-up question.
+		var key = products.map( function ( product ) {
+			return product.product_id;
+		} ).join( ',' );
+
+		if ( key === lastProductsKey ) {
+			return;
+		}
+
+		lastProductsKey = key;
 
 		var list = document.createElement( 'div' );
 		list.className = 'fsweb-aic-products';
@@ -371,6 +384,7 @@
 	if ( resetButton ) {
 		resetButton.addEventListener( 'click', function () {
 			history = [];
+			lastProductsKey = '';
 			writeHistory();
 			messages.textContent = '';
 			greeted = false;

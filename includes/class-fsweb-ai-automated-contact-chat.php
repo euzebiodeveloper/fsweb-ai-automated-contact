@@ -133,10 +133,6 @@ class Fsweb_Ai_Automated_Contact_Chat {
 					$products = array_merge( $products, $result['products'] );
 				}
 
-				if ( isset( $result['product']['product_id'] ) ) {
-					$products[] = $result['product'];
-				}
-
 				if ( isset( $result['checkout_url'] ) ) {
 					$cart = $result;
 				}

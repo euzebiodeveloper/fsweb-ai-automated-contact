@@ -380,6 +380,10 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 	/**
 	 * Convert neutral tools to the OpenAI function shape.
 	 *
+	 * A tool without arguments must expose `properties` as an empty JSON
+	 * object, not as an array: PHP encodes an empty array as `[]`, which the
+	 * provider rejects with "[] is not of type object".
+	 *
 	 * @since  1.0.0
 	 * @param  array $tools Neutral tools.
 	 * @return array
@@ -393,15 +397,35 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 				'function' => array(
 					'name'        => $tool['name'],
 					'description' => isset( $tool['description'] ) ? $tool['description'] : '',
-					'parameters'  => isset( $tool['parameters'] ) ? $tool['parameters'] : array(
-						'type'       => 'object',
-						'properties' => array(),
-					),
+					'parameters'  => $this->normalize_schema( isset( $tool['parameters'] ) ? $tool['parameters'] : array() ),
 				),
 			);
 		}
 
 		return $out;
+	}
+
+	/**
+	 * Make a JSON schema safe to encode.
+	 *
+	 * @since  1.0.0
+	 * @param  array $schema JSON schema.
+	 * @return array
+	 */
+	private function normalize_schema( array $schema ) {
+		if ( ! isset( $schema['type'] ) ) {
+			$schema['type'] = 'object';
+		}
+
+		if ( ! isset( $schema['properties'] ) || ! is_array( $schema['properties'] ) || array() === $schema['properties'] ) {
+			$schema['properties'] = new \stdClass();
+		}
+
+		if ( ! isset( $schema['required'] ) || ! is_array( $schema['required'] ) ) {
+			$schema['required'] = array();
+		}
+
+		return $schema;
 	}
 
 	/**
@@ -418,10 +442,7 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 			$out[] = array(
 				'name'         => $tool['name'],
 				'description'  => isset( $tool['description'] ) ? $tool['description'] : '',
-				'input_schema' => isset( $tool['parameters'] ) ? $tool['parameters'] : array(
-					'type'       => 'object',
-					'properties' => array(),
-				),
+				'input_schema' => $this->normalize_schema( isset( $tool['parameters'] ) ? $tool['parameters'] : array() ),
 			);
 		}
 

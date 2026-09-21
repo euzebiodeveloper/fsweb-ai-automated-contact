@@ -69,7 +69,7 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 		if ( ! $this->is_ready() ) {
 			return new WP_Error(
 				'fsweb_aic_not_configured',
-				__( 'Nenhum provedor de IA configurado. Informe a chave da API nas configurações.', 'fsweb-ai-automated-contact' )
+				__( 'No AI provider configured. Add the API key in the settings.', 'fsweb-ai-automated-contact' )
 			);
 		}
 
@@ -218,7 +218,7 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 				'fsweb_aic_http_error',
 				sprintf(
 					/* translators: %s: transport error message. */
-					__( 'Falha ao contatar o provedor de IA: %s', 'fsweb-ai-automated-contact' ),
+					__( 'Failed to reach the AI provider: %s', 'fsweb-ai-automated-contact' ),
 					$response->get_error_message()
 				)
 			);
@@ -230,7 +230,7 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 		if ( ! is_array( $body ) ) {
 			return new WP_Error(
 				'fsweb_aic_invalid_response',
-				__( 'O provedor de IA retornou uma resposta inválida.', 'fsweb-ai-automated-contact' )
+				__( 'The AI provider returned an invalid response.', 'fsweb-ai-automated-contact' )
 			);
 		}
 
@@ -245,9 +245,9 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 				'fsweb_aic_provider_error',
 				sprintf(
 					/* translators: 1: HTTP status code, 2: provider message. */
-					__( 'Provedor de IA retornou erro %1$d: %2$s', 'fsweb-ai-automated-contact' ),
+					__( 'The AI provider returned error %1$d: %2$s', 'fsweb-ai-automated-contact' ),
 					$code,
-					$message ? $message : __( 'sem detalhes', 'fsweb-ai-automated-contact' )
+					$message ? $message : __( 'no details', 'fsweb-ai-automated-contact' )
 				)
 			);
 		}
@@ -380,6 +380,10 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 	/**
 	 * Convert neutral tools to the OpenAI function shape.
 	 *
+	 * A tool without arguments must expose `properties` as an empty JSON
+	 * object, not as an array: PHP encodes an empty array as `[]`, which the
+	 * provider rejects with "[] is not of type object".
+	 *
 	 * @since  1.0.0
 	 * @param  array $tools Neutral tools.
 	 * @return array
@@ -393,15 +397,35 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 				'function' => array(
 					'name'        => $tool['name'],
 					'description' => isset( $tool['description'] ) ? $tool['description'] : '',
-					'parameters'  => isset( $tool['parameters'] ) ? $tool['parameters'] : array(
-						'type'       => 'object',
-						'properties' => array(),
-					),
+					'parameters'  => $this->normalize_schema( isset( $tool['parameters'] ) ? $tool['parameters'] : array() ),
 				),
 			);
 		}
 
 		return $out;
+	}
+
+	/**
+	 * Make a JSON schema safe to encode.
+	 *
+	 * @since  1.0.0
+	 * @param  array $schema JSON schema.
+	 * @return array
+	 */
+	private function normalize_schema( array $schema ) {
+		if ( ! isset( $schema['type'] ) ) {
+			$schema['type'] = 'object';
+		}
+
+		if ( ! isset( $schema['properties'] ) || ! is_array( $schema['properties'] ) || array() === $schema['properties'] ) {
+			$schema['properties'] = new \stdClass();
+		}
+
+		if ( ! isset( $schema['required'] ) || ! is_array( $schema['required'] ) ) {
+			$schema['required'] = array();
+		}
+
+		return $schema;
 	}
 
 	/**
@@ -418,10 +442,7 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 			$out[] = array(
 				'name'         => $tool['name'],
 				'description'  => isset( $tool['description'] ) ? $tool['description'] : '',
-				'input_schema' => isset( $tool['parameters'] ) ? $tool['parameters'] : array(
-					'type'       => 'object',
-					'properties' => array(),
-				),
+				'input_schema' => $this->normalize_schema( isset( $tool['parameters'] ) ? $tool['parameters'] : array() ),
 			);
 		}
 

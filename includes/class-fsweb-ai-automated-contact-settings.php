@@ -45,38 +45,38 @@ class Fsweb_Ai_Automated_Contact_Settings {
 				'api'      => 'openai',
 				'base_url' => 'https://api.openai.com/v1',
 				'keys_url' => 'https://platform.openai.com/api-keys',
-				'models'   => array( 'gpt-4.1-mini', 'gpt-4.1', 'gpt-4o-mini', 'gpt-4o', 'o4-mini' ),
+				'models'   => array( 'gpt-5.4-mini', 'gpt-5.5', 'gpt-5.4', 'gpt-5.4-nano', 'gpt-5.2', 'gpt-5.1', 'gpt-5-mini', 'gpt-4.1-mini' ),
 			),
 			'anthropic' => array(
 				'label'    => __( 'Anthropic (Claude)', 'fsweb-ai-automated-contact' ),
 				'api'      => 'anthropic',
 				'base_url' => 'https://api.anthropic.com/v1',
 				'keys_url' => 'https://console.anthropic.com/settings/keys',
-				'models'   => array( 'claude-sonnet-4-5', 'claude-haiku-4-5', 'claude-opus-4-1', 'claude-3-7-sonnet-latest' ),
+				'models'   => array( 'claude-sonnet-5', 'claude-haiku-4-5', 'claude-opus-5', 'claude-fable-5-1' ),
 			),
 			'deepseek'  => array(
 				'label'    => __( 'DeepSeek', 'fsweb-ai-automated-contact' ),
 				'api'      => 'openai',
 				'base_url' => 'https://api.deepseek.com/v1',
 				'keys_url' => 'https://platform.deepseek.com/api_keys',
-				'models'   => array( 'deepseek-chat', 'deepseek-reasoner' ),
+				'models'   => array( 'deepseek-flash', 'deepseek-v4-pro' ),
 			),
 			'xai'       => array(
 				'label'    => __( 'xAI (Grok)', 'fsweb-ai-automated-contact' ),
 				'api'      => 'openai',
 				'base_url' => 'https://api.x.ai/v1',
 				'keys_url' => 'https://console.x.ai',
-				'models'   => array( 'grok-4', 'grok-3', 'grok-3-mini' ),
+				'models'   => array( 'grok-4.6', 'grok-4.5', 'grok-4.3', 'grok-build-0.1' ),
 			),
 			'groq'      => array(
 				'label'    => __( 'Groq', 'fsweb-ai-automated-contact' ),
 				'api'      => 'openai',
 				'base_url' => 'https://api.groq.com/openai/v1',
 				'keys_url' => 'https://console.groq.com/keys',
-				'models'   => array( 'llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'openai/gpt-oss-120b', 'qwen/qwen3-32b' ),
+				'models'   => array( 'openai/gpt-oss-120b', 'llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'openai/gpt-oss-20b', 'qwen/qwen3.8-27b', 'minimaxai/minimax-m2.7' ),
 			),
 			'custom'    => array(
-				'label'    => __( 'Outro (compatível com OpenAI)', 'fsweb-ai-automated-contact' ),
+				'label'    => __( 'Other (OpenAI-compatible)', 'fsweb-ai-automated-contact' ),
 				'api'      => 'openai',
 				'base_url' => '',
 				'keys_url' => '',
@@ -108,6 +108,36 @@ class Fsweb_Ai_Automated_Contact_Settings {
 	}
 
 	/**
+	 * Default context sent to the agent as business instructions.
+	 *
+	 * Ships pre-filled so a fresh install already has a well-behaved
+	 * attendant instead of an empty prompt the merchant has to invent.
+	 *
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public static function default_context() {
+		return __(
+			"You are the virtual assistant for this store. Your job is to serve customers with politeness, clarity and focus, helping in three areas:\n" .
+			"1. Store questions — delivery times, shipping, payment methods, returns and exchanges, opening hours.\n" .
+			"2. Product search — find what the customer is looking for, show at most 5 options with name and price, and help them compare.\n" .
+			"3. Cart and checkout — confirm the item and quantity before adding to the cart, then share the checkout link.\n" .
+			"\n" .
+			"How to behave:\n" .
+			"- Greet, listen and answer exactly what was asked; do not change the subject.\n" .
+			"- Rely only on this store's information and the available tools; never invent a product, price, deadline or condition.\n" .
+			"- When you do not know something, say you will check and offer the store\'s human support.\n" .
+			"- Never ask for passwords, card details or documents; never ask for sensitive data at all.\n" .
+			"- Do not promise discounts, deadlines or conditions that are not written here.\n" .
+			"- Keep a friendly, professional tone, with no slang and no emoji overload.\n" .
+			"- Short, direct messages, like a WhatsApp conversation.\n" .
+			"\n" .
+			"Edit this text with your store's real information: delivery times and regions, shipping cost or free shipping, accepted payment methods, returns and exchange policy, opening hours and your human support channel.",
+			'fsweb-ai-automated-contact'
+		);
+	}
+
+	/**
 	 * Default settings.
 	 *
 	 * @since  1.0.0
@@ -116,20 +146,31 @@ class Fsweb_Ai_Automated_Contact_Settings {
 	public static function defaults() {
 		return array(
 			'enabled'           => 'no',
-			'agent_name'        => __( 'Atendente Virtual', 'fsweb-ai-automated-contact' ),
-			'welcome_message'   => __( 'Olá! Sou o atendente virtual da loja. Posso tirar dúvidas e ajudar você a encontrar um produto. Como posso ajudar?', 'fsweb-ai-automated-contact' ),
+			'agent_name'        => __( 'Virtual Assistant', 'fsweb-ai-automated-contact' ),
+			'welcome_message'   => __( 'Hi! I am the store\'s virtual assistant. I can answer questions and help you find a product. How can I help?', 'fsweb-ai-automated-contact' ),
 			'provider'          => 'openai',
-			'model'             => 'gpt-4.1-mini',
+			'model'             => 'gpt-5.4-mini',
 			'temperature'       => 0.3,
 			'max_tokens'        => 800,
-			'context'           => '',
+			'context'           => self::default_context(),
 			'woo_enabled'       => 'yes',
 			'product_limit'     => 5,
 			'allow_add_to_cart' => 'yes',
 			'position'          => 'right',
-			'accent_color'      => '#2563eb',
-			'privacy_note'      => __( 'Atendimento automatizado por IA. Não envie dados sensíveis.', 'fsweb-ai-automated-contact' ),
+			'accent_color'      => '#6e8b54',
+			'color_title'       => '#ffffff',
+			'color_icon'        => '#ffffff',
+			'chat_background'   => '#f6f8f5',
+			'bubble_agent'      => '#e9ebee',
+			'chat_text'         => '#16202c',
+			'avatar_type'       => 'chat',
+			'avatar_image'      => '',
+			'auto_open'         => 'no',
+			'auto_open_delay'   => 6,
+			'custom_css'        => '',
+			'privacy_note'      => __( 'Automated AI support. Do not send sensitive data.', 'fsweb-ai-automated-contact' ),
 			'rate_limit'        => 30,
+			'debug_log'         => 'no',
 			'providers'         => array(
 				'openai'    => array( 'api_key' => '' ),
 				'anthropic' => array( 'api_key' => '' ),
@@ -213,6 +254,12 @@ class Fsweb_Ai_Automated_Contact_Settings {
 		// The context is a free-form prompt: keep line breaks, strip tags.
 		$output['context'] = isset( $input['context'] ) ? wp_kses_post( trim( (string) $input['context'] ) ) : '';
 
+		// An empty context falls back to the shipped default so the agent
+		// never runs without its role instructions.
+		if ( '' === $output['context'] ) {
+			$output['context'] = self::default_context();
+		}
+
 		$provider = isset( $input['provider'] ) ? sanitize_key( $input['provider'] ) : $defaults['provider'];
 		$output['provider'] = self::provider( $provider ) ? $provider : $defaults['provider'];
 
@@ -231,10 +278,29 @@ class Fsweb_Ai_Automated_Contact_Settings {
 		$rate_limit = isset( $input['rate_limit'] ) ? absint( $input['rate_limit'] ) : (int) $defaults['rate_limit'];
 		$output['rate_limit'] = max( 1, min( 300, $rate_limit ) );
 
+		$output['debug_log'] = ( isset( $input['debug_log'] ) && 'yes' === $input['debug_log'] ) ? 'yes' : 'no';
+
 		$output['position'] = ( isset( $input['position'] ) && 'left' === $input['position'] ) ? 'left' : 'right';
 
-		$color = isset( $input['accent_color'] ) ? sanitize_hex_color( $input['accent_color'] ) : '';
-		$output['accent_color'] = $color ? $color : $defaults['accent_color'];
+		foreach ( array( 'accent_color', 'color_title', 'color_icon', 'chat_background', 'chat_text', 'bubble_agent' ) as $color_key ) {
+			$color = isset( $input[ $color_key ] ) ? sanitize_hex_color( $input[ $color_key ] ) : '';
+			$output[ $color_key ] = $color ? $color : $defaults[ $color_key ];
+		}
+
+		$avatar_types        = array( 'initials', 'chat', 'whatsapp', 'telegram', 'robot', 'custom' );
+		$avatar_type         = isset( $input['avatar_type'] ) ? sanitize_key( $input['avatar_type'] ) : $defaults['avatar_type'];
+		$output['avatar_type'] = in_array( $avatar_type, $avatar_types, true ) ? $avatar_type : $defaults['avatar_type'];
+
+		$avatar_image          = isset( $input['avatar_image'] ) ? esc_url_raw( trim( (string) $input['avatar_image'] ) ) : '';
+		$output['avatar_image'] = $avatar_image;
+
+		$output['auto_open']   = ( isset( $input['auto_open'] ) && 'yes' === $input['auto_open'] ) ? 'yes' : 'no';
+
+		$delay = isset( $input['auto_open_delay'] ) ? absint( $input['auto_open_delay'] ) : (int) $defaults['auto_open_delay'];
+		$output['auto_open_delay'] = max( 0, min( 120, $delay ) );
+
+		// Merchant CSS: strip tags so nothing executable survives.
+		$output['custom_css'] = isset( $input['custom_css'] ) ? trim( wp_strip_all_tags( (string) $input['custom_css'] ) ) : '';
 
 		// Provider credentials.
 		$output['providers'] = array();
@@ -258,6 +324,37 @@ class Fsweb_Ai_Automated_Contact_Settings {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Whether the merchant turned the debug log on.
+	 *
+	 * @since  1.0.0
+	 * @return bool
+	 */
+	public static function is_debug() {
+		return ( 'yes' === self::get( 'debug_log', 'no' ) );
+	}
+
+	/**
+	 * Write a diagnostic line to the WooCommerce log.
+	 *
+	 * Nothing is written unless the debug option is on, and it never touches
+	 * error_log(): the output goes to WooCommerce → Status → Logs under the
+	 * plugin's own source, where the merchant already looks for logs.
+	 *
+	 * @since  1.0.0
+	 * @param  string $message Message to record.
+	 * @return void
+	 */
+	public static function log( $message ) {
+		if ( ! self::is_debug() || ! function_exists( 'wc_get_logger' ) ) {
+			return;
+		}
+
+		$source = defined( 'FSWEB_AI_AUTOMATED_CONTACT_SLUG' ) ? FSWEB_AI_AUTOMATED_CONTACT_SLUG : 'fsweb-ai-automated-contact';
+
+		wc_get_logger()->debug( (string) $message, array( 'source' => $source ) );
 	}
 
 	/**

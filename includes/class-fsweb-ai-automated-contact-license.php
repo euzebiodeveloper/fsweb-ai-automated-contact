@@ -100,7 +100,7 @@ class Fsweb_Ai_Automated_Contact_License {
 		if ( '' === $license_key ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Informe uma chave de licença.', 'fsweb-ai-automated-contact' ),
+				'message' => __( 'Enter a license key.', 'fsweb-ai-automated-contact' ),
 				'status'  => $this->get_status(),
 				'expires' => $this->get_expires(),
 			);
@@ -109,7 +109,7 @@ class Fsweb_Ai_Automated_Contact_License {
 		if ( 'active' === $this->get_status() && $this->get_key() === $license_key ) {
 			return array(
 				'success' => true,
-				'message' => __( 'Esta licença já está ativa.', 'fsweb-ai-automated-contact' ),
+				'message' => __( 'This license is already active.', 'fsweb-ai-automated-contact' ),
 				'status'  => 'active',
 				'expires' => $this->get_expires(),
 			);
@@ -137,7 +137,7 @@ class Fsweb_Ai_Automated_Contact_License {
 
 			return array(
 				'success' => false,
-				'message' => __( 'Não foi possível falar com o servidor de licenças. A chave foi salva e está pendente de validação.', 'fsweb-ai-automated-contact' ),
+				'message' => __( 'Could not reach the license server. Your key was saved and is pending validation.', 'fsweb-ai-automated-contact' ),
 				'status'  => 'pending',
 				'expires' => '',
 			);
@@ -156,7 +156,7 @@ class Fsweb_Ai_Automated_Contact_License {
 
 			return array(
 				'success' => true,
-				'message' => __( 'Licença ativada com sucesso!', 'fsweb-ai-automated-contact' ),
+				'message' => __( 'License activated successfully!', 'fsweb-ai-automated-contact' ),
 				'status'  => 'active',
 				'expires' => $expires,
 			);
@@ -167,7 +167,7 @@ class Fsweb_Ai_Automated_Contact_License {
 
 			return array(
 				'success' => false,
-				'message' => __( 'O servidor de licenças respondeu de forma inválida. A chave foi salva e está pendente de validação.', 'fsweb-ai-automated-contact' ),
+				'message' => __( 'The license server returned an invalid response. Your key was saved and is pending validation.', 'fsweb-ai-automated-contact' ),
 				'status'  => 'pending',
 				'expires' => '',
 			);
@@ -177,7 +177,7 @@ class Fsweb_Ai_Automated_Contact_License {
 
 		return array(
 			'success' => false,
-			'message' => isset( $body['message'] ) ? sanitize_text_field( $body['message'] ) : __( 'Chave de licença inválida.', 'fsweb-ai-automated-contact' ),
+			'message' => isset( $body['message'] ) ? sanitize_text_field( $body['message'] ) : __( 'Invalid license key.', 'fsweb-ai-automated-contact' ),
 			'status'  => 'invalid',
 			'expires' => '',
 		);
@@ -217,7 +217,7 @@ class Fsweb_Ai_Automated_Contact_License {
 
 		return array(
 			'success' => true,
-			'message' => __( 'Licença desativada.', 'fsweb-ai-automated-contact' ),
+			'message' => __( 'License deactivated.', 'fsweb-ai-automated-contact' ),
 			'status'  => 'pending',
 		);
 	}
@@ -235,7 +235,7 @@ class Fsweb_Ai_Automated_Contact_License {
 		if ( '' === $license_key ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Nenhuma licença salva. Informe uma chave primeiro.', 'fsweb-ai-automated-contact' ),
+				'message' => __( 'No license saved. Enter a key first.', 'fsweb-ai-automated-contact' ),
 				'status'  => $this->get_status(),
 				'expires' => '',
 			);
@@ -255,7 +255,7 @@ class Fsweb_Ai_Automated_Contact_License {
 		if ( is_wp_error( $response ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Não foi possível falar com o servidor de licenças.', 'fsweb-ai-automated-contact' ),
+				'message' => __( 'Could not reach the license server.', 'fsweb-ai-automated-contact' ),
 				'status'  => $this->get_status(),
 				'expires' => $this->get_expires(),
 			);
@@ -266,7 +266,7 @@ class Fsweb_Ai_Automated_Contact_License {
 		if ( ! is_array( $body ) || ! isset( $body['status'] ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'Resposta inválida do servidor de licenças.', 'fsweb-ai-automated-contact' ),
+				'message' => __( 'Invalid response from the license server.', 'fsweb-ai-automated-contact' ),
 				'status'  => $this->get_status(),
 				'expires' => $this->get_expires(),
 			);
@@ -322,15 +322,15 @@ class Fsweb_Ai_Automated_Contact_License {
 	public function status_message( $status, $expires = '' ) {
 		switch ( $status ) {
 			case 'active':
-				return __( 'Licença ativa e válida.', 'fsweb-ai-automated-contact' );
+				return __( 'License is active and valid.', 'fsweb-ai-automated-contact' );
 			case 'expired':
-				return __( 'Licença expirada. Renove para continuar recebendo atualizações.', 'fsweb-ai-automated-contact' );
+				return __( 'License expired. Renew it to keep receiving updates.', 'fsweb-ai-automated-contact' );
 			case 'invalid':
-				return __( 'Chave de licença inválida.', 'fsweb-ai-automated-contact' );
+				return __( 'Invalid license key.', 'fsweb-ai-automated-contact' );
 			case 'pending':
-				return __( 'Licença aguardando ativação.', 'fsweb-ai-automated-contact' );
+				return __( 'License pending activation.', 'fsweb-ai-automated-contact' );
 			default:
-				return __( 'Licença inativa.', 'fsweb-ai-automated-contact' );
+				return __( 'License inactive.', 'fsweb-ai-automated-contact' );
 		}
 	}
 
@@ -361,7 +361,7 @@ class Fsweb_Ai_Automated_Contact_License {
 
 			$last = is_wp_error( $response )
 				? $response
-				: new WP_Error( 'fsweb_aic_empty_response', __( 'O servidor de licenças retornou uma resposta vazia.', 'fsweb-ai-automated-contact' ) );
+				: new WP_Error( 'fsweb_aic_empty_response', __( 'The license server returned an empty response.', 'fsweb-ai-automated-contact' ) );
 
 			if ( $i < $attempts ) {
 				sleep( $i );

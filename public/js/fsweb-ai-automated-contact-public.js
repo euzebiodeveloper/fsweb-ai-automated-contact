@@ -38,6 +38,7 @@
 	var history = [];
 	var busy = false;
 	var greeted = false;
+	var lastProductsKey = '';
 
 	function readHistory() {
 		try {
@@ -61,17 +62,67 @@
 		return config.i18n && config.i18n[ key ] ? config.i18n[ key ] : fallback;
 	}
 
+	// Remember that the visitor opened a product page: the chat reopens there
+	// so the conversation carries on.
+	function markReopen() {
+		try {
+			window.sessionStorage.setItem( STORAGE_KEY + '_reopen', '1' );
+		} catch ( error ) {
+			// Storage unavailable: the page still opens, just without the chat.
+		}
+	}
+
+	function shouldReopen() {
+		try {
+			if ( window.sessionStorage.getItem( STORAGE_KEY + '_reopen' ) ) {
+				window.sessionStorage.removeItem( STORAGE_KEY + '_reopen' );
+				return true;
+			}
+		} catch ( error ) {
+			// Storage unavailable.
+		}
+
+		return false;
+	}
+
 	function scrollToBottom() {
 		messages.scrollTop = messages.scrollHeight;
 	}
 
-	function addRow( role, content ) {
+	function escapeHtml( value ) {
+		return String( value == null ? '' : value )
+			.replace( /&/g, '&amp;' )
+			.replace( /</g, '&lt;' )
+			.replace( />/g, '&gt;' )
+			.replace( /"/g, '&quot;' );
+	}
+
+	// Small markdown subset: the agent writes **bold**, lists and links, and
+	// they must render as such instead of showing the raw characters.
+	function formatMessage( value ) {
+		var text = escapeHtml( decode( value ) );
+
+		text = text.replace( /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>' );
+		text = text.replace( /\*\*([^*]+)\*\*/g, '<strong>$1</strong>' );
+		text = text.replace( /__([^_]+)__/g, '<strong>$1</strong>' );
+		text = text.replace( /(^|\s)\*([^*\n]+)\*(?=\s|$)/g, '$1<em>$2</em>' );
+		text = text.replace( /^\s*[-•]\s+/gm, '• ' );
+		text = text.replace( /(^|\s)(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>' );
+
+		return text;
+	}
+
+	function addRow( role, content, isError ) {
 		var row = document.createElement( 'div' );
 		row.className = 'fsweb-aic-row fsweb-aic-row--' + role;
 
 		var bubble = document.createElement( 'div' );
-		bubble.className = 'fsweb-aic-bubble fsweb-aic-bubble--' + role;
-		bubble.textContent = content;
+		bubble.className = 'fsweb-aic-bubble fsweb-aic-bubble--' + role + ( isError ? ' fsweb-aic-bubble--error' : '' );
+		if ( 'user' === role ) {
+			bubble.textContent = content;
+		} else {
+			bubble.innerHTML = formatMessage( content );
+		}
 
 		row.appendChild( bubble );
 		messages.appendChild( row );
@@ -108,10 +159,29 @@
 		}
 	}
 
+	// Safety net: never print raw entities from the catalogue.
+	function decode( value ) {
+		var holder = document.createElement( 'textarea' );
+		holder.innerHTML = String( value == null ? '' : value );
+		return holder.value;
+	}
+
 	function addProducts( products ) {
 		if ( ! products || ! products.length ) {
 			return;
 		}
+
+		// Do not repeat the same shelf twice in a row: the agent often looks
+		// the same products up again while answering a follow-up question.
+		var key = products.map( function ( product ) {
+			return product.product_id;
+		} ).join( ',' );
+
+		if ( key === lastProductsKey ) {
+			return;
+		}
+
+		lastProductsKey = key;
 
 		var list = document.createElement( 'div' );
 		list.className = 'fsweb-aic-products';
@@ -120,50 +190,80 @@
 			var card = document.createElement( 'div' );
 			card.className = 'fsweb-aic-product';
 
-			if ( product.imagem ) {
-				var thumb = document.createElement( 'div' );
-				thumb.className = 'fsweb-aic-product__thumb';
+			var thumb = document.createElement( 'div' );
+			thumb.className = 'fsweb-aic-product__thumb';
 
+			if ( product.image ) {
 				var image = document.createElement( 'img' );
-				image.src = product.imagem;
+				image.src = product.image;
 				image.alt = '';
 				image.loading = 'lazy';
 
 				thumb.appendChild( image );
-				card.appendChild( thumb );
+			} else {
+				// No featured image: show a discreet placeholder instead of a gap.
+				thumb.className += ' fsweb-aic-product__thumb--empty';
+				thumb.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm11.5 5.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM5 17l4.5-5 3.5 3.5 2.5-2 4.5 3.5H5Z" fill="currentColor"/></svg>';
 			}
+
+			card.appendChild( thumb );
 
 			var info = document.createElement( 'div' );
 			info.className = 'fsweb-aic-product__info';
 
 			var name = document.createElement( 'span' );
 			name.className = 'fsweb-aic-product__name';
-			name.textContent = product.nome || '';
+			name.textContent = decode( product.name );
 			info.appendChild( name );
 
 			var price = document.createElement( 'span' );
 			price.className = 'fsweb-aic-product__price';
-			price.textContent = product.preco || '';
+			price.textContent = decode( product.price );
 			info.appendChild( price );
+
+			if ( product.summary ) {
+				var summary = document.createElement( 'span' );
+				summary.className = 'fsweb-aic-product__summary';
+				summary.textContent = decode( product.summary );
+				info.appendChild( summary );
+			}
 
 			var actions = document.createElement( 'div' );
 			actions.className = 'fsweb-aic-product__actions';
 
-			if ( product.link ) {
+			if ( product.url ) {
 				var link = document.createElement( 'a' );
 				link.className = 'fsweb-aic-product__link';
-				link.href = product.link;
-				link.target = '_blank';
-				link.rel = 'noopener';
-				link.textContent = text( 'view_product', 'Ver produto' );
+				link.href = product.url;
+				// Same tab, and the chat reopens on the next page so the
+				// conversation continues instead of a blank tab.
+				link.addEventListener( 'click', function () {
+					markReopen();
+				} );
+				link.textContent = text( 'view_product', 'View product' );
 				actions.appendChild( link );
 			}
 
-			if ( product.disponivel === false ) {
+			if ( product.available === false ) {
 				var out = document.createElement( 'span' );
 				out.className = 'fsweb-aic-product__price';
-				out.textContent = 'esgotado';
+				out.textContent = text( 'out_of_stock', 'Out of stock' );
 				actions.appendChild( out );
+			} else if ( product.product_id ) {
+				var addButton = document.createElement( 'button' );
+				addButton.type = 'button';
+				addButton.className = 'fsweb-aic-product__button';
+				addButton.textContent = text( 'add_to_cart', 'Add to cart' );
+				addButton.addEventListener( 'click', function () {
+					var request = ( config.i18n.add_request || 'Please add product id %s to my cart' ).replace( '%s', product.product_id );
+
+					if ( product.name ) {
+						request += ' (' + product.name + ')';
+					}
+
+					send( request );
+				} );
+				actions.appendChild( addButton );
 			}
 
 			info.appendChild( actions );
@@ -176,13 +276,15 @@
 	}
 
 	function addCheckoutCta( cart ) {
-		if ( ! cart || ! cart.checkout_url ) {
+		var url = ( cart && cart.checkout_url ) || config.checkout_url;
+
+		if ( ! url ) {
 			return;
 		}
 
 		var link = document.createElement( 'a' );
 		link.className = 'fsweb-aic-cta';
-		link.href = cart.checkout_url;
+		link.href = url;
 		link.textContent = text( 'go_checkout', 'Finalizar compra' );
 
 		messages.appendChild( link );
@@ -197,16 +299,41 @@
 		}
 
 		stored.forEach( function ( entry ) {
-			if ( entry && entry.content ) {
-				addRow( entry.role === 'user' ? 'user' : 'agent', entry.content );
+			if ( ! entry || ! entry.content ) {
+				return;
+			}
+
+			addRow( entry.role === 'user' ? 'user' : 'agent', entry.content, !! entry.error );
+
+			if ( entry.products && entry.products.length ) {
+				addProducts( entry.products );
+			}
+
+			if ( entry.checkout ) {
+				addCheckoutCta( null );
 			}
 		} );
 	}
 
-	function pushHistory( role, content ) {
-		history.push( { role: role, content: content } );
+	function pushHistory( role, content, products, flags ) {
+		var entry = { role: role, content: content, products: products || [] };
+
+		if ( flags && flags.error ) {
+			entry.error = true;
+		}
+
+		if ( flags && flags.checkout ) {
+			entry.checkout = true;
+		}
+
+		history.push( entry );
 		history = history.slice( -MAX_HISTORY );
 		writeHistory();
+	}
+
+	function showError( message ) {
+		addRow( 'agent', message, true );
+		pushHistory( 'assistant', message, [], { error: true } );
 	}
 
 	function greet() {
@@ -224,6 +351,7 @@
 
 	function openPanel() {
 		panel.hidden = false;
+		widget.classList.add( 'is-open' );
 		launcher.setAttribute( 'aria-expanded', 'true' );
 
 		if ( badge ) {
@@ -231,11 +359,18 @@
 		}
 
 		greet();
+		scrollToBottom();
 		input.focus();
+
+		// Layout settles a beat later; make sure the last message is visible.
+		window.setTimeout( function () {
+			scrollToBottom();
+		}, 60 );
 	}
 
 	function closePanel() {
 		panel.hidden = true;
+		widget.classList.remove( 'is-open' );
 		launcher.setAttribute( 'aria-expanded', 'false' );
 	}
 
@@ -284,22 +419,24 @@
 				var payload = result.payload || {};
 
 				if ( ! result.ok ) {
-					addRow( 'agent', payload.message || text( 'error', 'Erro inesperado.' ) );
+					showError( payload.message || text( 'error', 'Something went wrong.' ) );
 					return;
 				}
 
 				var reply = payload.reply || '';
 				addRow( 'agent', reply );
-				pushHistory( 'assistant', reply );
+				pushHistory( 'assistant', reply, payload.products, { checkout: !! payload.show_checkout } );
 				addProducts( payload.products );
-				addCheckoutCta( payload.cart );
+				if ( payload.show_checkout ) {
+					addCheckoutCta( payload.cart );
+				}
 			} )
 			.catch( function () {
 				if ( typing ) {
 					typing.remove();
 				}
 
-				addRow( 'agent', text( 'error', 'Não consegui responder agora.' ) );
+				showError( text( 'error', 'I could not answer right now.' ) );
 			} )
 			.then( function () {
 				setBusy( false );
@@ -321,6 +458,7 @@
 	if ( resetButton ) {
 		resetButton.addEventListener( 'click', function () {
 			history = [];
+			lastProductsKey = '';
 			writeHistory();
 			messages.textContent = '';
 			greeted = false;
@@ -360,11 +498,48 @@
 		}
 	} );
 
+	// Auto open once per visit, when the merchant enabled it.
+	function maybeAutoOpen() {
+		if ( ! config.auto_open || greeted ) {
+			return;
+		}
+
+		try {
+			if ( window.sessionStorage.getItem( STORAGE_KEY + '_auto' ) ) {
+				return;
+			}
+
+			window.sessionStorage.setItem( STORAGE_KEY + '_auto', '1' );
+		} catch ( error ) {
+			// Storage unavailable: keep going, it just opens every visit.
+		}
+
+		var delay = parseInt( config.auto_open_delay, 10 );
+
+		if ( isNaN( delay ) || delay < 0 ) {
+			delay = 6;
+		}
+
+		window.setTimeout( function () {
+			if ( panel.hidden && ! busy ) {
+				openPanel();
+			}
+		}, delay * 1000 );
+	}
+
 	history = readHistory();
 	widget.hidden = false;
 	renderExisting();
 
 	if ( history.length ) {
 		greeted = true;
+	}
+
+	scrollToBottom();
+
+	if ( shouldReopen() ) {
+		openPanel();
+	} else {
+		maybeAutoOpen();
 	}
 } )();

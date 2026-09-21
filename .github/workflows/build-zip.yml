@@ -30,6 +30,7 @@ jobs:
           #       └── ...
           mkdir -p "${BUILD_DIR}"
 
+          # Copia os arquivos para dentro da pasta do plugin
           rsync -a ./ "${BUILD_DIR}/" \
             --exclude='.git/' \
             --exclude='.github/' \
@@ -48,10 +49,12 @@ jobs:
             --exclude='.vscode/' \
             --exclude='.idea/'
 
+          # Gera o ZIP a partir do pai do diretório
           cd /tmp/build
           zip -r "${GITHUB_WORKSPACE}/${ZIP_NAME}" "${PLUGIN_SLUG}"
 
           echo "ZIP criado: ${ZIP_NAME}"
+          echo "ZIP_SIZE=$(stat -c%s ${GITHUB_WORKSPACE}/${ZIP_NAME})" >> $GITHUB_ENV
           ls -lh "${GITHUB_WORKSPACE}/${ZIP_NAME}"
 
       - name: Upload ZIP as artifact
@@ -68,6 +71,28 @@ jobs:
           echo "VERSION=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "Versão detectada: ${VERSION}"
 
+      - name: Extract changelog
+        id: changelog
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          if [ -f CHANGELOG.md ]; then
+            CHANGELOG="$(awk -v v="${VERSION}" '
+              index($0, "# " v " ") == 1 { print "###" substr($0, 2); found=1; next }
+              found && index($0, "# ") == 1 { exit }
+              found { print }
+            ' CHANGELOG.md)"
+          else
+            CHANGELOG=""
+          fi
+          if [ -z "${CHANGELOG}" ]; then
+            CHANGELOG="- No changelog entry found for v${VERSION}."
+          fi
+          {
+            echo "CHANGELOG<<EOF"
+            echo "${CHANGELOG}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Create Release
         if: github.event.pull_request.base.ref == 'main' || github.event.pull_request.base.ref == 'master'
         uses: softprops/action-gh-release@v2
@@ -83,9 +108,12 @@ jobs:
 
             - 🤖 **Multi-IA** — OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq e endpoints compatíveis com OpenAI
             - 🛒 **WooCommerce** — busca de produtos, detalhes, carrinho e link de checkout
-            - 🔐 **Somente leitura** — a IA nunca altera produtos, pedidos ou configurações
             - 🎨 **Widget próprio** — chat flutuante com aparência configurável
             - 🔑 **Licença e atualização automática** — updates direto do servidor
+
+            ## 🔖 Changelog
+
+            ${{ steps.changelog.outputs.CHANGELOG }}
 
             ---
 

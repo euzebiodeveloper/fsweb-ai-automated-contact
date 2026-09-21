@@ -129,6 +129,26 @@ class Fsweb_Ai_Automated_Contact_Rest {
 	}
 
 	/**
+	 * Make sure the request has a WooCommerce session and cart loaded.
+	 *
+	 * @since  1.0.0
+	 * @return void
+	 */
+	private function bootstrap_session() {
+		if ( ! function_exists( 'wc_load_cart' ) ) {
+			return;
+		}
+
+		wc_load_cart();
+
+		if ( function_exists( 'WC' ) && WC()->session && ! WC()->session->has_session() ) {
+			// Persist the session cookie in this response so the next request
+			// (and the store pages) share the same cart.
+			WC()->session->set_customer_session_cookie( true );
+		}
+	}
+
+	/**
 	 * GET /config — public widget configuration.
 	 *
 	 * @since  1.0.0
@@ -163,6 +183,12 @@ class Fsweb_Ai_Automated_Contact_Rest {
 	 * @return WP_REST_Response|\WP_Error
 	 */
 	public function post_chat( WP_REST_Request $request ) {
+		// The chat cart has to be the same cart the store pages use, so make
+		// sure the visitor owns a WooCommerce session before touching it.
+		// Without this each chat request started a throwaway cart and the
+		// second product never stacked on the first.
+		$this->bootstrap_session();
+
 		$allowed = $this->chat->check_rate_limit();
 
 		if ( is_wp_error( $allowed ) ) {

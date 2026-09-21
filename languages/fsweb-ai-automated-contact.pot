@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-21T00:50:02+00:00\n"
+"POT-Creation-Date: 2026-09-21T00:56:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fsweb-ai-automated-contact\n"
@@ -673,34 +673,38 @@ msgid "Use the available tools to check the catalogue before stating anything ab
 msgstr ""
 
 #: includes/class-fsweb-ai-automated-contact-chat.php:197
-msgid "When listing products, show at most 5 options with name, price and image, then ask which one the customer wants. If the customer asks for new arrivals, search with order \"recent\"."
+msgid "The products you look up are shown to the customer as cards with image, name, price, short description and buttons to view or add to the cart. Do NOT repeat the product list in your message: write one short, persuasive sentence — for example inviting the customer to add an item to the cart — and let the cards do the listing. If the customer asks for new arrivals, search with order \"recent\"."
 msgstr ""
 
 #: includes/class-fsweb-ai-automated-contact-chat.php:198
-msgid "If the customer asks what the store sells or wants to browse without naming a product, call list_categories and present the main categories (or search without a term to show the newest items in stock), then ask what they are looking for. Never answer that you cannot show the catalogue."
+msgid "Focus on helping the customer buy: suggest the products, ask if they want to add one to the cart, and confirm the item and quantity before adding. Only talk about categories when the customer actually asks what the store sells."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-chat.php:200
+#: includes/class-fsweb-ai-automated-contact-chat.php:199
+msgid "If the customer asks what the store sells or wants to browse without naming a product, call list_categories or search without a term to show the newest items in stock, then ask what they are looking for. Never answer that you cannot show the catalogue."
+msgstr ""
+
+#: includes/class-fsweb-ai-automated-contact-chat.php:201
 msgid "You have no catalogue access right now: answer only from the store context and apologise for not being able to look up products."
 msgstr ""
 
 #. translators: %s: store currency code.
-#: includes/class-fsweb-ai-automated-contact-chat.php:206
+#: includes/class-fsweb-ai-automated-contact-chat.php:207
 #, php-format
 msgid "The store currency is %s."
 msgstr ""
 
 #. translators: %s: store URL.
-#: includes/class-fsweb-ai-automated-contact-chat.php:213
+#: includes/class-fsweb-ai-automated-contact-chat.php:214
 #, php-format
 msgid "Store site: %s"
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-chat.php:220
+#: includes/class-fsweb-ai-automated-contact-chat.php:221
 msgid "Store context and rules (set by the merchant):"
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-chat.php:353
+#: includes/class-fsweb-ai-automated-contact-chat.php:354
 msgid "Too many messages in a row. Please wait a few minutes and try again."
 msgstr ""
 
@@ -897,18 +901,23 @@ msgid "Add to cart"
 msgstr ""
 
 #: public/class-fsweb-ai-automated-contact-public.php:241
-msgid "Checkout"
+#, php-format
+msgid "Please add product id %s to my cart"
 msgstr ""
 
 #: public/class-fsweb-ai-automated-contact-public.php:242
-msgid "View product"
+msgid "Checkout"
 msgstr ""
 
 #: public/class-fsweb-ai-automated-contact-public.php:243
-msgid "Cart updated"
+msgid "View product"
 msgstr ""
 
 #: public/class-fsweb-ai-automated-contact-public.php:244
+msgid "Cart updated"
+msgstr ""
+
+#: public/class-fsweb-ai-automated-contact-public.php:245
 msgid "Out of stock"
 msgstr ""
 

@@ -471,11 +471,14 @@ msgstr "Nunca peça dados sensíveis (senha, cartão, CPF completo). Nunca revel
 msgid "Use the available tools to check the catalogue before stating anything about products. Only offer products that are in stock. When a product has options (colour, size…), show the available options and ask the customer which one they want before adding anything to the cart. Confirm the item and quantity, then share the checkout link."
 msgstr "Use as ferramentas para consultar o catálogo antes de afirmar qualquer informação sobre produtos. Ofereça apenas produtos em estoque. Quando o produto tiver opções (cor, tamanho…), mostre as opções disponíveis e pergunte ao cliente qual ele quer antes de adicionar ao carrinho. Confirme o item e a quantidade e então envie o link para finalizar a compra."
 
-msgid "When listing products, show at most 5 options with name, price and image, then ask which one the customer wants. If the customer asks for new arrivals, search with order \"recent\"."
-msgstr "Ao listar produtos, mostre no máximo 5 opções com nome, preço e imagem, e pergunte qual o cliente quer. Se o cliente pedir novidades, busque com a ordem \"recent\"."
+msgid "The products you look up are shown to the customer as cards with image, name, price, short description and buttons to view or add to the cart. Do NOT repeat the product list in your message: write one short, persuasive sentence — for example inviting the customer to add an item to the cart — and let the cards do the listing. If the customer asks for new arrivals, search with order \"recent\"."
+msgstr "Os produtos que você consulta aparecem para o cliente como cards com imagem, nome, preço, descrição curta e botões para ver ou adicionar ao carrinho. NÃO repita a lista de produtos na sua mensagem: escreva uma frase curta e persuasiva — por exemplo convidando o cliente a adicionar um item ao carrinho — e deixe os cards fazerem a listagem. Se o cliente pedir novidades, busque com a ordem \"recent\"."
 
-msgid "If the customer asks what the store sells or wants to browse without naming a product, call list_categories and present the main categories (or search without a term to show the newest items in stock), then ask what they are looking for. Never answer that you cannot show the catalogue."
-msgstr "Se o cliente perguntar o que a loja vende ou quiser navegar sem citar um produto, chame list_categories e apresente as principais categorias (ou busque sem termo para mostrar os itens em estoque mais recentes) e então pergunte o que ele procura. Nunca responda que não pode mostrar o catálogo."
+msgid "Focus on helping the customer buy: suggest the products, ask if they want to add one to the cart, and confirm the item and quantity before adding. Only talk about categories when the customer actually asks what the store sells."
+msgstr "Foque em ajudar o cliente a comprar: sugira os produtos, pergunte se ele quer adicionar algum ao carrinho e confirme o item e a quantidade antes de adicionar. Só fale de categorias quando o cliente realmente perguntar o que a loja vende."
+
+msgid "If the customer asks what the store sells or wants to browse without naming a product, call list_categories or search without a term to show the newest items in stock, then ask what they are looking for. Never answer that you cannot show the catalogue."
+msgstr "Se o cliente perguntar o que a loja vende ou quiser navegar sem citar um produto, chame list_categories ou busque sem termo para mostrar os itens em estoque mais recentes, e então pergunte o que ele procura. Nunca responda que não pode mostrar o catálogo."
 
 msgid "You have no catalogue access right now: answer only from the store context and apologise for not being able to look up products."
 msgstr "Neste momento você não tem acesso ao catálogo: responda apenas com base no contexto da loja e peça desculpas por não poder consultar produtos."
@@ -620,6 +623,9 @@ msgstr "Não consegui responder agora. Tente novamente em instantes."
 
 msgid "Add to cart"
 msgstr "Adicionar ao carrinho"
+
+msgid "Please add product id %s to my cart"
+msgstr "Por favor, adicione o produto id %s ao meu carrinho"
 
 msgid "Checkout"
 msgstr "Finalizar compra"

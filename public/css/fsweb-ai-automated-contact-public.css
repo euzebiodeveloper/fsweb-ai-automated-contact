@@ -305,6 +305,12 @@
 	background: rgba(255, 255, 255, 0.36) !important;
 }
 
+/* The actions row must not stretch the buttons: stretch turns a circle
+   into an oval. */
+.fsweb-aic-widget .fsweb-aic-header__actions {
+	align-items: center !important;
+}
+
 .fsweb-aic-widget .fsweb-aic-icon-button svg {
 	width: 17px !important;
 	height: 17px !important;

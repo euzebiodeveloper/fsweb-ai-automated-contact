@@ -171,12 +171,18 @@
 		var $button = $( this );
 		var $spinner = $( '#fsweb-aic-test-spinner' );
 		var $result = $( '#fsweb-aic-test-result' );
+		var provider = $( '#fsweb-aic-provider' ).val();
 
 		$button.prop( 'disabled', true ).text( config.i18n.testing );
 		$spinner.show();
 		$result.removeClass( 'is-ok is-error' ).text( '' );
 
-		post( 'fsweb_aic_test_provider' )
+		post( 'fsweb_aic_test_provider', {
+			provider: provider,
+			model: $( '#fsweb-aic-model' ).val(),
+			api_key: $( '#fsweb-aic-key-' + provider ).val(),
+			base_url: $( '#fsweb-aic-base-url' ).val()
+		} )
 			.done( function ( response ) {
 				var payload = response && response.data ? response.data : {};
 

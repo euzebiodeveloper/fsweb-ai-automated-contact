@@ -580,7 +580,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 										<button type="button" class="button" id="fsweb-aic-test-provider"><?php esc_html_e( 'Testar agora', 'fsweb-ai-automated-contact' ); ?></button>
 										<span class="spinner" id="fsweb-aic-test-spinner" style="float:none;margin:0 0 0 6px;"></span>
 										<p class="fsweb-aic-test-result" id="fsweb-aic-test-result"></p>
-										<p class="description"><?php esc_html_e( 'Salve as configurações antes de testar.', 'fsweb-ai-automated-contact' ); ?></p>
+										<p class="description"><?php esc_html_e( 'The test uses the values currently on screen — no need to save first.', 'fsweb-ai-automated-contact' ); ?></p>
 										<?php if ( ! empty( $endpoint['model'] ) ) : ?>
 											<p class="description"><?php echo esc_html( sprintf( /* translators: 1: provider id, 2: model. */ __( 'Configuração atual: %1$s / %2$s', 'fsweb-ai-automated-contact' ), $endpoint['provider'], $endpoint['model'] ) ); ?></p>
 										<?php endif; ?>
@@ -896,7 +896,72 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	}
 
 	/**
-	 * AJAX handler — send a tiny probe to the configured provider.
+	 * Build the endpoint to test, preferring the values currently on screen.
+	 *
+	 * The test button works on unsaved input, so the merchant can try a key
+	 * before committing it to the database.
+	 *
+	 * @since  1.0.0
+	 * @return array<string,string>|WP_Error
+	 */
+	private function endpoint_from_request() {
+		$provider_id = isset( $_POST['provider'] ) ? sanitize_key( wp_unslash( $_POST['provider'] ) ) : '';
+		$config      = Fsweb_Ai_Automated_Contact_Settings::provider( $provider_id );
+
+		if ( ! $config ) {
+			return new WP_Error(
+				'fsweb_aic_unknown_provider',
+				__( 'Select an AI provider first.', 'fsweb-ai-automated-contact' )
+			);
+		}
+
+		// Keys are opaque: strip whitespace only, never mangle the value.
+		$api_key = isset( $_POST['api_key'] ) ? trim( preg_replace( '/\s+/', '', (string) wp_unslash( $_POST['api_key'] ) ) ) : '';
+		$model   = isset( $_POST['model'] ) ? sanitize_text_field( wp_unslash( $_POST['model'] ) ) : '';
+
+		if ( '' === $api_key ) {
+			$saved   = Fsweb_Ai_Automated_Contact_Settings::all();
+			$api_key = isset( $saved['providers'][ $provider_id ]['api_key'] ) ? $saved['providers'][ $provider_id ]['api_key'] : '';
+		}
+
+		if ( '' === $api_key ) {
+			return new WP_Error(
+				'fsweb_aic_missing_key',
+				__( 'Paste the API key of the selected provider to run the test.', 'fsweb-ai-automated-contact' )
+			);
+		}
+
+		if ( '' === $model ) {
+			$model = Fsweb_Ai_Automated_Contact_Settings::get( 'model', '' );
+		}
+
+		$base_url = $config['base_url'];
+
+		if ( 'custom' === $provider_id ) {
+			$base_url = isset( $_POST['base_url'] ) ? esc_url_raw( trim( (string) wp_unslash( $_POST['base_url'] ) ) ) : '';
+		}
+
+		if ( ! $base_url ) {
+			return new WP_Error(
+				'fsweb_aic_missing_base_url',
+				__( 'Provide the base URL of the OpenAI-compatible endpoint.', 'fsweb-ai-automated-contact' )
+			);
+		}
+
+		return array(
+			'provider' => $provider_id,
+			'api'      => $config['api'],
+			'base_url' => untrailingslashit( $base_url ),
+			'api_key'  => $api_key,
+			'model'    => $model,
+		);
+	}
+
+	/**
+	 * AJAX handler — send a tiny probe to the provider configured on screen.
+	 *
+	 * Works with the values currently typed in the form, so the merchant can
+	 * validate a key without saving first.
 	 *
 	 * @since    1.0.0
 	 * @return void
@@ -904,17 +969,23 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	public function ajax_test_provider() {
 		$this->guard_ajax();
 
-		$client = new Fsweb_Ai_Automated_Contact_Ai_Client();
+		$endpoint = $this->endpoint_from_request();
+
+		if ( is_wp_error( $endpoint ) ) {
+			wp_send_json_error( array( 'message' => $endpoint->get_error_message() ) );
+		}
+
+		$client = new Fsweb_Ai_Automated_Contact_Ai_Client( $endpoint );
 
 		$result = $client->complete(
 			array(
 				array(
 					'role'    => 'user',
-					'content' => 'Responda apenas com a palavra: ok',
+					'content' => 'Reply with the single word: ok',
 				),
 			),
 			array(),
-			'Você é um teste de conexão. Responda de forma mínima.'
+			'You are a connection test. Answer with the minimum possible.'
 		);
 
 		if ( is_wp_error( $result ) ) {
@@ -923,11 +994,15 @@ class Fsweb_Ai_Automated_Contact_Admin {
 
 		wp_send_json_success(
 			array(
-				'message' => sprintf(
-					/* translators: %s: provider answer. */
-					__( 'Conexão bem-sucedida. Resposta do modelo: %s', 'fsweb-ai-automated-contact' ),
+				'message'  => sprintf(
+					/* translators: 1: provider id, 2: model name, 3: answer from the model. */
+					__( 'Success with %1$s / %2$s. Model answered: %3$s', 'fsweb-ai-automated-contact' ),
+					$endpoint['provider'],
+					$endpoint['model'],
 					trim( wp_strip_all_tags( (string) $result['content'] ) )
 				),
+				'provider' => $endpoint['provider'],
+				'model'    => $endpoint['model'],
 			)
 		);
 	}

@@ -112,12 +112,12 @@
 		return text;
 	}
 
-	function addRow( role, content ) {
+	function addRow( role, content, isError ) {
 		var row = document.createElement( 'div' );
 		row.className = 'fsweb-aic-row fsweb-aic-row--' + role;
 
 		var bubble = document.createElement( 'div' );
-		bubble.className = 'fsweb-aic-bubble fsweb-aic-bubble--' + role;
+		bubble.className = 'fsweb-aic-bubble fsweb-aic-bubble--' + role + ( isError ? ' fsweb-aic-bubble--error' : '' );
 		if ( 'user' === role ) {
 			bubble.textContent = content;
 		} else {
@@ -276,13 +276,15 @@
 	}
 
 	function addCheckoutCta( cart ) {
-		if ( ! cart || ! cart.checkout_url ) {
+		var url = ( cart && cart.checkout_url ) || config.checkout_url;
+
+		if ( ! url ) {
 			return;
 		}
 
 		var link = document.createElement( 'a' );
 		link.className = 'fsweb-aic-cta';
-		link.href = cart.checkout_url;
+		link.href = url;
 		link.textContent = text( 'go_checkout', 'Finalizar compra' );
 
 		messages.appendChild( link );
@@ -301,18 +303,37 @@
 				return;
 			}
 
-			addRow( entry.role === 'user' ? 'user' : 'agent', entry.content );
+			addRow( entry.role === 'user' ? 'user' : 'agent', entry.content, !! entry.error );
 
 			if ( entry.products && entry.products.length ) {
 				addProducts( entry.products );
 			}
+
+			if ( entry.checkout ) {
+				addCheckoutCta( null );
+			}
 		} );
 	}
 
-	function pushHistory( role, content, products ) {
-		history.push( { role: role, content: content, products: products || [] } );
+	function pushHistory( role, content, products, flags ) {
+		var entry = { role: role, content: content, products: products || [] };
+
+		if ( flags && flags.error ) {
+			entry.error = true;
+		}
+
+		if ( flags && flags.checkout ) {
+			entry.checkout = true;
+		}
+
+		history.push( entry );
 		history = history.slice( -MAX_HISTORY );
 		writeHistory();
+	}
+
+	function showError( message ) {
+		addRow( 'agent', message, true );
+		pushHistory( 'assistant', message, [], { error: true } );
 	}
 
 	function greet() {
@@ -338,7 +359,13 @@
 		}
 
 		greet();
+		scrollToBottom();
 		input.focus();
+
+		// Layout settles a beat later; make sure the last message is visible.
+		window.setTimeout( function () {
+			scrollToBottom();
+		}, 60 );
 	}
 
 	function closePanel() {
@@ -392,13 +419,13 @@
 				var payload = result.payload || {};
 
 				if ( ! result.ok ) {
-					addRow( 'agent', payload.message || text( 'error', 'Erro inesperado.' ) );
+					showError( payload.message || text( 'error', 'Something went wrong.' ) );
 					return;
 				}
 
 				var reply = payload.reply || '';
 				addRow( 'agent', reply );
-				pushHistory( 'assistant', reply, payload.products );
+				pushHistory( 'assistant', reply, payload.products, { checkout: !! payload.show_checkout } );
 				addProducts( payload.products );
 				if ( payload.show_checkout ) {
 					addCheckoutCta( payload.cart );
@@ -409,7 +436,7 @@
 					typing.remove();
 				}
 
-				addRow( 'agent', text( 'error', 'Não consegui responder agora.' ) );
+				showError( text( 'error', 'I could not answer right now.' ) );
 			} )
 			.then( function () {
 				setBusy( false );
@@ -507,6 +534,8 @@
 	if ( history.length ) {
 		greeted = true;
 	}
+
+	scrollToBottom();
 
 	if ( shouldReopen() ) {
 		openPanel();

@@ -132,6 +132,13 @@
 		}
 	}
 
+	// Safety net: never print raw entities from the catalogue.
+	function decode( value ) {
+		var holder = document.createElement( 'textarea' );
+		holder.innerHTML = String( value == null ? '' : value );
+		return holder.value;
+	}
+
 	function addProducts( products ) {
 		if ( ! products || ! products.length ) {
 			return;
@@ -156,36 +163,41 @@
 			var card = document.createElement( 'div' );
 			card.className = 'fsweb-aic-product';
 
-			if ( product.image ) {
-				var thumb = document.createElement( 'div' );
-				thumb.className = 'fsweb-aic-product__thumb';
+			var thumb = document.createElement( 'div' );
+			thumb.className = 'fsweb-aic-product__thumb';
 
+			if ( product.image ) {
 				var image = document.createElement( 'img' );
 				image.src = product.image;
 				image.alt = '';
 				image.loading = 'lazy';
 
 				thumb.appendChild( image );
-				card.appendChild( thumb );
+			} else {
+				// No featured image: show a discreet placeholder instead of a gap.
+				thumb.className += ' fsweb-aic-product__thumb--empty';
+				thumb.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm11.5 5.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM5 17l4.5-5 3.5 3.5 2.5-2 4.5 3.5H5Z" fill="currentColor"/></svg>';
 			}
+
+			card.appendChild( thumb );
 
 			var info = document.createElement( 'div' );
 			info.className = 'fsweb-aic-product__info';
 
 			var name = document.createElement( 'span' );
 			name.className = 'fsweb-aic-product__name';
-			name.textContent = product.name || '';
+			name.textContent = decode( product.name );
 			info.appendChild( name );
 
 			var price = document.createElement( 'span' );
 			price.className = 'fsweb-aic-product__price';
-			price.textContent = product.price || '';
+			price.textContent = decode( product.price );
 			info.appendChild( price );
 
 			if ( product.summary ) {
 				var summary = document.createElement( 'span' );
 				summary.className = 'fsweb-aic-product__summary';
-				summary.textContent = product.summary;
+				summary.textContent = decode( product.summary );
 				info.appendChild( summary );
 			}
 

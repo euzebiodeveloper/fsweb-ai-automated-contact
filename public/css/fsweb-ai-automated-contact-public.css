@@ -378,6 +378,62 @@
 .fsweb-aic-widget .fsweb-aic-messages {
 	overflow-y: auto !important;
 	overflow-x: hidden !important;
+	padding-bottom: 18px !important;
+}
+
+/* Product card buttons: the theme repaints <button> and <a>, so pin them. */
+.fsweb-aic-widget .fsweb-aic-product__button {
+	background: var(--fsweb-aic-accent) !important;
+	border: 0 !important;
+	border-radius: 999px !important;
+	box-shadow: none !important;
+	color: var(--fsweb-aic-title) !important;
+	cursor: pointer;
+	font: inherit !important;
+	font-size: 12px !important;
+	font-weight: 600 !important;
+	line-height: 1 !important;
+	min-height: 0 !important;
+	padding: 8px 14px !important;
+	text-transform: none !important;
+}
+
+.fsweb-aic-widget .fsweb-aic-product__button:hover,
+.fsweb-aic-widget .fsweb-aic-product__button:focus-visible {
+	filter: brightness(0.92);
+}
+
+.fsweb-aic-widget .fsweb-aic-product__link {
+	background: transparent !important;
+	border: 1px solid var(--fsweb-aic-accent) !important;
+	border-radius: 999px !important;
+	color: var(--fsweb-aic-accent) !important;
+	display: inline-block;
+	font-size: 12px !important;
+	font-weight: 600 !important;
+	line-height: 1 !important;
+	padding: 7px 13px !important;
+	text-decoration: none !important;
+}
+
+.fsweb-aic-widget .fsweb-aic-product__link:hover,
+.fsweb-aic-widget .fsweb-aic-product__link:focus-visible {
+	background: var(--fsweb-aic-accent) !important;
+	color: var(--fsweb-aic-title) !important;
+}
+
+/* Placeholder when the product has no featured image. */
+.fsweb-aic-product__thumb--empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--fsweb-aic-chat-text);
+	opacity: 0.35;
+}
+
+.fsweb-aic-product__thumb--empty svg {
+	width: 22px;
+	height: 22px;
 }
 
 /* Product card extras: short description and the second action. */
@@ -535,8 +591,8 @@
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
-	max-width: 92%;
-	margin: 0 0 10px;
+	max-width: 100%;
+	margin: 2px 0 12px;
 }
 
 .fsweb-aic-product {

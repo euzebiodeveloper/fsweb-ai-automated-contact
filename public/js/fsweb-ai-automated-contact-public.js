@@ -89,13 +89,40 @@
 		messages.scrollTop = messages.scrollHeight;
 	}
 
+	function escapeHtml( value ) {
+		return String( value == null ? '' : value )
+			.replace( /&/g, '&amp;' )
+			.replace( /</g, '&lt;' )
+			.replace( />/g, '&gt;' )
+			.replace( /"/g, '&quot;' );
+	}
+
+	// Small markdown subset: the agent writes **bold**, lists and links, and
+	// they must render as such instead of showing the raw characters.
+	function formatMessage( value ) {
+		var text = escapeHtml( decode( value ) );
+
+		text = text.replace( /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>' );
+		text = text.replace( /\*\*([^*]+)\*\*/g, '<strong>$1</strong>' );
+		text = text.replace( /__([^_]+)__/g, '<strong>$1</strong>' );
+		text = text.replace( /(^|\s)\*([^*\n]+)\*(?=\s|$)/g, '$1<em>$2</em>' );
+		text = text.replace( /^\s*[-•]\s+/gm, '• ' );
+		text = text.replace( /(^|\s)(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>' );
+
+		return text;
+	}
+
 	function addRow( role, content ) {
 		var row = document.createElement( 'div' );
 		row.className = 'fsweb-aic-row fsweb-aic-row--' + role;
 
 		var bubble = document.createElement( 'div' );
 		bubble.className = 'fsweb-aic-bubble fsweb-aic-bubble--' + role;
-		bubble.textContent = content;
+		if ( 'user' === role ) {
+			bubble.textContent = content;
+		} else {
+			bubble.innerHTML = formatMessage( content );
+		}
 
 		row.appendChild( bubble );
 		messages.appendChild( row );
@@ -270,14 +297,20 @@
 		}
 
 		stored.forEach( function ( entry ) {
-			if ( entry && entry.content ) {
-				addRow( entry.role === 'user' ? 'user' : 'agent', entry.content );
+			if ( ! entry || ! entry.content ) {
+				return;
+			}
+
+			addRow( entry.role === 'user' ? 'user' : 'agent', entry.content );
+
+			if ( entry.products && entry.products.length ) {
+				addProducts( entry.products );
 			}
 		} );
 	}
 
-	function pushHistory( role, content ) {
-		history.push( { role: role, content: content } );
+	function pushHistory( role, content, products ) {
+		history.push( { role: role, content: content, products: products || [] } );
 		history = history.slice( -MAX_HISTORY );
 		writeHistory();
 	}
@@ -365,9 +398,11 @@
 
 				var reply = payload.reply || '';
 				addRow( 'agent', reply );
-				pushHistory( 'assistant', reply );
+				pushHistory( 'assistant', reply, payload.products );
 				addProducts( payload.products );
-				addCheckoutCta( payload.cart );
+				if ( payload.show_checkout ) {
+					addCheckoutCta( payload.cart );
+				}
 			} )
 			.catch( function () {
 				if ( typing ) {

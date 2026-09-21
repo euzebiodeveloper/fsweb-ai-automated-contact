@@ -7,6 +7,10 @@
  * widget only ever talks to the plugin's own REST endpoints — provider keys
  * stay on the server.
  *
+ * Appearance is merchant-driven: icon, colours, position, auto-open and an
+ * optional custom CSS block are all resolved here and handed to the browser as
+ * CSS variables.
+ *
  * @link       https://flowsyncweb.com
  * @since      1.0.0
  *
@@ -51,6 +55,15 @@ class Fsweb_Ai_Automated_Contact_Public {
 	private $should_render = false;
 
 	/**
+	 * Settings resolved once per request.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      array
+	 */
+	private $settings = array();
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -60,6 +73,53 @@ class Fsweb_Ai_Automated_Contact_Public {
 	public function __construct( $plugin_name, $version ) {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
+		$this->settings    = Fsweb_Ai_Automated_Contact_Settings::all();
+	}
+
+	/**
+	 * Icon markup for one of the built-in avatars.
+	 *
+	 * @since  1.0.0
+	 * @param  string $type Icon id.
+	 * @return string       Inline SVG (empty for "initials" and "custom").
+	 */
+	public static function icon_svg( $type ) {
+		switch ( $type ) {
+			case 'whatsapp':
+				return '<svg class="fsweb-aic-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.15c-1.5 0-2.97-.4-4.26-1.16l-.3-.18-3.12.82.83-3.04-.2-.31a8.19 8.19 0 0 1-1.26-4.37c0-4.54 3.7-8.24 8.24-8.24s8.24 3.7 8.24 8.24-3.7 8.24-8.17 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.7-.8-.23-.08-.4-.12-.56.13-.17.25-.65.8-.8.96-.15.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.39.11-.51.11-.11.29-.29.43-.44.14-.15.19-.25.29-.42.1-.17.05-.31-.02-.44-.08-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.42h-.48c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08 0 1.23.89 2.41 1.02 2.58.12.17 1.75 2.67 4.23 3.74.59.25 1.05.4 1.41.51.58.18 1.11.16 1.53.1.47-.07 1.44-.59 1.64-1.16.2-.57.2-1.05.14-1.16-.06-.1-.23-.17-.48-.29z"/></svg>';
+			case 'telegram':
+				return '<svg class="fsweb-aic-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M21.9 4.3 19 19.2c-.2 1-.8 1.2-1.6.8l-4.4-3.3-2.1 2c-.2.3-.4.4-.9.4l.3-4.5 8.2-7.4c.4-.3-.1-.5-.6-.2L7.8 13.2 3.4 11.8c-1-.3-1-1 .2-1.4l17-6.6c.8-.3 1.5.2 1.3 1.5z"/></svg>';
+			case 'robot':
+				return '<svg class="fsweb-aic-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v1h3a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3h3V4a1 1 0 0 1 1-1zm-3 5a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-1zm6 0a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-1zm-5 5v1h4v-1h-4zm6.5 5.5h1a2.5 2.5 0 0 1-2.5 2.5h-6A2.5 2.5 0 0 1 6.5 18.5h1a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5z"/></svg>';
+			case 'chat':
+			default:
+				return '<svg class="fsweb-aic-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M4.5 3h15A2.5 2.5 0 0 1 22 5.5v9A2.5 2.5 0 0 1 19.5 17H9.6l-4.9 3.7A1 1 0 0 1 3 19.9V5.5A2.5 2.5 0 0 1 4.5 3z"/><circle cx="8.6" cy="10" r="1.3" fill="#fff"/><circle cx="12" cy="10" r="1.3" fill="#fff"/><circle cx="15.4" cy="10" r="1.3" fill="#fff"/></svg>';
+		}
+	}
+
+	/**
+	 * Avatar markup for the chat header.
+	 *
+	 * @since  1.0.0
+	 * @param  array $settings Plugin settings.
+	 * @return string
+	 */
+	public static function avatar_markup( array $settings ) {
+		$type = $settings['avatar_type'];
+
+		if ( 'custom' === $type && ! empty( $settings['avatar_image'] ) ) {
+			return '<img src="' . esc_url( $settings['avatar_image'] ) . '" alt="" loading="lazy">';
+		}
+
+		if ( 'initials' === $type ) {
+			$letter = function_exists( 'mb_substr' )
+				? mb_substr( $settings['agent_name'], 0, 1 )
+				: substr( $settings['agent_name'], 0, 1 );
+
+			return '<span class="fsweb-aic-initial">' . esc_html( $letter ) . '</span>';
+		}
+
+		return self::icon_svg( $type );
 	}
 
 	/**
@@ -69,7 +129,7 @@ class Fsweb_Ai_Automated_Contact_Public {
 	 * @return bool
 	 */
 	private function is_enabled() {
-		$settings = Fsweb_Ai_Automated_Contact_Settings::all();
+		$settings = $this->settings;
 
 		if ( 'yes' !== $settings['enabled'] ) {
 			return false;
@@ -113,15 +173,22 @@ class Fsweb_Ai_Automated_Contact_Public {
 			'all'
 		);
 
-		$accent = Fsweb_Ai_Automated_Contact_Settings::get( 'accent_color', '#2563eb' );
+		$settings = $this->settings;
 
-		wp_add_inline_style(
-			$this->plugin_name,
-			sprintf(
-				'.fsweb-aic-widget{--fsweb-aic-accent:%1$s;} .fsweb-aic-launcher{background:%1$s;} .fsweb-aic-bubble--user{background:%1$s;} .fsweb-aic-send{background:%1$s;} .fsweb-aic-cta{background:%1$s;}',
-				esc_html( $accent )
-			)
+		$css = sprintf(
+			'.fsweb-aic-widget{--fsweb-aic-accent:%1$s;--fsweb-aic-title:%2$s;--fsweb-aic-chat-bg:%3$s;--fsweb-aic-chat-text:%4$s;}',
+			esc_html( $settings['accent_color'] ),
+			esc_html( $settings['color_title'] ),
+			esc_html( $settings['chat_background'] ),
+			esc_html( $settings['chat_text'] )
 		);
+
+		wp_add_inline_style( $this->plugin_name, $css );
+
+		// Merchant CSS runs last so it can override anything above.
+		if ( ! empty( $settings['custom_css'] ) ) {
+			wp_add_inline_style( $this->plugin_name, wp_strip_all_tags( (string) $settings['custom_css'] ) );
+		}
 	}
 
 	/**
@@ -143,30 +210,34 @@ class Fsweb_Ai_Automated_Contact_Public {
 			true
 		);
 
-		$settings = Fsweb_Ai_Automated_Contact_Settings::all();
+		$settings = $this->settings;
 
 		wp_localize_script(
 			$this->plugin_name,
 			'FSWEB_Aic_Widget',
 			array(
-				'rest_url'    => esc_url_raw( rest_url( Fsweb_Ai_Automated_Contact_Rest::NAMESPACE_V1 ) ),
-				'nonce'       => wp_create_nonce( 'wp_rest' ),
-				'agent_name'  => $settings['agent_name'],
-				'welcome'     => $settings['welcome_message'],
-				'privacy'     => $settings['privacy_note'],
-				'position'    => $settings['position'],
-				'cart_url'    => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '',
+				'rest_url'     => esc_url_raw( rest_url( Fsweb_Ai_Automated_Contact_Rest::NAMESPACE_V1 ) ),
+				'nonce'        => wp_create_nonce( 'wp_rest' ),
+				'agent_name'   => $settings['agent_name'],
+				'welcome'      => $settings['welcome_message'],
+				'privacy'      => $settings['privacy_note'],
+				'position'     => $settings['position'],
+				'avatar_type'  => $settings['avatar_type'],
+				'avatar_image' => $settings['avatar_image'],
+				'auto_open'    => ( 'yes' === $settings['auto_open'] ),
+				'auto_open_delay' => (int) $settings['auto_open_delay'],
+				'cart_url'     => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '',
 				'checkout_url' => function_exists( 'wc_get_checkout_url' ) ? wc_get_checkout_url() : '',
-				'i18n'        => array(
-					'placeholder' => __( 'Type your message…', 'fsweb-ai-automated-contact' ),
-					'send'        => __( 'Send', 'fsweb-ai-automated-contact' ),
-					'close'       => __( 'Close', 'fsweb-ai-automated-contact' ),
-					'open'        => __( 'Open chat', 'fsweb-ai-automated-contact' ),
-					'reset'       => __( 'New conversation', 'fsweb-ai-automated-contact' ),
-					'typing'      => __( 'typing…', 'fsweb-ai-automated-contact' ),
-					'error'       => __( 'I could not answer right now. Please try again in a moment.', 'fsweb-ai-automated-contact' ),
-					'add_to_cart' => __( 'Add to cart', 'fsweb-ai-automated-contact' ),
-					'go_checkout' => __( 'Checkout', 'fsweb-ai-automated-contact' ),
+				'i18n'         => array(
+					'placeholder'  => __( 'Type your message…', 'fsweb-ai-automated-contact' ),
+					'send'         => __( 'Send', 'fsweb-ai-automated-contact' ),
+					'close'        => __( 'Close', 'fsweb-ai-automated-contact' ),
+					'open'         => __( 'Open chat', 'fsweb-ai-automated-contact' ),
+					'reset'        => __( 'New conversation', 'fsweb-ai-automated-contact' ),
+					'typing'       => __( 'typing…', 'fsweb-ai-automated-contact' ),
+					'error'        => __( 'I could not answer right now. Please try again in a moment.', 'fsweb-ai-automated-contact' ),
+					'add_to_cart'  => __( 'Add to cart', 'fsweb-ai-automated-contact' ),
+					'go_checkout'  => __( 'Checkout', 'fsweb-ai-automated-contact' ),
 					'view_product' => __( 'View product', 'fsweb-ai-automated-contact' ),
 					'cart_updated' => __( 'Cart updated', 'fsweb-ai-automated-contact' ),
 				),
@@ -185,7 +256,7 @@ class Fsweb_Ai_Automated_Contact_Public {
 			return;
 		}
 
-		$settings = Fsweb_Ai_Automated_Contact_Settings::all();
+		$settings = $this->settings;
 
 		require plugin_dir_path( __FILE__ ) . 'partials/fsweb-ai-automated-contact-widget.php';
 	}

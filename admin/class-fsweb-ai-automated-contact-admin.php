@@ -117,6 +117,9 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			return;
 		}
 
+		// Needed by the avatar picker on the settings screen.
+		wp_enqueue_media();
+
 		wp_enqueue_script(
 			$this->plugin_name,
 			plugin_dir_url( __FILE__ ) . 'js/fsweb-ai-automated-contact-admin.js',
@@ -144,6 +147,8 @@ class Fsweb_Ai_Automated_Contact_Admin {
 					'validating'         => __( 'Verifying…', 'fsweb-ai-automated-contact' ),
 					'testing'            => __( 'Testing…', 'fsweb-ai-automated-contact' ),
 					'custom_model'       => __( 'Other model (type it)', 'fsweb-ai-automated-contact' ),
+					'choose_image'       => __( 'Choose image', 'fsweb-ai-automated-contact' ),
+					'use_image'          => __( 'Use this image', 'fsweb-ai-automated-contact' ),
 					'current_setup'      => __( 'Current setup: %1$s / %2$s', 'fsweb-ai-automated-contact' ),
 					'empty_key'          => __( 'Enter a license key.', 'fsweb-ai-automated-contact' ),
 					'network_error'      => __( 'Network error. Please try again.', 'fsweb-ai-automated-contact' ),
@@ -643,8 +648,54 @@ class Fsweb_Ai_Automated_Contact_Admin {
 						<div class="fsweb-aic-card__body">
 							<table class="form-table" role="presentation">
 								<tr>
-									<th scope="row"><label for="fsweb-aic-color"><?php esc_html_e( 'Accent colour', 'fsweb-ai-automated-contact' ); ?></label></th>
-									<td><input type="color" id="fsweb-aic-color" name="<?php echo esc_attr( $option ); ?>[accent_color]" value="<?php echo esc_attr( $settings['accent_color'] ); ?>"></td>
+									<th scope="row"><label for="fsweb-aic-avatar"><?php esc_html_e( 'Chat icon', 'fsweb-ai-automated-contact' ); ?></label></th>
+									<td>
+										<select id="fsweb-aic-avatar" name="<?php echo esc_attr( $option ); ?>[avatar_type]">
+											<option value="chat" <?php selected( 'chat', $settings['avatar_type'] ); ?>><?php esc_html_e( 'Chat bubble', 'fsweb-ai-automated-contact' ); ?></option>
+											<option value="initials" <?php selected( 'initials', $settings['avatar_type'] ); ?>><?php esc_html_e( 'Initial letter', 'fsweb-ai-automated-contact' ); ?></option>
+											<option value="whatsapp" <?php selected( 'whatsapp', $settings['avatar_type'] ); ?>>WhatsApp</option>
+											<option value="telegram" <?php selected( 'telegram', $settings['avatar_type'] ); ?>>Telegram</option>
+											<option value="robot" <?php selected( 'robot', $settings['avatar_type'] ); ?>><?php esc_html_e( 'Robot', 'fsweb-ai-automated-contact' ); ?></option>
+											<option value="custom" <?php selected( 'custom', $settings['avatar_type'] ); ?>><?php esc_html_e( 'Custom image', 'fsweb-ai-automated-contact' ); ?></option>
+										</select>
+
+										<div class="fsweb-aic-avatar-custom" id="fsweb-aic-avatar-custom"<?php echo 'custom' === $settings['avatar_type'] ? '' : ' hidden'; ?>>
+											<input type="url" class="regular-text" id="fsweb-aic-avatar-image"
+												name="<?php echo esc_attr( $option ); ?>[avatar_image]"
+												value="<?php echo esc_attr( $settings['avatar_image'] ); ?>"
+												placeholder="https://...">
+											<button type="button" class="button" id="fsweb-aic-avatar-pick"><?php esc_html_e( 'Choose image', 'fsweb-ai-automated-contact' ); ?></button>
+											<button type="button" class="button-link" id="fsweb-aic-avatar-clear"><?php esc_html_e( 'Clear', 'fsweb-ai-automated-contact' ); ?></button>
+										</div>
+										<p class="description"><?php esc_html_e( 'Shown on the floating button and in the chat header.', 'fsweb-ai-automated-contact' ); ?></p>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row"><?php esc_html_e( 'Colours', 'fsweb-ai-automated-contact' ); ?></th>
+									<td>
+										<div class="fsweb-aic-colors">
+											<label><span><?php esc_html_e( 'Primary', 'fsweb-ai-automated-contact' ); ?></span>
+												<input type="color" id="fsweb-aic-color-primary" name="<?php echo esc_attr( $option ); ?>[accent_color]" value="<?php echo esc_attr( $settings['accent_color'] ); ?>"></label>
+											<label><span><?php esc_html_e( 'Title &amp; icon', 'fsweb-ai-automated-contact' ); ?></span>
+												<input type="color" id="fsweb-aic-color-title" name="<?php echo esc_attr( $option ); ?>[color_title]" value="<?php echo esc_attr( $settings['color_title'] ); ?>"></label>
+											<label><span><?php esc_html_e( 'Chat background', 'fsweb-ai-automated-contact' ); ?></span>
+												<input type="color" id="fsweb-aic-color-bg" name="<?php echo esc_attr( $option ); ?>[chat_background]" value="<?php echo esc_attr( $settings['chat_background'] ); ?>"></label>
+											<label><span><?php esc_html_e( 'Chat text', 'fsweb-ai-automated-contact' ); ?></span>
+												<input type="color" id="fsweb-aic-color-text" name="<?php echo esc_attr( $option ); ?>[chat_text]" value="<?php echo esc_attr( $settings['chat_text'] ); ?>"></label>
+										</div>
+										<div class="fsweb-aic-preview" id="fsweb-aic-preview">
+											<div class="fsweb-aic-preview__panel">
+												<div class="fsweb-aic-preview__header">
+													<span class="fsweb-aic-preview__avatar" id="fsweb-aic-preview-avatar"></span>
+													<span class="fsweb-aic-preview__name"><?php echo esc_html( $settings['agent_name'] ); ?></span>
+												</div>
+												<div class="fsweb-aic-preview__body" id="fsweb-aic-preview-body">
+													<span class="fsweb-aic-preview__bubble" id="fsweb-aic-preview-bubble"><?php esc_html_e( 'Hi! How can I help?', 'fsweb-ai-automated-contact' ); ?></span>
+												</div>
+											</div>
+											<span class="fsweb-aic-preview__ball" id="fsweb-aic-preview-ball"></span>
+										</div>
+									</td>
 								</tr>
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Position', 'fsweb-ai-automated-contact' ); ?></th>
@@ -652,6 +703,28 @@ class Fsweb_Ai_Automated_Contact_Admin {
 										<label><input type="radio" name="<?php echo esc_attr( $option ); ?>[position]" value="right" <?php checked( 'right', $settings['position'] ); ?>> <?php esc_html_e( 'Right', 'fsweb-ai-automated-contact' ); ?></label>
 										&nbsp;&nbsp;
 										<label><input type="radio" name="<?php echo esc_attr( $option ); ?>[position]" value="left" <?php checked( 'left', $settings['position'] ); ?>> <?php esc_html_e( 'Left', 'fsweb-ai-automated-contact' ); ?></label>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row"><?php esc_html_e( 'Auto open', 'fsweb-ai-automated-contact' ); ?></th>
+									<td>
+										<label>
+											<input type="checkbox" name="<?php echo esc_attr( $option ); ?>[auto_open]" value="yes" <?php checked( 'yes', $settings['auto_open'] ); ?>>
+											<?php esc_html_e( 'Open the chat automatically for new visitors', 'fsweb-ai-automated-contact' ); ?>
+										</label>
+										<p class="fsweb-aic-field">
+											<label for="fsweb-aic-auto-delay"><?php esc_html_e( 'Delay (seconds)', 'fsweb-ai-automated-contact' ); ?></label>
+											<input type="number" min="0" max="120" step="1" class="small-text" id="fsweb-aic-auto-delay"
+												name="<?php echo esc_attr( $option ); ?>[auto_open_delay]" value="<?php echo esc_attr( (string) $settings['auto_open_delay'] ); ?>">
+										</p>
+										<p class="description"><?php esc_html_e( 'Opens once per visit, after the delay, and only if the customer has not opened it yet.', 'fsweb-ai-automated-contact' ); ?></p>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row"><label for="fsweb-aic-custom-css"><?php esc_html_e( 'Custom CSS', 'fsweb-ai-automated-contact' ); ?></label></th>
+									<td>
+										<textarea class="large-text code" rows="6" id="fsweb-aic-custom-css" name="<?php echo esc_attr( $option ); ?>[custom_css]" placeholder=".fsweb-aic-widget .fsweb-aic-panel { border-radius: 22px; }"><?php echo esc_textarea( $settings['custom_css'] ); ?></textarea>
+										<p class="description"><?php esc_html_e( 'Optional: extra styles for the widget, applied after the plugin CSS.', 'fsweb-ai-automated-contact' ); ?></p>
 									</td>
 								</tr>
 							</table>
@@ -782,25 +855,41 @@ class Fsweb_Ai_Automated_Contact_Admin {
 				</div>
 				<div class="fsweb-aic-card__body">
 					<ol class="fsweb-aic-steps">
-						<li>
-							<strong><?php esc_html_e( 'Pick the AI', 'fsweb-ai-automated-contact' ); ?></strong>
-							<p><?php esc_html_e( 'Pick OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq or an OpenAI-compatible endpoint. Paste the API key of the chosen provider.', 'fsweb-ai-automated-contact' ); ?></p>
+						<li class="fsweb-aic-step">
+							<div class="fsweb-aic-step__content">
+								<h3><?php esc_html_e( 'Pick the AI', 'fsweb-ai-automated-contact' ); ?></h3>
+								<p><?php esc_html_e( 'Pick OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq or an OpenAI-compatible endpoint. Paste the API key of the chosen provider.', 'fsweb-ai-automated-contact' ); ?></p>
+							</div>
 						</li>
-						<li>
-							<strong><?php esc_html_e( 'Pick the model', 'fsweb-ai-automated-contact' ); ?></strong>
-							<p><?php esc_html_e( 'The list is pre-filled per provider. You can type any specific model, including recent releases.', 'fsweb-ai-automated-contact' ); ?></p>
+						<li class="fsweb-aic-step">
+							<div class="fsweb-aic-step__content">
+								<h3><?php esc_html_e( 'Pick the model', 'fsweb-ai-automated-contact' ); ?></h3>
+								<p><?php esc_html_e( 'The list is pre-filled per provider. You can type any specific model, including recent releases.', 'fsweb-ai-automated-contact' ); ?></p>
+							</div>
 						</li>
-						<li>
-							<strong><?php esc_html_e( 'Write the store context', 'fsweb-ai-automated-contact' ); ?></strong>
-							<p><?php esc_html_e( 'The more context, the better the service: delivery times, shipping, payment, returns, tone of voice and the details the AI must not invent.', 'fsweb-ai-automated-contact' ); ?></p>
+						<li class="fsweb-aic-step">
+							<div class="fsweb-aic-step__content">
+								<h3><?php esc_html_e( 'Write the store context', 'fsweb-ai-automated-contact' ); ?></h3>
+								<p><?php esc_html_e( 'The more context, the better the service: delivery times, shipping, payment, returns, tone of voice and the details the AI must not invent.', 'fsweb-ai-automated-contact' ); ?></p>
+							</div>
 						</li>
-						<li>
-							<strong><?php esc_html_e( 'Enable WooCommerce in the chat', 'fsweb-ai-automated-contact' ); ?></strong>
-							<p><?php esc_html_e( 'With catalogue access enabled, the AI searches products, shows price and availability, adds to the cart (after confirmation) and sends the customer to checkout.', 'fsweb-ai-automated-contact' ); ?></p>
+						<li class="fsweb-aic-step">
+							<div class="fsweb-aic-step__content">
+								<h3><?php esc_html_e( 'Enable WooCommerce in the chat', 'fsweb-ai-automated-contact' ); ?></h3>
+								<p><?php esc_html_e( 'With catalogue access enabled, the AI searches products, shows price and availability, adds to the cart (after confirmation) and sends the customer to checkout.', 'fsweb-ai-automated-contact' ); ?></p>
+							</div>
 						</li>
-						<li>
-							<strong><?php esc_html_e( 'Test and enable the widget', 'fsweb-ai-automated-contact' ); ?></strong>
-							<p><?php esc_html_e( 'Use the connection test, save the settings and tick "Show the chat on the site". Open the store as a visitor to check the experience.', 'fsweb-ai-automated-contact' ); ?></p>
+						<li class="fsweb-aic-step">
+							<div class="fsweb-aic-step__content">
+								<h3><?php esc_html_e( 'Style the widget', 'fsweb-ai-automated-contact' ); ?></h3>
+								<p><?php esc_html_e( 'Choose the icon, the colours and whether the chat opens by itself. You can also fine-tune it with custom CSS.', 'fsweb-ai-automated-contact' ); ?></p>
+							</div>
+						</li>
+						<li class="fsweb-aic-step">
+							<div class="fsweb-aic-step__content">
+								<h3><?php esc_html_e( 'Test and enable the widget', 'fsweb-ai-automated-contact' ); ?></h3>
+								<p><?php esc_html_e( 'Use the connection test, save the settings and tick "Show the chat on the site". Open the store as a visitor to check the experience.', 'fsweb-ai-automated-contact' ); ?></p>
+							</div>
 						</li>
 					</ol>
 					<p><a class="button button-primary" href="<?php echo esc_url( $settings_url ); ?>"><?php esc_html_e( 'Go to settings', 'fsweb-ai-automated-contact' ); ?></a></p>

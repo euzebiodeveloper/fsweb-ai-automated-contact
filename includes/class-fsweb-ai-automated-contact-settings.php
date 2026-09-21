@@ -157,7 +157,16 @@ class Fsweb_Ai_Automated_Contact_Settings {
 			'product_limit'     => 5,
 			'allow_add_to_cart' => 'yes',
 			'position'          => 'right',
-			'accent_color'      => '#2563eb',
+			'accent_color'      => '#6e8b54',
+			'color_title'       => '#ffffff',
+			'color_icon'        => '#ffffff',
+			'chat_background'   => '#f6f8fc',
+			'chat_text'         => '#16202c',
+			'avatar_type'       => 'chat',
+			'avatar_image'      => '',
+			'auto_open'         => 'no',
+			'auto_open_delay'   => 6,
+			'custom_css'        => '',
 			'privacy_note'      => __( 'Automated AI support. Do not send sensitive data.', 'fsweb-ai-automated-contact' ),
 			'rate_limit'        => 30,
 			'providers'         => array(
@@ -269,8 +278,25 @@ class Fsweb_Ai_Automated_Contact_Settings {
 
 		$output['position'] = ( isset( $input['position'] ) && 'left' === $input['position'] ) ? 'left' : 'right';
 
-		$color = isset( $input['accent_color'] ) ? sanitize_hex_color( $input['accent_color'] ) : '';
-		$output['accent_color'] = $color ? $color : $defaults['accent_color'];
+		foreach ( array( 'accent_color', 'color_title', 'color_icon', 'chat_background', 'chat_text' ) as $color_key ) {
+			$color = isset( $input[ $color_key ] ) ? sanitize_hex_color( $input[ $color_key ] ) : '';
+			$output[ $color_key ] = $color ? $color : $defaults[ $color_key ];
+		}
+
+		$avatar_types        = array( 'initials', 'chat', 'whatsapp', 'telegram', 'robot', 'custom' );
+		$avatar_type         = isset( $input['avatar_type'] ) ? sanitize_key( $input['avatar_type'] ) : $defaults['avatar_type'];
+		$output['avatar_type'] = in_array( $avatar_type, $avatar_types, true ) ? $avatar_type : $defaults['avatar_type'];
+
+		$avatar_image          = isset( $input['avatar_image'] ) ? esc_url_raw( trim( (string) $input['avatar_image'] ) ) : '';
+		$output['avatar_image'] = $avatar_image;
+
+		$output['auto_open']   = ( isset( $input['auto_open'] ) && 'yes' === $input['auto_open'] ) ? 'yes' : 'no';
+
+		$delay = isset( $input['auto_open_delay'] ) ? absint( $input['auto_open_delay'] ) : (int) $defaults['auto_open_delay'];
+		$output['auto_open_delay'] = max( 0, min( 120, $delay ) );
+
+		// Merchant CSS: strip tags so nothing executable survives.
+		$output['custom_css'] = isset( $input['custom_css'] ) ? trim( wp_strip_all_tags( (string) $input['custom_css'] ) ) : '';
 
 		// Provider credentials.
 		$output['providers'] = array();

@@ -360,6 +360,35 @@
 		}
 	} );
 
+	// Auto open once per visit, when the merchant enabled it.
+	function maybeAutoOpen() {
+		if ( ! config.auto_open || greeted ) {
+			return;
+		}
+
+		try {
+			if ( window.sessionStorage.getItem( STORAGE_KEY + '_auto' ) ) {
+				return;
+			}
+
+			window.sessionStorage.setItem( STORAGE_KEY + '_auto', '1' );
+		} catch ( error ) {
+			// Storage unavailable: keep going, it just opens every visit.
+		}
+
+		var delay = parseInt( config.auto_open_delay, 10 );
+
+		if ( isNaN( delay ) || delay < 0 ) {
+			delay = 6;
+		}
+
+		window.setTimeout( function () {
+			if ( panel.hidden && ! busy ) {
+				openPanel();
+			}
+		}, delay * 1000 );
+	}
+
 	history = readHistory();
 	widget.hidden = false;
 	renderExisting();
@@ -367,4 +396,6 @@
 	if ( history.length ) {
 		greeted = true;
 	}
+
+	maybeAutoOpen();
 } )();

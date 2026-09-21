@@ -12,8 +12,8 @@
 /*  Design tokens (scoped to the plugin pages)
 /* ------------------------------------------------------------------ */
 .fsweb-aic-wrap {
-	--fsweb-aic-brand: #7b61ff;
-	--fsweb-aic-brand-dark: #5b3fd4;
+	--fsweb-aic-brand: #6e8b54;
+	--fsweb-aic-brand-dark: #4a6136;
 	--fsweb-aic-primary: var(--wp-admin-theme-color, #3858e9);
 	--fsweb-aic-heading: #23282d;
 	--fsweb-aic-body: #3c434a;
@@ -507,7 +507,7 @@ body.fsweb-aic-onboarding-page #wpbody {
 	justify-content: center;
 	padding: 48px;
 	box-sizing: border-box;
-	background: #007cba;
+	background: #4a6136;
 }
 
 .fsweb-aic-onboarding__brand-img {
@@ -579,8 +579,8 @@ body.fsweb-aic-onboarding-page #wpbody {
 }
 
 .fsweb-aic-onboarding__input:focus {
-	border-color: #007cba;
-	box-shadow: 0 0 0 1px #007cba;
+	border-color: #6e8b54;
+	box-shadow: 0 0 0 1px #6e8b54;
 	outline: none;
 }
 

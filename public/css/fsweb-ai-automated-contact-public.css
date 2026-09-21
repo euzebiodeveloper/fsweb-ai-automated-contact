@@ -19,9 +19,9 @@
 .fsweb-aic-widget {
 	--fsweb-aic-accent: #6e8b54;
 	--fsweb-aic-title: #ffffff;
-	--fsweb-aic-chat-bg: #f6f8fc;
+	--fsweb-aic-chat-bg: #f6f8f5;
 	--fsweb-aic-chat-text: #16202c;
-	--fsweb-aic-agent-bubble: #ffffff;
+	--fsweb-aic-agent-bubble: #e9ebee;
 	--fsweb-aic-radius: 18px;
 	--fsweb-aic-shadow: 0 16px 44px rgba(16, 30, 54, 0.24);
 	position: fixed;

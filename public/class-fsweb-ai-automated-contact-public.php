@@ -241,6 +241,7 @@ class Fsweb_Ai_Automated_Contact_Public {
 					'go_checkout'  => __( 'Checkout', 'fsweb-ai-automated-contact' ),
 					'view_product' => __( 'View product', 'fsweb-ai-automated-contact' ),
 					'cart_updated' => __( 'Cart updated', 'fsweb-ai-automated-contact' ),
+					'out_of_stock' => __( 'Out of stock', 'fsweb-ai-automated-contact' ),
 				),
 			)
 		);

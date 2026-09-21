@@ -120,12 +120,12 @@
 			var card = document.createElement( 'div' );
 			card.className = 'fsweb-aic-product';
 
-			if ( product.imagem ) {
+			if ( product.image ) {
 				var thumb = document.createElement( 'div' );
 				thumb.className = 'fsweb-aic-product__thumb';
 
 				var image = document.createElement( 'img' );
-				image.src = product.imagem;
+				image.src = product.image;
 				image.alt = '';
 				image.loading = 'lazy';
 
@@ -138,31 +138,31 @@
 
 			var name = document.createElement( 'span' );
 			name.className = 'fsweb-aic-product__name';
-			name.textContent = product.nome || '';
+			name.textContent = product.name || '';
 			info.appendChild( name );
 
 			var price = document.createElement( 'span' );
 			price.className = 'fsweb-aic-product__price';
-			price.textContent = product.preco || '';
+			price.textContent = product.price || '';
 			info.appendChild( price );
 
 			var actions = document.createElement( 'div' );
 			actions.className = 'fsweb-aic-product__actions';
 
-			if ( product.link ) {
+			if ( product.url ) {
 				var link = document.createElement( 'a' );
 				link.className = 'fsweb-aic-product__link';
-				link.href = product.link;
+				link.href = product.url;
 				link.target = '_blank';
 				link.rel = 'noopener';
-				link.textContent = text( 'view_product', 'Ver produto' );
+				link.textContent = text( 'view_product', 'View product' );
 				actions.appendChild( link );
 			}
 
-			if ( product.disponivel === false ) {
+			if ( product.available === false ) {
 				var out = document.createElement( 'span' );
 				out.className = 'fsweb-aic-product__price';
-				out.textContent = 'esgotado';
+				out.textContent = text( 'out_of_stock', 'Out of stock' );
 				actions.appendChild( out );
 			}
 

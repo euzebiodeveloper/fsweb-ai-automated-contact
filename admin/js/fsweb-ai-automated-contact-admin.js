@@ -303,4 +303,74 @@
 			$( '#fsweb-aic-context' ).val( config.default_context );
 		}
 	} );
+	// Avatar picker + live preview of the widget.
+	function syncPreview() {
+		var $preview = $( '#fsweb-aic-preview' );
+
+		if ( ! $preview.length ) {
+			return;
+		}
+
+		var primary = $( '#fsweb-aic-color-primary' ).val() || '#6e8b54';
+		var title = $( '#fsweb-aic-color-title' ).val() || '#ffffff';
+		var background = $( '#fsweb-aic-color-bg' ).val() || '#f6f8fc';
+		var text = $( '#fsweb-aic-color-text' ).val() || '#16202c';
+		var type = $( '#fsweb-aic-avatar' ).val();
+		var image = $.trim( $( '#fsweb-aic-avatar-image' ).val() );
+
+		$preview.find( '.fsweb-aic-preview__header' ).css( { background: primary, color: title } );
+		$preview.find( '.fsweb-aic-preview__body' ).css( 'background', background );
+		$preview.find( '.fsweb-aic-preview__bubble' ).css( 'color', text );
+		$preview.find( '.fsweb-aic-preview__ball' ).css( 'background', primary );
+
+		var $avatar = $preview.find( '.fsweb-aic-preview__avatar' );
+
+		if ( 'custom' === type && image ) {
+			$avatar.html( $( '<img>' ).attr( 'src', image ).attr( 'alt', '' ) );
+		} else {
+			$avatar.text( 'A' );
+		}
+	}
+
+	$( document ).on( 'change', '#fsweb-aic-avatar', function () {
+		$( '#fsweb-aic-avatar-custom' ).prop( 'hidden', 'custom' !== $( this ).val() );
+		syncPreview();
+	} );
+
+	var avatarFrame = null;
+
+	$( document ).on( 'click', '#fsweb-aic-avatar-pick', function ( event ) {
+		event.preventDefault();
+
+		if ( ! window.wp || ! window.wp.media ) {
+			return;
+		}
+
+		if ( ! avatarFrame ) {
+			avatarFrame = window.wp.media( {
+				title: config.i18n.choose_image || 'Choose image',
+				button: { text: config.i18n.use_image || 'Use this image' },
+				library: { type: 'image' },
+				multiple: false
+			} );
+
+			avatarFrame.on( 'select', function () {
+				var attachment = avatarFrame.state().get( 'selection' ).first().toJSON();
+				$( '#fsweb-aic-avatar-image' ).val( attachment.url );
+				syncPreview();
+			} );
+		}
+
+		avatarFrame.open();
+	} );
+
+	$( document ).on( 'click', '#fsweb-aic-avatar-clear', function ( event ) {
+		event.preventDefault();
+		$( '#fsweb-aic-avatar-image' ).val( '' );
+		syncPreview();
+	} );
+
+	$( document ).on( 'input change', '#fsweb-aic-avatar-image, #fsweb-aic-color-primary, #fsweb-aic-color-title, #fsweb-aic-color-bg, #fsweb-aic-color-text', syncPreview );
+
+	syncPreview();
 } )( jQuery );

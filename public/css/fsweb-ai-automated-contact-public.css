@@ -271,7 +271,68 @@
 
 .fsweb-aic-icon-button:hover,
 .fsweb-aic-icon-button:focus-visible {
-	background: rgba(255, 255, 255, 0.22);
+	background: rgba(255, 255, 255, 0.34);
+}
+
+/* Themes love to repaint <button> and <textarea>; hold the widget's own
+   controls together so the header buttons never turn into white blobs. */
+.fsweb-aic-widget .fsweb-aic-icon-button {
+	width: 32px !important;
+	height: 32px !important;
+	min-width: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	border-radius: 50% !important;
+	background: rgba(255, 255, 255, 0.18) !important;
+	box-shadow: none !important;
+	color: var(--fsweb-aic-title) !important;
+}
+
+.fsweb-aic-widget .fsweb-aic-icon-button:hover,
+.fsweb-aic-widget .fsweb-aic-icon-button:focus-visible {
+	background: rgba(255, 255, 255, 0.36) !important;
+}
+
+.fsweb-aic-widget .fsweb-aic-icon-button svg {
+	width: 17px !important;
+	height: 17px !important;
+}
+
+/* Textarea: no resize handle, no theme border, starts on one line. */
+.fsweb-aic-widget .fsweb-aic-input {
+	height: 30px !important;
+	min-height: 0 !important;
+	max-height: 108px !important;
+	padding: 4px 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	resize: none !important;
+	overflow-y: auto;
+}
+
+/* The conversation fills the whole panel, composer stays pinned. */
+.fsweb-aic-widget .fsweb-aic-panel {
+	display: flex !important;
+	flex-direction: column !important;
+	max-height: calc(100vh - 40px) !important;
+}
+
+@supports (height: 100dvh) {
+	.fsweb-aic-widget .fsweb-aic-panel {
+		max-height: calc(100dvh - 40px) !important;
+	}
+}
+
+.fsweb-aic-widget .fsweb-aic-messages {
+	flex: 1 1 auto !important;
+	min-height: 0 !important;
+}
+
+.fsweb-aic-widget .fsweb-aic-header,
+.fsweb-aic-widget .fsweb-aic-composer,
+.fsweb-aic-widget .fsweb-aic-disclaimer {
+	flex: 0 0 auto !important;
 }
 
 .fsweb-aic-icon-button svg {

@@ -274,15 +274,27 @@
 	background: rgba(255, 255, 255, 0.34);
 }
 
-/* Themes love to repaint <button> and <textarea>; hold the widget's own
-   controls together so the header buttons never turn into white blobs. */
-.fsweb-aic-widget .fsweb-aic-icon-button {
-	width: 32px !important;
-	height: 32px !important;
+/* Themes love to repaint <button> and <textarea>. Every round control in the
+   widget is pinned to a square box with an explicit size, so the theme cannot
+   stretch it into an oval. */
+.fsweb-aic-widget .fsweb-aic-icon-button,
+.fsweb-aic-widget .fsweb-aic-send,
+.fsweb-aic-widget .fsweb-aic-launcher {
+	aspect-ratio: 1 / 1;
 	min-width: 0 !important;
+	min-height: 0 !important;
 	padding: 0 !important;
 	border: 0 !important;
 	border-radius: 50% !important;
+	line-height: 0 !important;
+	text-shadow: none !important;
+}
+
+.fsweb-aic-widget .fsweb-aic-icon-button {
+	flex: 0 0 32px !important;
+	width: 32px !important;
+	height: 32px !important;
+	max-width: 32px !important;
 	background: rgba(255, 255, 255, 0.18) !important;
 	box-shadow: none !important;
 	color: var(--fsweb-aic-title) !important;
@@ -298,28 +310,65 @@
 	height: 17px !important;
 }
 
-/* Textarea: no resize handle, no theme border, starts on one line. */
+/* Send ball: always visible, always round. */
+.fsweb-aic-widget .fsweb-aic-send {
+	flex: 0 0 32px !important;
+	width: 32px !important;
+	height: 32px !important;
+	max-width: 32px !important;
+	background: var(--fsweb-aic-accent) !important;
+	box-shadow: none !important;
+	color: var(--fsweb-aic-title) !important;
+}
+
+.fsweb-aic-widget .fsweb-aic-send svg {
+	width: 16px !important;
+	height: 16px !important;
+}
+
+/* The floating ball stays a perfect circle, with its shadow. */
+.fsweb-aic-widget .fsweb-aic-launcher {
+	flex: 0 0 58px !important;
+	width: 58px !important;
+	height: 58px !important;
+	max-width: 58px !important;
+	background: var(--fsweb-aic-accent) !important;
+	box-shadow: 0 8px 22px rgba(16, 30, 54, 0.26) !important;
+	color: var(--fsweb-aic-title) !important;
+}
+
+/* Textarea: no resize handle, no theme border, centered on a single line. */
 .fsweb-aic-widget .fsweb-aic-input {
-	height: 30px !important;
+	height: 32px !important;
 	min-height: 0 !important;
 	max-height: 108px !important;
-	padding: 4px 0 !important;
+	padding: 5px 0 !important;
 	border: 0 !important;
 	background: transparent !important;
 	box-shadow: none !important;
 	resize: none !important;
+	line-height: 22px !important;
 	overflow-y: auto;
 }
 
-/* The conversation fills the whole panel, composer stays pinned. */
-.fsweb-aic-widget .fsweb-aic-panel {
+.fsweb-aic-widget .fsweb-aic-composer__field {
+	align-items: center !important;
+}
+
+/* The panel is flex only while it is visible: `hidden` must always win,
+   otherwise the ball and the chat show up at the same time. */
+.fsweb-aic-widget .fsweb-aic-panel[hidden] {
+	display: none !important;
+}
+
+.fsweb-aic-widget .fsweb-aic-panel:not([hidden]) {
 	display: flex !important;
 	flex-direction: column !important;
 	max-height: calc(100vh - 40px) !important;
 }
 
 @supports (height: 100dvh) {
-	.fsweb-aic-widget .fsweb-aic-panel {
+	.fsweb-aic-widget .fsweb-aic-panel:not([hidden]) {
 		max-height: calc(100dvh - 40px) !important;
 	}
 }
@@ -333,6 +382,11 @@
 .fsweb-aic-widget .fsweb-aic-composer,
 .fsweb-aic-widget .fsweb-aic-disclaimer {
 	flex: 0 0 auto !important;
+}
+
+/* While the conversation is open the ball steps aside for the panel. */
+.fsweb-aic-widget.is-open .fsweb-aic-launcher {
+	display: none !important;
 }
 
 .fsweb-aic-icon-button svg {

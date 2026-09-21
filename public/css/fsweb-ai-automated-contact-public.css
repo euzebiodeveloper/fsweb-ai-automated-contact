@@ -550,6 +550,13 @@
 	border-bottom-left-radius: 4px;
 }
 
+/* Failures are part of the thread too, and they survive a reload. */
+.fsweb-aic-bubble--error {
+	background: #fdecec;
+	border: 1px solid #f0b4b4;
+	color: #8a1f1f;
+}
+
 .fsweb-aic-typing {
 	display: inline-flex;
 	gap: 4px;
@@ -599,9 +606,13 @@
 	display: flex;
 	gap: 10px;
 	padding: 8px;
-	border: 1px solid rgba(16, 30, 54, 0.08);
+	/* The card is part of the conversation: it wears the assistant bubble
+   colour, not plain white. */
+	border: 1px solid var(--fsweb-aic-accent);
+	border-left-width: 3px;
 	border-radius: 12px;
-	background: #fff;
+	background: var(--fsweb-aic-agent-bubble);
+	color: var(--fsweb-aic-chat-text);
 }
 
 .fsweb-aic-product__thumb {

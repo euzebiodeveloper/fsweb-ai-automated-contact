@@ -121,6 +121,15 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 			),
 		);
 
+		$tools[] = array(
+			'name'        => 'send_checkout',
+			'description' => 'Hand the checkout over to the customer: the chat shows a checkout button. Call it ONLY when the customer says they are done shopping — never right after adding an item — and never paste the link in your message.',
+			'parameters'  => array(
+				'type'       => 'object',
+				'properties' => array(),
+			),
+		);
+
 		if ( 'yes' === $settings['allow_add_to_cart'] ) {
 			$tools[] = array(
 				'name'        => 'add_to_cart',
@@ -171,6 +180,8 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 				return $this->add_to_cart( $args );
 			case 'view_cart':
 				return $this->cart_payload();
+			case 'send_checkout':
+				return $this->checkout_payload();
 			case 'store_info':
 				return $this->store_info();
 			default:
@@ -453,6 +464,24 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		}
 
 		return $cart;
+	}
+
+	/**
+	 * Checkout payload: only used when the customer is finished shopping.
+	 *
+	 * @since  1.0.0
+	 * @return array<string,mixed>
+	 */
+	private function checkout_payload() {
+		$cart = $this->cart_payload();
+
+		return array(
+			'message'       => __( 'Ready to finish the purchase.', 'fsweb-ai-automated-contact' ),
+			'checkout_url'  => $cart['checkout_url'],
+			'show_checkout' => true,
+			'count'         => $cart['count'],
+			'total'         => $cart['total'],
+		);
 	}
 
 	/**

@@ -97,8 +97,9 @@ class Fsweb_Ai_Automated_Contact_Chat {
 			'content' => $message,
 		);
 
-		$products    = array();
-		$cart        = null;
+		$products      = array();
+		$cart          = null;
+		$show_checkout = false;
 		$reply       = '';
 		$rounds      = 0;
 
@@ -137,6 +138,10 @@ class Fsweb_Ai_Automated_Contact_Chat {
 					$cart = $result;
 				}
 
+				if ( ! empty( $result['show_checkout'] ) ) {
+					$show_checkout = true;
+				}
+
 				$messages[] = array(
 					'role'         => 'tool',
 					'tool_call_id' => isset( $call['id'] ) ? $call['id'] : '',
@@ -155,7 +160,8 @@ class Fsweb_Ai_Automated_Contact_Chat {
 			'products'     => $this->unique_products( $products ),
 			'cart'         => $cart,
 			'checkout_url' => function_exists( 'wc_get_checkout_url' ) ? wc_get_checkout_url() : '',
-			'cart_url'     => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '',
+			'cart_url'      => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '',
+			'show_checkout' => $show_checkout,
 		);
 	}
 
@@ -192,6 +198,9 @@ class Fsweb_Ai_Automated_Contact_Chat {
 			$lines[] = __( 'Use the available tools to check the catalogue before stating anything about products. Only offer products that are in stock. When a product has options (colour, size…), show the available options and ask the customer which one they want before adding anything to the cart. Confirm the item and quantity, then share the checkout link.', 'fsweb-ai-automated-contact' );
 			$lines[] = __( 'The products you look up are shown to the customer as cards with image, name, price, short description and buttons to view or add to the cart. Do NOT repeat the product list in your message: write one short, persuasive sentence — for example inviting the customer to add an item to the cart — and let the cards do the listing. If the customer asks for new arrivals, search with order "recent".', 'fsweb-ai-automated-contact' );
 			$lines[] = __( 'Focus on helping the customer buy: suggest the products, ask if they want to add one to the cart, and confirm the item and quantity before adding. Only talk about categories when the customer actually asks what the store sells.', 'fsweb-ai-automated-contact' );
+			$lines[] = __( 'Never paste URLs or links in your messages: the chat shows the buttons for the product and for the checkout, so the customer does not need the address.', 'fsweb-ai-automated-contact' );
+			$lines[] = __( 'After adding an item to the cart, do not close the sale: suggest one complementary product and ask whether they want anything else. Call send_checkout only when the customer says they are done (something like "no, that is all").', 'fsweb-ai-automated-contact' );
+			$lines[] = __( 'You may use **bold** to highlight a product name or a price. Keep answers short.', 'fsweb-ai-automated-contact' );
 			$lines[] = __( 'If the customer asks what the store sells or wants to browse without naming a product, call list_categories or search without a term to show the newest items in stock, then ask what they are looking for. Never answer that you cannot show the catalogue.', 'fsweb-ai-automated-contact' );
 		} else {
 			$lines[] = __( 'You have no catalogue access right now: answer only from the store context and apologise for not being able to look up products.', 'fsweb-ai-automated-contact' );

@@ -387,7 +387,7 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		$quantity     = max( 1, min( 10, $quantity ) );
 
 		if ( ! function_exists( 'wc_get_product' ) || ! $product_id ) {
-			error_log( sprintf( '[FSWEB AIC] add_to_cart recusado: produto_id invalido (%s)', wp_json_encode( $args ) ) );
+			Fsweb_Ai_Automated_Contact_Settings::log( sprintf( 'add_to_cart recusado: produto_id invalido (%s)', wp_json_encode( $args ) ) );
 
 			return array(
 				'error'   => 'invalid_product',
@@ -398,7 +398,7 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		$product = wc_get_product( $product_id );
 
 		if ( ! $product || ! $product->is_purchasable() || ! $product->is_in_stock() ) {
-			error_log( sprintf( '[FSWEB AIC] add_to_cart recusado: produto %d indisponivel ou inexistente', $product_id ) );
+			Fsweb_Ai_Automated_Contact_Settings::log( sprintf( 'add_to_cart recusado: produto %d indisponivel ou inexistente', $product_id ) );
 
 			return array(
 				'error'   => 'product_unavailable',
@@ -456,9 +456,9 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 			if ( $key ) {
 				$added = true;
 
-				error_log(
+				Fsweb_Ai_Automated_Contact_Settings::log(
 					sprintf(
-						'[FSWEB AIC] add_to_cart ok: produto=%d variacao=%d qtd=%d | antes=%d depois=%d | sessao=%s',
+						'add_to_cart ok: produto=%d variacao=%d qtd=%d | antes=%d depois=%d | sessao=%s',
 						$product_id,
 						$variation_id,
 						$quantity,
@@ -470,9 +470,9 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 			} else {
 				$notices = function_exists( 'wc_get_notices' ) ? wc_get_notices( 'error' ) : array();
 
-				error_log(
+				Fsweb_Ai_Automated_Contact_Settings::log(
 					sprintf(
-						'[FSWEB AIC] add_to_cart falhou: produto=%d variacao=%d qtd=%d | sessao=%s | antes=%d | %s',
+						'add_to_cart falhou: produto=%d variacao=%d qtd=%d | sessao=%s | antes=%d | %s',
 						$product_id,
 						$variation_id,
 						$quantity,

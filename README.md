@@ -38,6 +38,17 @@ The assistant also answers store questions (delivery times, shipping, payment me
 
 ---
 
+## ⚙️ How to Use
+
+1. Go to **AI Contact** and pick your AI provider — OpenAI, Anthropic, DeepSeek, xAI, Groq or any OpenAI-compatible endpoint.
+2. Paste the API key and choose the model. The list is pre-filled per provider, and you can type any specific model.
+3. Write the **store context**: delivery times, shipping, payment methods, returns and tone of voice. This is what the assistant follows.
+4. Enable the catalogue and the cart so the assistant can search products, list variations and add items.
+5. Style the widget: icon, colours, auto open and custom CSS.
+6. Tick **Show the chat on the site** and save. Use the connection test to validate your key first.
+
+---
+
 ## 📦 Installation
 
 1. Upload the `fsweb-ai-automated-contact` folder to the `/wp-content/plugins/` directory (or install the ZIP via **Plugins → Add New → Upload Plugin**).
@@ -45,6 +56,16 @@ The assistant also answers store questions (delivery times, shipping, payment me
 3. Enter your license key on the welcome screen.
 4. Go to **AI Contact**, pick the AI provider, paste the API key, choose the model and write your store context.
 5. Tick **Show the chat on the site** and save.
+
+---
+
+## 🎯 Use Cases
+
+- **Product discovery** — the customer says "I am looking for a bluetooth headphone" and the assistant searches the catalogue, showing options with price and availability.
+- **Product questions** — sizes, colours, variations and stock for a specific item, answered from your own catalogue.
+- **Cart and checkout** — once the customer confirms, the assistant adds the item to the cart and hands over the checkout button.
+- **Store policies** — delivery times, shipping, payment methods and returns, answered from the context you wrote.
+- **Out-of-hours support** — the assistant keeps answering while nobody is online.
 
 ---
 

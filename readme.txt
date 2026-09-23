@@ -1,71 +1,82 @@
 === AI Automated Contact ===
 Contributors: flowsyncweb
 Donate link: https://flowsyncweb.com/
-Tags: woocommerce, chat, ai, atendimento, openai
+Tags: woocommerce, chat, ai, virtual assistant, customer support
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
 Stable tag: 1.0.0
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Atendente virtual com IA para WooCommerce: tira dúvidas, encontra produtos, monta o carrinho e leva o cliente ao checkout.
+AI-powered virtual assistant for WooCommerce: it answers questions, finds products, builds the cart and takes the customer to checkout.
 
 == Description ==
 
-O AI Automated Contact coloca um atendente virtual com IA na sua loja WooCommerce. O cliente abre o chat, descreve o que procura (por exemplo, "fone de ouvido"), e a IA consulta o catálogo, apresenta os produtos com preço e disponibilidade, adiciona ao carrinho depois de confirmar e envia o cliente direto para a página de finalizar compra.
+AI Automated Contact puts an AI virtual assistant on your WooCommerce store. The customer opens the chat, describes what they are looking for (for example, "bluetooth headphone"), and the assistant searches the catalogue, shows the products with price and availability, confirms the item and adds it to the cart, then sends the customer straight to checkout.
 
-Além das vendas, o atendente responde dúvidas sobre a loja — prazos, frete, pagamento, trocas — usando o contexto que você mesmo escreve no painel.
+Beyond selling, the assistant answers questions about the store — delivery times, shipping, payment methods, returns — using the context you write yourself in the settings.
 
-**Principais recursos**
+**Main features**
 
-* Vários provedores de IA: OpenAI (ChatGPT), Anthropic (Claude), DeepSeek, xAI (Grok) e Groq.
-* Lista de modelos pré-selecionada por provedor, com campo livre para qualquer modelo específico.
-* Qualquer endpoint compatível com OpenAI (base URL + chave + modelo) pelo provedor "Outro".
-* Contexto da loja editável — você escreve e a IA obedece.
-* Integração WooCommerce: busca de produtos, detalhes, atributos, variações, carrinho e checkout.
-* Atuação segura: o atendente trabalha com consulta ao catálogo e ao carrinho do próprio visitante.
-* Widget de chat flutuante com cor, posição, nome do atendente e mensagem de boas-vindas configuráveis.
-* Chaves de API ficam no servidor — nunca são expostas ao navegador do visitante.
-* Limite de mensagens por visitante contra abuso.
-* Licença com ativação por domínio e atualizações automáticas.
+* Multiple AI providers: OpenAI (ChatGPT), Anthropic (Claude), DeepSeek, xAI (Grok) and Groq.
+* Model list pre-filled per provider, with a free field for any specific model.
+* Any OpenAI-compatible endpoint (base URL + key + model) through the "Other" provider.
+* Editable store context — you write it, the assistant follows it.
+* WooCommerce integration: product search, details, attributes, variations, cart and checkout.
+* Safe by design: the assistant only reads the catalogue and works with the visitor's own cart.
+* Floating chat widget with configurable colour, position, assistant name and welcome message.
+* API keys stay on the server — they are never exposed to the visitor's browser.
+* Per-visitor message limit against abuse.
+* License with per-domain activation and automatic updates.
 
 == Installation ==
 
-1. Envie a pasta `fsweb-ai-automated-contact` para `/wp-content/plugins/` (ou instale o ZIP pelo painel).
-2. Ative o plugin em *Plugins*.
-3. Informe sua chave de licença na tela de boas-vindas.
-4. Em *AI Contact*, escolha o provedor, cole a chave de API, selecione o modelo e escreva o contexto da loja.
-5. Marque **Exibir o chat no site** e salve.
+1. Upload the `fsweb-ai-automated-contact` folder to `/wp-content/plugins/` (or install the ZIP through **Plugins → Add New → Upload Plugin**).
+2. Activate the plugin through the **Plugins** menu in WordPress.
+3. Enter your license key on the welcome screen.
+4. Go to **AI Contact**, pick the provider, paste the API key, choose the model and write your store context.
+5. Tick **Show the chat on the site** and save.
 
 == Frequently Asked Questions ==
 
-= Como o atendente trabalha com o catálogo? =
+= How does the assistant work with the catalogue? =
 
-Ele consulta produtos, preços e disponibilidade em tempo real, confirma com o cliente e então adiciona o item ao carrinho. Não há ferramentas de criação, edição ou exclusão de conteúdo.
+It looks up products, prices and availability in real time, confirms with the customer and then adds the item to the cart. There are no tools for creating, editing or deleting content.
 
-= Preciso do WooCommerce? =
+= Do I need WooCommerce? =
 
-O WooCommerce é necessário para busca de produtos e carrinho. Sem ele o atendente continua funcionando para dúvidas gerais, mas sem acessar o catálogo.
+WooCommerce is required for product search and the cart. Without it the assistant still handles general questions, but without catalogue access.
 
-= Onde ficam minhas chaves de API? =
+= Where are my API keys stored? =
 
-No banco de dados do seu WordPress (`wp_options`). Elas nunca são enviadas ao navegador: o widget conversa apenas com o REST do próprio plugin.
+In your WordPress database (`wp_options`). They are never sent to the browser: the widget only talks to the plugin's own REST endpoints.
 
-= O histórico da conversa é salvo no servidor? =
+= Is the conversation stored on the server? =
 
-Não. O histórico fica no `sessionStorage` do navegador do visitante e é enviado junto de cada mensagem apenas para dar contexto ao modelo.
+No. The history stays in the visitor's browser `sessionStorage` and is sent with each message only to give the model context.
+
+= Can I use products with options (colour, size)? =
+
+Yes. For variable products the assistant lists the available options, asks which one the customer wants and only then adds the chosen variation to the cart.
+
+== Screenshots ==
+
+1. The floating chat button on the storefront.
+2. The chat window — greeting, customer message, typing indicator and message field.
 
 == Changelog ==
 
 = 1.0.0 =
-* Versão inicial.
-* Atendente virtual com IA, multi-provedor.
-* Integração WooCommerce (leitura + carrinho).
-* Widget público configurável.
-* Sistema de licença e atualizações automáticas.
+* Initial release.
+* AI virtual assistant with multiple providers (OpenAI, Anthropic, DeepSeek, xAI and Groq).
+* Per-provider model catalogue with a free field for any other model.
+* Editable store context, with a ready-made service prompt.
+* WooCommerce integration: product search, details, variations, cart and checkout.
+* Configurable public chat widget: icon, colours, auto open and custom CSS.
+* Per-domain license with onboarding and automatic updates.
 
 == Upgrade Notice ==
 
 = 1.0.0 =
-Primeira versão pública.
+First public release.

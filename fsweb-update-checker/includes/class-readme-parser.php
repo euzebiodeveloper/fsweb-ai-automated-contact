@@ -50,7 +50,32 @@ class ReadmeParser {
 	 * @param string $plugin_dir Absolute path to the plugin directory.
 	 */
 	public function __construct( $plugin_dir ) {
-		$this->file_path = trailingslashit( $plugin_dir ) . 'README.txt';
+		$this->file_path = $this->resolve_file_path( $plugin_dir );
+	}
+
+	/**
+	 * Resolve the readme file path.
+	 *
+	 * WordPress ships the readme as `readme.txt` (lowercase), while some
+	 * FSWEB plugins use the uppercase variant. Looking for the lowercase
+	 * name first keeps the WordPress convention working and still reads the
+	 * uppercase file when that is the one present — otherwise the "View
+	 * details" popup came up without any section.
+	 *
+	 * @since  1.0.0
+	 * @param  string $plugin_dir Absolute path to the plugin directory.
+	 * @return string
+	 */
+	private function resolve_file_path( $plugin_dir ) {
+		$dir = trailingslashit( $plugin_dir );
+
+		foreach ( array( 'readme.txt', 'README.txt', 'Readme.txt' ) as $candidate ) {
+			if ( file_exists( $dir . $candidate ) ) {
+				return $dir . $candidate;
+			}
+		}
+
+		return $dir . 'readme.txt';
 	}
 
 	/**

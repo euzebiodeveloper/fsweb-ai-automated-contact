@@ -27,6 +27,13 @@
 	--fsweb-aic-radius: 8px;
 	--fsweb-aic-radius-sm: 6px;
 	--fsweb-aic-shadow: 0 1px 2px rgba(16, 16, 16, 0.06), 0 8px 24px rgba(16, 16, 16, 0.06);
+	--fsweb-aic-green: #1e7e34;
+	--fsweb-aic-green-bg: #edfaef;
+	--fsweb-aic-green-line: #b7e1c1;
+	--fsweb-aic-amber: #94660c;
+	--fsweb-aic-amber-bg: #fdf6e3;
+	--fsweb-aic-amber-line: #f0d87e;
+	--fsweb-aic-red: #b32d2e;
 	--fsweb-aic-input-h: 40px;
 	max-width: none;
 }
@@ -145,11 +152,21 @@
 	background: currentColor;
 }
 
+.fsweb-aic-status .dashicons,
+.fsweb-aic-status .dashicons:before,
+.fsweb-aic-pill .dashicons,
+.fsweb-aic-pill .dashicons:before {
+	width: 15px;
+	height: 15px;
+	font-size: 15px;
+	line-height: 1;
+}
+
 .fsweb-aic-status--active,
 .fsweb-aic-pill.is-on {
-	background: #edfaef;
-	color: #1e7e34;
-	border: 1px solid #b7e1c1;
+	background: var(--fsweb-aic-green-bg);
+	color: var(--fsweb-aic-green);
+	border: 1px solid var(--fsweb-aic-green-line);
 }
 
 .fsweb-aic-status--inactive,
@@ -160,21 +177,21 @@
 }
 
 .fsweb-aic-status--expired {
-	background: #fcf9e8;
-	color: #996800;
-	border: 1px solid #f0d87e;
+	background: var(--fsweb-aic-amber-bg);
+	color: var(--fsweb-aic-amber);
+	border: 1px solid var(--fsweb-aic-amber-line);
 }
 
 .fsweb-aic-status--invalid {
 	background: #fcf0f1;
-	color: #b52727;
+	color: var(--fsweb-aic-red);
 	border: 1px solid #f1adad;
 }
 
 .fsweb-aic-status--pending {
-	background: #f0f6fc;
-	color: #1d5c96;
-	border: 1px solid #b8d6f0;
+	background: var(--fsweb-aic-soft);
+	color: var(--fsweb-aic-muted);
+	border: 1px solid var(--fsweb-aic-line);
 }
 
 /* ------------------------------------------------------------------ */

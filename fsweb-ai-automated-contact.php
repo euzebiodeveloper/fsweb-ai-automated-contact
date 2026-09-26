@@ -49,13 +49,16 @@ define( 'FSWEB_AI_AUTOMATED_CONTACT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FSWEB_AI_AUTOMATED_CONTACT_URL', plugin_dir_url( __FILE__ ) );
 
 /**
- * Base URL for the license API (fsweb-license-checker REST endpoints).
+ * Base URL for the license API (FSWEB license API).
+ *
+ * The client appends `/activate`, `/deactivate` and `/validate` to this
+ * value; all three are served by the FSWEB license API (Laravel).
  *
  * Override in wp-config.php if needed:
- *   define( 'FSWEB_LICENSE_API_URL', 'https://yoursite.com/wp-json/fsweb/v1/license' );
+ *   define( 'FSWEB_LICENSE_API_URL', 'https://yoursite.com/api/license' );
  */
 if ( ! defined( 'FSWEB_LICENSE_API_URL' ) ) {
-	define( 'FSWEB_LICENSE_API_URL', 'https://flowsyncweb.com/wp-json/fsweb/v1/license' );
+	define( 'FSWEB_LICENSE_API_URL', 'https://api.flowsyncweb.com/api/license' );
 }
 
 /**

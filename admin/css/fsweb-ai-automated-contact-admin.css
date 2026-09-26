@@ -15,14 +15,20 @@
 	--fsweb-aic-brand: #6e8b54;
 	--fsweb-aic-brand-dark: #4a6136;
 	--fsweb-aic-primary: var(--wp-admin-theme-color, #3858e9);
-	--fsweb-aic-heading: #23282d;
-	--fsweb-aic-body: #3c434a;
+	--fsweb-aic-heading: #1d2327;
+	--fsweb-aic-body: #50575e;
+	--fsweb-aic-muted: #787c82;
 	--fsweb-aic-border: rgba(16, 16, 16, 0.08);
+	--fsweb-aic-line: #e2e4e7;
+	--fsweb-aic-surface: #fff;
+	--fsweb-aic-soft: #f6f7f7;
 	--fsweb-aic-border-input: #c3c4c7;
 	--fsweb-aic-border-input-hover: #a7aaad;
-	--fsweb-aic-radius: 5px;
+	--fsweb-aic-radius: 8px;
+	--fsweb-aic-radius-sm: 6px;
+	--fsweb-aic-shadow: 0 1px 2px rgba(16, 16, 16, 0.06), 0 8px 24px rgba(16, 16, 16, 0.06);
 	--fsweb-aic-input-h: 40px;
-	max-width: 1350px;
+	max-width: none;
 }
 
 /* ------------------------------------------------------------------ */
@@ -56,6 +62,53 @@
 	line-height: 1.6;
 }
 
+.fsweb-aic-hero--split {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	flex-wrap: wrap;
+}
+
+.fsweb-aic-hero__actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+	flex-shrink: 0;
+}
+
+.fsweb-aic-wrap .fsweb-aic-hero .button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	min-height: 38px;
+	padding: 0 16px;
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	border-radius: var(--fsweb-aic-radius-sm);
+	background: rgba(255, 255, 255, 0.12);
+	color: #fff;
+	font-weight: 600;
+	text-decoration: none;
+	box-shadow: none;
+}
+
+.fsweb-aic-wrap .fsweb-aic-hero .button:hover,
+.fsweb-aic-wrap .fsweb-aic-hero .button:focus {
+	background: rgba(255, 255, 255, 0.22);
+	border-color: rgba(255, 255, 255, 0.55);
+	color: #fff;
+}
+
+.fsweb-aic-wrap .fsweb-aic-hero .button .dashicons,
+.fsweb-aic-wrap .fsweb-aic-hero .button .dashicons:before {
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+	color: #fff;
+	-webkit-text-fill-color: #fff;
+}
+
 /* Keep admin notices readable inside the plugin pages. */
 .fsweb-aic-wrap .notice,
 .fsweb-aic-wrap .notice p {
@@ -67,15 +120,29 @@
 /* ------------------------------------------------------------------ */
 .fsweb-aic-status,
 .fsweb-aic-pill {
-	display: inline-block;
-	padding: 3px 10px;
-	border-radius: 3px;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 3px 11px;
+	border-radius: 999px;
 	font-weight: 600;
-	font-size: 13px;
-	line-height: 1.6;
+	font-size: 12.5px;
+	line-height: 1.8;
+	white-space: nowrap;
 	background: #f0f0f1;
 	color: #646970;
 	border: 1px solid #dcdcde;
+}
+
+.fsweb-aic-status::before,
+.fsweb-aic-pill::before {
+	content: "";
+	display: block;
+	flex-shrink: 0;
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: currentColor;
 }
 
 .fsweb-aic-status--active,
@@ -149,9 +216,10 @@
 /* ------------------------------------------------------------------ */
 .fsweb-aic-card {
 	margin: 0 0 20px;
-	background: #fff;
+	background: var(--fsweb-aic-surface);
+	border: 1px solid var(--fsweb-aic-line);
 	border-radius: var(--fsweb-aic-radius);
-	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+	box-shadow: var(--fsweb-aic-shadow);
 	overflow: hidden;
 }
 
@@ -160,21 +228,37 @@
 }
 
 .fsweb-aic-card__header {
-	padding: 18px 24px;
-	border-bottom: 1px solid var(--fsweb-aic-border);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	flex-wrap: wrap;
+	padding: 16px 22px;
+	border-bottom: 1px solid var(--fsweb-aic-line);
+	background: #fbfbfc;
 }
 
 .fsweb-aic-card__header h2 {
+	display: flex;
+	align-items: center;
+	gap: 8px;
 	margin: 0;
 	padding: 0;
 	color: var(--fsweb-aic-heading);
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: 600;
 	line-height: 1.3;
 }
 
+.fsweb-aic-card__header h2 .dashicons {
+	width: 20px;
+	height: 20px;
+	font-size: 20px;
+	color: var(--fsweb-aic-brand);
+}
+
 .fsweb-aic-card__body {
-	padding: 20px 24px 24px;
+	padding: 20px 22px 22px;
 }
 
 /* Two-column form layout used on the settings screen. */
@@ -569,33 +653,136 @@
 /* ------------------------------------------------------------------ */
 /*  License page
 /* ------------------------------------------------------------------ */
-.fsweb-aic-license-wrap .fsweb-aic-license-card {
-	background: #fff;
-	border: 1px solid #c3c4c7;
-	border-radius: 4px;
-	padding: 20px 24px;
-	margin-top: 16px;
-	max-width: 720px;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+/* The license screen uses the full width of the admin area. */
+.fsweb-aic-license-wrap {
+	max-width: none;
 }
 
-.fsweb-aic-license-card .form-table th {
-	width: 160px;
+.fsweb-aic-license-wrap .fsweb-aic-grid {
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 18px 24px;
 }
 
-.fsweb-aic-license-card .description {
-	margin: 0 0 16px;
+.fsweb-aic-license-wrap .fsweb-aic-grid .fsweb-aic-field {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+	margin: 0;
+}
+
+.fsweb-aic-license-wrap .fsweb-aic-field label {
+	margin: 0;
+}
+
+.fsweb-aic-field--full {
+	grid-column: 1 / -1;
+}
+
+.fsweb-aic-license-wrap .fsweb-aic-field input[type="text"] {
+	width: 100%;
+	max-width: none;
+}
+
+.fsweb-aic-license-wrap .fsweb-aic-field .description {
+	margin: 0;
+	color: var(--fsweb-aic-muted);
+	font-size: 12.5px;
+	font-style: normal;
+	line-height: 1.5;
+}
+
+.fsweb-aic-license-value {
+	color: var(--fsweb-aic-heading);
+	font-weight: 600;
 	font-size: 14px;
 }
 
-.fsweb-aic-license-card .submit {
-	margin: 0;
+.fsweb-aic-license-actions {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+	margin: 20px 0 0;
 	padding: 16px 0 0;
-	border-top: 1px solid var(--fsweb-aic-border);
+	border-top: 1px solid var(--fsweb-aic-line);
+}
+
+.fsweb-aic-license-actions .button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	min-height: 38px;
+	padding: 0 16px;
+	border-radius: var(--fsweb-aic-radius-sm);
+	line-height: 1.4;
+}
+
+.fsweb-aic-license-actions .button .dashicons,
+.fsweb-aic-license-actions .button .dashicons:before {
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+}
+
+.fsweb-aic-license-actions .spinner {
+	float: none;
+	margin: 0;
 }
 
 #fsweb-aic-license-message {
-	margin: 12px 0 0;
+	margin: 16px 0 0;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Family components (hint box + icon list)
+/* ------------------------------------------------------------------ */
+.fsweb-aic-hint {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	margin: 18px 0 0;
+	padding: 12px 14px;
+	border-radius: var(--fsweb-aic-radius-sm);
+	background: var(--fsweb-aic-soft);
+	color: var(--fsweb-aic-body);
+	font-size: 13px;
+	line-height: 1.55;
+}
+
+.fsweb-aic-hint .dashicons {
+	flex-shrink: 0;
+	width: 18px;
+	height: 18px;
+	margin-top: 1px;
+	font-size: 18px;
+	color: var(--fsweb-aic-brand);
+}
+
+.fsweb-aic-list--icons {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.fsweb-aic-list--icons li {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.fsweb-aic-list--icons li:last-child {
+	margin-bottom: 0;
+}
+
+.fsweb-aic-list--icons li .dashicons {
+	flex-shrink: 0;
+	width: 19px;
+	height: 19px;
+	margin-top: 2px;
+	font-size: 19px;
+	color: var(--fsweb-aic-brand);
 }
 
 /* ------------------------------------------------------------------ */
@@ -768,5 +955,44 @@ body.fsweb-aic-onboarding-page #wpbody {
 	.fsweb-aic-onboarding__panel {
 		flex: 1 1 auto;
 		padding: 40px 24px;
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/*  Narrow screens — the license grid stacks
+/* ------------------------------------------------------------------ */
+@media screen and (max-width: 782px) {
+	.fsweb-aic-hero {
+		padding: 24px 20px;
+	}
+
+	.fsweb-aic-hero--split {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.fsweb-aic-hero__actions,
+	.fsweb-aic-hero__actions .button {
+		width: 100%;
+		justify-content: center;
+	}
+
+	.fsweb-aic-license-wrap .fsweb-aic-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.fsweb-aic-card__header,
+	.fsweb-aic-card__body {
+		padding-left: 16px;
+		padding-right: 16px;
+	}
+
+	.fsweb-aic-license-actions {
+		align-items: stretch;
+	}
+
+	.fsweb-aic-license-actions .button {
+		width: 100%;
+		justify-content: center;
 	}
 }

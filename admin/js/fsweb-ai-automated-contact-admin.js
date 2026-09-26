@@ -45,6 +45,25 @@
 		return map[ status ] || config.i18n.status_inactive;
 	}
 
+	// The license API works with ISO 8601 instants. The admin formats the
+	// expiration in UTC before printing it, so a well-behaved payload already
+	// carries "dd/mm/yyyy"; this guard keeps a raw ISO value from ever
+	// reaching the screen, formatting it in UTC instead of shifting it to
+	// the previous day west of Greenwich.
+	function formatExpires( value ) {
+		if ( ! value ) {
+			return '';
+		}
+
+		var iso = /^(\d{4})-(\d{2})-(\d{2})T\d{2}:\d{2}:\d{2}/.exec( value );
+
+		if ( iso ) {
+			return iso[ 3 ] + '/' + iso[ 2 ] + '/' + iso[ 1 ];
+		}
+
+		return value;
+	}
+
 	function applyLicenseStatus( status, expires ) {
 		var $status = $( '#fsweb-aic-license-status' );
 		$status
@@ -62,7 +81,7 @@
 		}
 
 		if ( expires ) {
-			$( '#fsweb-aic-license-expires' ).text( expires );
+			$( '#fsweb-aic-license-expires' ).text( formatExpires( expires ) );
 			$( '#fsweb-aic-expires-row' ).show();
 		} else {
 			$( '#fsweb-aic-expires-row' ).hide();

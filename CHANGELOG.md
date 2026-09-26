@@ -1,3 +1,8 @@
+# 1.0.4 - 26/09/2026
+  * Fix: O placeholder do campo da chave de licença passa a mostrar o formato real — 32 caracteres em 4 grupos de 8, com alfabeto sem 0/O/1/I/L — em vez do exemplo aposentado `FSWEB-XXXX-XXXX-XXXX`.
+  * Fix: A data de expiração da licença é formatada em UTC e nunca mais aparece como a string ISO crua; o valor não escorrega um dia para trás e fica igual no primeiro render e depois do AJAX/refresh.
+  * Fix: Tradução pt_BR atualizada com o novo placeholder da chave.
+
 # 1.0.3 - 26/09/2026
   * Fix: License activation and deactivation no longer depend on another FSWEB plugin's constants — each plugin now resolves the license API URL from its own constant, so an outdated sibling plugin can no longer point this one at the retired endpoint.
 

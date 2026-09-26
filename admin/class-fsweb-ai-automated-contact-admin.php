@@ -473,7 +473,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			<form method="post" action="<?php echo esc_url( admin_url( 'options.php' ) ); ?>">
 				<?php settings_fields( 'fsweb_aic_settings_group' ); ?>
 
-				<div class="fsweb-aic-grid">
+				<div class="fsweb-aic-grid fsweb-aic-grid--cards">
 					<div class="fsweb-aic-card">
 						<div class="fsweb-aic-card__header">
 							<h2>

@@ -34,8 +34,17 @@
 	--fsweb-aic-amber-bg: #fdf6e3;
 	--fsweb-aic-amber-line: #f0d87e;
 	--fsweb-aic-red: #b32d2e;
+	--fsweb-aic-red-bg: #fcf0f1;
+	--fsweb-aic-red-line: #f1adad;
+	--fsweb-aic-neutral: #646970;
+	--fsweb-aic-neutral-bg: #f0f0f1;
+	--fsweb-aic-neutral-line: #dcdcde;
 	--fsweb-aic-input-h: 40px;
 	max-width: none;
+}
+
+.fsweb-aic-wrap * {
+	box-sizing: border-box;
 }
 
 /* ------------------------------------------------------------------ */
@@ -129,27 +138,56 @@
 .fsweb-aic-pill {
 	display: inline-flex;
 	align-items: center;
-	gap: 6px;
-	padding: 3px 11px;
+	align-self: flex-start;
+	gap: 5px;
+	padding: 3px 10px 3px 7px;
 	border-radius: 999px;
 	font-weight: 600;
 	font-size: 12.5px;
 	line-height: 1.8;
 	white-space: nowrap;
-	background: #f0f0f1;
-	color: #646970;
-	border: 1px solid #dcdcde;
+	background: var(--fsweb-aic-neutral-bg);
+	color: var(--fsweb-aic-neutral);
+	border: 1px solid var(--fsweb-aic-neutral-line);
 }
 
+/* O JS da licença troca as classes do pill, então o ícone vem do CSS — um
+   <span class="dashicons"> seria apagado na troca de status.
+   O glifo segue a família: ativo = yes-alt, inativo = hidden,
+   expirado = clock, pendente = marker (neutro) e inválido = warning. */
 .fsweb-aic-status::before,
 .fsweb-aic-pill::before {
-	content: "";
-	display: block;
-	flex-shrink: 0;
-	width: 7px;
-	height: 7px;
-	border-radius: 50%;
-	background: currentColor;
+	display: inline-block;
+	flex: 0 0 auto;
+	font-family: dashicons;
+	font-size: 15px;
+	font-weight: 400;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	speak: never;
+}
+
+.fsweb-aic-status--active::before,
+.fsweb-aic-pill.is-on::before {
+	content: "\f12a";
+}
+
+.fsweb-aic-status--inactive::before,
+.fsweb-aic-pill.is-off::before {
+	content: "\f530";
+}
+
+.fsweb-aic-status--expired::before {
+	content: "\f469";
+}
+
+.fsweb-aic-status--invalid::before {
+	content: "\f534";
+}
+
+.fsweb-aic-status--pending::before {
+	content: "\f159";
 }
 
 .fsweb-aic-status .dashicons,
@@ -169,11 +207,14 @@
 	border: 1px solid var(--fsweb-aic-green-line);
 }
 
+/* Inativa e pendente compartilham o mesmo tratamento neutro: nenhuma das
+   duas tem licença válida em uso, então o pill não puxa cor de alerta. */
 .fsweb-aic-status--inactive,
-.fsweb-aic-pill.is-off {
-	background: #f0f0f1;
-	color: #646970;
-	border: 1px solid #dcdcde;
+.fsweb-aic-pill.is-off,
+.fsweb-aic-status--pending {
+	background: var(--fsweb-aic-neutral-bg);
+	color: var(--fsweb-aic-neutral);
+	border: 1px solid var(--fsweb-aic-neutral-line);
 }
 
 .fsweb-aic-status--expired {
@@ -183,15 +224,9 @@
 }
 
 .fsweb-aic-status--invalid {
-	background: #fcf0f1;
+	background: var(--fsweb-aic-red-bg);
 	color: var(--fsweb-aic-red);
-	border: 1px solid #f1adad;
-}
-
-.fsweb-aic-status--pending {
-	background: var(--fsweb-aic-soft);
-	color: var(--fsweb-aic-muted);
-	border: 1px solid var(--fsweb-aic-line);
+	border: 1px solid var(--fsweb-aic-red-line);
 }
 
 /* ------------------------------------------------------------------ */
@@ -199,17 +234,17 @@
 /* ------------------------------------------------------------------ */
 .fsweb-aic-stats {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 16px;
-	margin-bottom: 24px;
+	grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+	gap: 14px;
+	margin: 0 0 20px;
 }
 
 .fsweb-aic-stat-card {
-	background: #fff;
-	border: 1px solid #dcdcde;
-	border-radius: 6px;
-	padding: 18px 20px;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+	background: var(--fsweb-aic-surface);
+	border: 1px solid var(--fsweb-aic-line);
+	border-radius: var(--fsweb-aic-radius);
+	padding: 16px 18px;
+	box-shadow: var(--fsweb-aic-shadow);
 }
 
 .fsweb-aic-stat-label {
@@ -224,7 +259,7 @@
 
 @media (max-width: 960px) {
 	.fsweb-aic-stats {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 	}
 }
 
@@ -279,15 +314,22 @@
 }
 
 /* Two-column form layout used on the settings screen. */
+/* Form field grid, same recipe as the other FSWEB plugins. */
 .fsweb-aic-grid {
 	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 20px;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 16px 20px;
 	align-items: start;
 }
 
+/* Settings screen: the cards line up two per row. */
+.fsweb-aic-grid--cards {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 20px;
+}
+
 @media (max-width: 1100px) {
-	.fsweb-aic-grid {
+	.fsweb-aic-grid--cards {
 		grid-template-columns: 1fr;
 	}
 }
@@ -446,8 +488,8 @@
 }
 
 .fsweb-aic-card .form-table th {
-	width: 180px;
-	padding: 12px 20px 12px 0;
+	width: 200px;
+	padding: 12px 24px 12px 0;
 	vertical-align: top;
 }
 
@@ -466,10 +508,9 @@
 
 .fsweb-aic-card .form-table td .description,
 .fsweb-aic-card__body > .description {
-	margin: 8px 0 0;
-	color: rgba(60, 67, 74, 0.7);
-	font-style: italic;
-	font-size: 13px;
+	margin: 6px 0 0;
+	color: var(--fsweb-aic-muted);
+	font-size: 12.5px;
 	line-height: 1.5;
 }
 
@@ -551,16 +592,33 @@
 /* ------------------------------------------------------------------ */
 /*  Buttons
 /* ------------------------------------------------------------------ */
-.fsweb-aic-wrap .button {
-	border-radius: 4px;
+/* Botões da família: ícone + rótulo na mesma linha, mesma altura e raio dos
+   botões do hero e das ações da licença. */
+.fsweb-aic-wrap .button,
+.fsweb-aic-wrap .button-primary,
+.fsweb-aic-wrap .button-secondary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	min-height: 38px;
+	padding: 0 16px;
+	border-radius: var(--fsweb-aic-radius-sm);
 	font-weight: 600;
+	line-height: 1.4;
 	box-shadow: none;
 }
 
-.fsweb-aic-wrap .button-primary {
-	min-height: var(--fsweb-aic-input-h);
-	padding: 0 22px;
-	line-height: var(--fsweb-aic-input-h);
+.fsweb-aic-wrap .button > .dashicons,
+.fsweb-aic-wrap .button > .dashicons:before {
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+	line-height: 1;
+}
+
+.fsweb-aic-wrap .button > .dashicons {
+	flex-shrink: 0;
 }
 
 .fsweb-aic-wrap .form-table td label {
@@ -580,36 +638,6 @@
 
 .fsweb-aic-wrap > form > .submit {
 	margin: 0 0 32px;
-}
-
-/* Buttons that carry a Dashicon: icon and label on one row, like the license
-   screen. The hero and the license actions already handle this themselves. */
-.fsweb-aic-wrap .fsweb-aic-card__body .button {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	min-height: 38px;
-	padding: 0 16px;
-	line-height: 1.4;
-}
-
-.fsweb-aic-wrap > form > .submit .button {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	line-height: 1.4;
-}
-
-.fsweb-aic-wrap .button > .dashicons,
-.fsweb-aic-wrap .button > .dashicons:before {
-	width: 18px;
-	height: 18px;
-	font-size: 18px;
-	line-height: 1;
-}
-
-.fsweb-aic-wrap .button > .dashicons {
-	flex-shrink: 0;
 }
 
 /* ------------------------------------------------------------------ */
@@ -705,11 +733,7 @@
 	max-width: none;
 }
 
-.fsweb-aic-license-wrap .fsweb-aic-grid {
-	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-	gap: 18px 24px;
-}
-
+/* Campos da licença: mesma grade de campos da família. */
 .fsweb-aic-license-wrap .fsweb-aic-grid .fsweb-aic-field {
 	display: flex;
 	flex-direction: column;

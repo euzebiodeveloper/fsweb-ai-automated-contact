@@ -387,6 +387,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 							value="<?php echo esc_attr( $license_key ); ?>"
 							placeholder="<?php esc_attr_e( 'ex.: FSWEB-XXXX-XXXX-XXXX', 'fsweb-ai-automated-contact' ); ?>">
 						<button type="button" id="fsweb-aic-onboarding-activate" class="button button-primary fsweb-aic-onboarding__button">
+							<span class="dashicons dashicons-yes-alt"></span>
 							<?php esc_html_e( 'Activate', 'fsweb-ai-automated-contact' ); ?>
 						</button>
 					</div>
@@ -400,8 +401,14 @@ class Fsweb_Ai_Automated_Contact_Admin {
 
 				<div class="fsweb-aic-onboarding__done" id="fsweb-aic-onboarding-done" style="display:none;">
 					<p><?php esc_html_e( 'License active! Now configure your store\'s AI.', 'fsweb-ai-automated-contact' ); ?></p>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=fsweb-ai-automated-contact' ) ); ?>" class="button button-primary"><?php esc_html_e( 'Continue', 'fsweb-ai-automated-contact' ); ?></a>
-					<a href="<?php echo esc_url( $tutorial_url ); ?>" class="button button-secondary"><?php esc_html_e( 'See the tutorial', 'fsweb-ai-automated-contact' ); ?></a>
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=fsweb-ai-automated-contact' ) ); ?>" class="button button-primary">
+						<span class="dashicons dashicons-arrow-right-alt2"></span>
+						<?php esc_html_e( 'Continue', 'fsweb-ai-automated-contact' ); ?>
+					</a>
+					<a href="<?php echo esc_url( $tutorial_url ); ?>" class="button button-secondary">
+						<span class="dashicons dashicons-editor-help"></span>
+						<?php esc_html_e( 'See the tutorial', 'fsweb-ai-automated-contact' ); ?>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -415,18 +422,32 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	 * @return void
 	 */
 	public function render_settings_page() {
-		$settings  = Fsweb_Ai_Automated_Contact_Settings::all();
-		$providers = Fsweb_Ai_Automated_Contact_Settings::providers();
-		$endpoint  = Fsweb_Ai_Automated_Contact_Settings::active_endpoint();
-		$option    = Fsweb_Ai_Automated_Contact_Settings::OPTION;
-		$woo       = class_exists( 'WooCommerce' );
+		$settings     = Fsweb_Ai_Automated_Contact_Settings::all();
+		$providers    = Fsweb_Ai_Automated_Contact_Settings::providers();
+		$endpoint     = Fsweb_Ai_Automated_Contact_Settings::active_endpoint();
+		$option       = Fsweb_Ai_Automated_Contact_Settings::OPTION;
+		$woo          = class_exists( 'WooCommerce' );
+		$tutorial_url = admin_url( 'admin.php?page=fsweb-ai-automated-contact-tutorial' );
+		$license_url  = admin_url( 'admin.php?page=fsweb-ai-automated-contact-license' );
 		?>
 		<div class="wrap fsweb-aic-wrap">
 			<hr class="wp-header-end">
 
-			<div class="fsweb-aic-hero">
-				<h1><?php esc_html_e( 'AI Contact', 'fsweb-ai-automated-contact' ); ?></h1>
-				<p><?php esc_html_e( 'Configure the virtual assistant, pick the AI, write the store context and tune the widget.', 'fsweb-ai-automated-contact' ); ?></p>
+			<div class="fsweb-aic-hero fsweb-aic-hero--split">
+				<div>
+					<h1><?php esc_html_e( 'AI Contact', 'fsweb-ai-automated-contact' ); ?></h1>
+					<p><?php esc_html_e( 'Configure the virtual assistant, pick the AI, write the store context and tune the widget.', 'fsweb-ai-automated-contact' ); ?></p>
+				</div>
+				<div class="fsweb-aic-hero__actions">
+					<a class="button" href="<?php echo esc_url( $tutorial_url ); ?>">
+						<span class="dashicons dashicons-editor-help"></span>
+						<?php esc_html_e( 'Tutorial', 'fsweb-ai-automated-contact' ); ?>
+					</a>
+					<a class="button" href="<?php echo esc_url( $license_url ); ?>">
+						<span class="dashicons dashicons-awards"></span>
+						<?php esc_html_e( 'License', 'fsweb-ai-automated-contact' ); ?>
+					</a>
+				</div>
 			</div>
 
 			<div class="fsweb-aic-stats">
@@ -456,7 +477,10 @@ class Fsweb_Ai_Automated_Contact_Admin {
 				<div class="fsweb-aic-grid">
 					<div class="fsweb-aic-card">
 						<div class="fsweb-aic-card__header">
-							<h2><?php esc_html_e( 'Assistant', 'fsweb-ai-automated-contact' ); ?></h2>
+							<h2>
+								<span class="dashicons dashicons-format-chat"></span>
+								<?php esc_html_e( 'Assistant', 'fsweb-ai-automated-contact' ); ?>
+							</h2>
 						</div>
 						<div class="fsweb-aic-card__body">
 							<table class="form-table" role="presentation">
@@ -504,7 +528,10 @@ class Fsweb_Ai_Automated_Contact_Admin {
 
 					<div class="fsweb-aic-card">
 						<div class="fsweb-aic-card__header">
-							<h2><?php esc_html_e( 'Artificial Intelligence', 'fsweb-ai-automated-contact' ); ?></h2>
+							<h2>
+								<span class="dashicons dashicons-lightbulb"></span>
+								<?php esc_html_e( 'Artificial Intelligence', 'fsweb-ai-automated-contact' ); ?>
+							</h2>
 						</div>
 						<div class="fsweb-aic-card__body">
 							<table class="form-table" role="presentation">
@@ -598,7 +625,10 @@ class Fsweb_Ai_Automated_Contact_Admin {
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Connection test', 'fsweb-ai-automated-contact' ); ?></th>
 									<td>
-										<button type="button" class="button" id="fsweb-aic-test-provider"><?php esc_html_e( 'Test now', 'fsweb-ai-automated-contact' ); ?></button>
+										<button type="button" class="button" id="fsweb-aic-test-provider">
+											<span class="dashicons dashicons-update"></span>
+											<?php esc_html_e( 'Test now', 'fsweb-ai-automated-contact' ); ?>
+										</button>
 										<span class="spinner" id="fsweb-aic-test-spinner" style="float:none;margin:0 0 0 6px;"></span>
 										<p class="fsweb-aic-test-result" id="fsweb-aic-test-result"></p>
 										<p class="description"><?php esc_html_e( 'The test uses the values currently on screen — no need to save first.', 'fsweb-ai-automated-contact' ); ?></p>
@@ -611,13 +641,19 @@ class Fsweb_Ai_Automated_Contact_Admin {
 
 					<div class="fsweb-aic-card fsweb-aic-card--wide">
 						<div class="fsweb-aic-card__header">
-							<h2><?php esc_html_e( 'Store context (instructions for the AI)', 'fsweb-ai-automated-contact' ); ?></h2>
+							<h2>
+								<span class="dashicons dashicons-media-text"></span>
+								<?php esc_html_e( 'Store context (instructions for the AI)', 'fsweb-ai-automated-contact' ); ?>
+							</h2>
 						</div>
 						<div class="fsweb-aic-card__body">
 							<p class="description"><?php esc_html_e( 'Write here everything the AI should know: main products and categories, delivery times, payment methods, returns and exchanges, opening hours, tone of voice. This text is sent as the assistant\'s priority context.', 'fsweb-ai-automated-contact' ); ?></p>
 							<textarea class="large-text code" rows="14" id="fsweb-aic-context" name="<?php echo esc_attr( $option ); ?>[context]"><?php echo esc_textarea( $settings['context'] ); ?></textarea>
 							<p>
-								<button type="button" class="button" id="fsweb-aic-context-reset"><?php esc_html_e( 'Restore default text', 'fsweb-ai-automated-contact' ); ?></button>
+								<button type="button" class="button" id="fsweb-aic-context-reset">
+									<span class="dashicons dashicons-undo"></span>
+									<?php esc_html_e( 'Restore default text', 'fsweb-ai-automated-contact' ); ?>
+								</button>
 								<span class="description"><?php esc_html_e( 'Reloads the original text with the service rules.', 'fsweb-ai-automated-contact' ); ?></span>
 							</p>
 						</div>
@@ -625,7 +661,10 @@ class Fsweb_Ai_Automated_Contact_Admin {
 
 					<div class="fsweb-aic-card">
 						<div class="fsweb-aic-card__header">
-							<h2><?php esc_html_e( 'WooCommerce', 'fsweb-ai-automated-contact' ); ?></h2>
+							<h2>
+								<span class="dashicons dashicons-cart"></span>
+								<?php esc_html_e( 'WooCommerce', 'fsweb-ai-automated-contact' ); ?>
+							</h2>
 						</div>
 						<div class="fsweb-aic-card__body">
 							<table class="form-table" role="presentation">
@@ -658,7 +697,10 @@ class Fsweb_Ai_Automated_Contact_Admin {
 
 					<div class="fsweb-aic-card">
 						<div class="fsweb-aic-card__header">
-							<h2><?php esc_html_e( 'Appearance', 'fsweb-ai-automated-contact' ); ?></h2>
+							<h2>
+								<span class="dashicons dashicons-art"></span>
+								<?php esc_html_e( 'Appearance', 'fsweb-ai-automated-contact' ); ?>
+							</h2>
 						</div>
 						<div class="fsweb-aic-card__body">
 							<table class="form-table" role="presentation">
@@ -679,8 +721,14 @@ class Fsweb_Ai_Automated_Contact_Admin {
 												name="<?php echo esc_attr( $option ); ?>[avatar_image]"
 												value="<?php echo esc_attr( $settings['avatar_image'] ); ?>"
 												placeholder="https://...">
-											<button type="button" class="button" id="fsweb-aic-avatar-pick"><?php esc_html_e( 'Choose image', 'fsweb-ai-automated-contact' ); ?></button>
-											<button type="button" class="button-link" id="fsweb-aic-avatar-clear"><?php esc_html_e( 'Clear', 'fsweb-ai-automated-contact' ); ?></button>
+											<button type="button" class="button" id="fsweb-aic-avatar-pick">
+												<span class="dashicons dashicons-format-image"></span>
+												<?php esc_html_e( 'Choose image', 'fsweb-ai-automated-contact' ); ?>
+											</button>
+											<button type="button" class="button" id="fsweb-aic-avatar-clear">
+												<span class="dashicons dashicons-no-alt"></span>
+												<?php esc_html_e( 'Clear', 'fsweb-ai-automated-contact' ); ?>
+											</button>
 										</div>
 										<p class="description"><?php esc_html_e( 'Shown on the floating button and in the chat header.', 'fsweb-ai-automated-contact' ); ?></p>
 									</td>
@@ -749,7 +797,12 @@ class Fsweb_Ai_Automated_Contact_Admin {
 					</div>
 				</div>
 
-				<?php submit_button( __( 'Save settings', 'fsweb-ai-automated-contact' ) ); ?>
+				<p class="submit">
+					<button type="submit" name="submit" id="submit" class="button button-primary">
+						<span class="dashicons dashicons-saved"></span>
+						<?php esc_html_e( 'Save settings', 'fsweb-ai-automated-contact' ); ?>
+					</button>
+				</p>
 			</form>
 		</div>
 		<?php
@@ -911,17 +964,33 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	 */
 	public function render_tutorial_page() {
 		$settings_url = admin_url( 'admin.php?page=fsweb-ai-automated-contact' );
+		$license_url  = admin_url( 'admin.php?page=fsweb-ai-automated-contact-license' );
 		?>
 		<div class="wrap fsweb-aic-wrap">
 			<hr class="wp-header-end">
-			<div class="fsweb-aic-hero">
-				<h1><?php esc_html_e( 'AI Contact — Tutorial', 'fsweb-ai-automated-contact' ); ?></h1>
-				<p><?php esc_html_e( 'Your virtual assistant is live in five steps.', 'fsweb-ai-automated-contact' ); ?></p>
+			<div class="fsweb-aic-hero fsweb-aic-hero--split">
+				<div>
+					<h1><?php esc_html_e( 'AI Contact — Tutorial', 'fsweb-ai-automated-contact' ); ?></h1>
+					<p><?php esc_html_e( 'Your virtual assistant is live in five steps.', 'fsweb-ai-automated-contact' ); ?></p>
+				</div>
+				<div class="fsweb-aic-hero__actions">
+					<a class="button" href="<?php echo esc_url( $settings_url ); ?>">
+						<span class="dashicons dashicons-admin-settings"></span>
+						<?php esc_html_e( 'Go to settings', 'fsweb-ai-automated-contact' ); ?>
+					</a>
+					<a class="button" href="<?php echo esc_url( $license_url ); ?>">
+						<span class="dashicons dashicons-awards"></span>
+						<?php esc_html_e( 'License', 'fsweb-ai-automated-contact' ); ?>
+					</a>
+				</div>
 			</div>
 
 			<div class="fsweb-aic-card fsweb-aic-card--wide">
 				<div class="fsweb-aic-card__header">
-					<h2><?php esc_html_e( 'Step by step', 'fsweb-ai-automated-contact' ); ?></h2>
+					<h2>
+						<span class="dashicons dashicons-editor-ol"></span>
+						<?php esc_html_e( 'Step by step', 'fsweb-ai-automated-contact' ); ?>
+					</h2>
 				</div>
 				<div class="fsweb-aic-card__body">
 					<ol class="fsweb-aic-steps">
@@ -962,13 +1031,19 @@ class Fsweb_Ai_Automated_Contact_Admin {
 							</div>
 						</li>
 					</ol>
-					<p><a class="button button-primary" href="<?php echo esc_url( $settings_url ); ?>"><?php esc_html_e( 'Go to settings', 'fsweb-ai-automated-contact' ); ?></a></p>
+					<p><a class="button button-primary" href="<?php echo esc_url( $settings_url ); ?>">
+						<span class="dashicons dashicons-admin-settings"></span>
+						<?php esc_html_e( 'Go to settings', 'fsweb-ai-automated-contact' ); ?>
+					</a></p>
 				</div>
 			</div>
 
 			<div class="fsweb-aic-card fsweb-aic-card--wide">
 				<div class="fsweb-aic-card__header">
-					<h2><?php esc_html_e( 'What the assistant does for your store', 'fsweb-ai-automated-contact' ); ?></h2>
+					<h2>
+						<span class="dashicons dashicons-format-chat"></span>
+						<?php esc_html_e( 'What the assistant does for your store', 'fsweb-ai-automated-contact' ); ?>
+					</h2>
 				</div>
 				<div class="fsweb-aic-card__body">
 					<ul class="fsweb-aic-list">

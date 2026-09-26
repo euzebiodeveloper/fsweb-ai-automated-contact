@@ -5,7 +5,7 @@ Tags: woocommerce, chat, ai, virtual assistant, customer support
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,13 @@ Yes. For variable products the assistant lists the available options, asks which
 
 == Changelog ==
 
+= 1.0.1 =
+* Settings, tutorial, onboarding and license screens standardised with hero, quick actions, cards, pills and icon buttons.
+* Complete pt_BR translation of the standardised screens; the source is now 100% English, including the labels the JS rewrites.
+* English documentation: README.md with badges, features and requirements, readme with screenshots, plugin banner and icon.
+* Fix: the readme parser accepts lowercase `readme.txt` and the "View details" popup shows every section again.
+* Fix: the onboarding license block got the id the JS uses to close it, and the manual license-check action was removed from the license screen.
+
 = 1.0.0 =
 * Initial release.
 * AI virtual assistant with multiple providers (OpenAI, Anthropic, DeepSeek, xAI and Groq).
@@ -77,6 +84,9 @@ Yes. For variable products the assistant lists the available options, asks which
 * Per-domain license with onboarding and automatic updates.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Standardised admin screens, complete pt_BR translation and readme fixes.
 
 = 1.0.0 =
 First public release.

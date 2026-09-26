@@ -99,8 +99,8 @@ msgstr "Ative sua licença para liberar o atendente virtual com IA: ele conversa
 msgid "License key"
 msgstr "Chave de licença"
 
-msgid "e.g. FSWEB-XXXX-XXXX-XXXX"
-msgstr "ex.: FSWEB-XXXX-XXXX-XXXX"
+msgid "e.g. A7B9C2D4-E6F8G3H5-J7K9M2N4-P6Q8R3S5"
+msgstr "ex.: A7B9C2D4-E6F8G3H5-J7K9M2N4-P6Q8R3S5"
 
 msgid "Activate"
 msgstr "Ativar"

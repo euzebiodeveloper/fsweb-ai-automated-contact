@@ -184,7 +184,7 @@ msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:390
 #: admin/class-fsweb-ai-automated-contact-admin.php:878
-msgid "e.g. FSWEB-XXXX-XXXX-XXXX"
+msgid "e.g. A7B9C2D4-E6F8G3H5-J7K9M2N4-P6Q8R3S5"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:398

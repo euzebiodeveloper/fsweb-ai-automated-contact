@@ -387,7 +387,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 					<div class="fsweb-aic-onboarding__row">
 						<input type="text" id="fsweb-aic-onboarding-license-key" class="fsweb-aic-onboarding__input"
 							value="<?php echo esc_attr( $license_key ); ?>"
-							placeholder="<?php esc_attr_e( 'e.g. FSWEB-XXXX-XXXX-XXXX', 'fsweb-ai-automated-contact' ); ?>">
+							placeholder="<?php esc_attr_e( 'e.g. A7B9C2D4-E6F8G3H5-J7K9M2N4-P6Q8R3S5', 'fsweb-ai-automated-contact' ); ?>">
 						<button type="button" id="fsweb-aic-onboarding-activate" class="button button-primary fsweb-aic-onboarding__button">
 							<span class="dashicons dashicons-yes-alt"></span>
 							<?php esc_html_e( 'Activate', 'fsweb-ai-automated-contact' ); ?>
@@ -875,7 +875,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 							<label for="fsweb-aic-license-key"><?php esc_html_e( 'License key', 'fsweb-ai-automated-contact' ); ?></label>
 							<input type="text" id="fsweb-aic-license-key" name="fsweb_aic_license_key" class="regular-text"
 								value="<?php echo esc_attr( $license_key ); ?>"
-								placeholder="<?php esc_attr_e( 'e.g. FSWEB-XXXX-XXXX-XXXX', 'fsweb-ai-automated-contact' ); ?>"
+								placeholder="<?php esc_attr_e( 'e.g. A7B9C2D4-E6F8G3H5-J7K9M2N4-P6Q8R3S5', 'fsweb-ai-automated-contact' ); ?>"
 								<?php echo $is_active ? 'readonly' : ''; ?>>
 							<p class="description"><?php esc_html_e( 'The key is bound to this domain and unlocks automatic updates and the virtual assistant.', 'fsweb-ai-automated-contact' ); ?></p>
 						</div>

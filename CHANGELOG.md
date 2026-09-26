@@ -1,4 +1,5 @@
 # 1.0.2 - 26/09/2026
+  * Fix: O plugin passou a usar a própria constante de URL da API (`FSWEB_AI_AUTOMATED_CONTACT_LICENSE_API_URL`), sem disputar o nome compartilhado com os plugins irmãos.
   * Fix: A ativação, a validação e a desativação da licença passam a falar com a API nova de licenças (`https://api.flowsyncweb.com/api/license`) em vez do bridge legado do License Manager for WooCommerce, que respondia "License Manager for WooCommerce is not active.".
   * Fix: O corpo da resposta volta a ser a fonte da verdade — rejeição de negócio (success: false) aparece com a mensagem que a API manda, e falha de transporte (WP_Error ou 5xx) mantém o estado atual da licença e devolve um aviso neutro, sem alarmar o lojista.
 

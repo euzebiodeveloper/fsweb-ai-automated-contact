@@ -68,6 +68,7 @@ Yes. For variable products the assistant lists the available options, asks which
 == Changelog ==
 
 = 1.0.2 =
+* The plugin now uses its own license API URL constant (`FSWEB_AI_AUTOMATED_CONTACT_LICENSE_API_URL`), so sibling plugins cannot override it.
 * License activation, validation and deactivation now talk to the FSWEB license API on `api.flowsyncweb.com`; the legacy License Manager for WooCommerce bridge is gone.
 * The response body is the source of truth again: a business rejection is shown as it comes from the API, and a transport failure keeps the current license state and shows a neutral notice.
 

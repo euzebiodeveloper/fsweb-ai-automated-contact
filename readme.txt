@@ -5,7 +5,7 @@ Tags: woocommerce, chat, ai, virtual assistant, customer support
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,10 @@ Yes. For variable products the assistant lists the available options, asks which
 
 == Changelog ==
 
+= 1.1.0 =
+* License activation, validation and deactivation now talk to the FSWEB license API on `api.flowsyncweb.com`; the legacy License Manager for WooCommerce bridge is gone.
+* The response body is the source of truth again: a business rejection is shown as it comes from the API, and a transport failure keeps the current license state and shows a neutral notice.
+
 = 1.0.1 =
 * Settings, tutorial, onboarding and license screens standardised with hero, quick actions, cards, pills and icon buttons.
 * Complete pt_BR translation of the standardised screens; the source is now 100% English, including the labels the JS rewrites.
@@ -84,6 +88,9 @@ Yes. For variable products the assistant lists the available options, asks which
 * Per-domain license with onboarding and automatic updates.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+License fixed against the new license API.
 
 = 1.0.1 =
 Standardised admin screens, complete pt_BR translation and readme fixes.

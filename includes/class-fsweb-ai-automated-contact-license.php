@@ -245,6 +245,7 @@ class Fsweb_Ai_Automated_Contact_License {
 		}
 
 		$this->store( $license_key, 'pending' );
+		$this->clear_state_cache();
 
 		return array(
 			'success' => true,
@@ -254,11 +255,39 @@ class Fsweb_Ai_Automated_Contact_License {
 	}
 
 	/**
+	 * Drop every cached copy of the license state.
+	 *
+	 * The state lives in wp_options, but a persistent object cache can keep
+	 * serving the previous value for the rest of the request — and the update
+	 * checker caches its own license verdict in separate options. Releasing a
+	 * key must leave nothing behind that still answers "active", otherwise the
+	 * screen can flip back on the next load.
+	 *
+	 * @since  1.0.5
+	 * @return void
+	 */
+	private function clear_state_cache() {
+		foreach ( array( self::OPTION_KEY, self::OPTION_STATUS, self::OPTION_EXPIRES ) as $option ) {
+			wp_cache_delete( $option, 'options' );
+		}
+
+		if ( function_exists( 'fsweb_ai_automated_contact_reset_update_checker_cache' ) ) {
+			fsweb_ai_automated_contact_reset_update_checker_cache();
+		}
+	}
+
+	/**
 	 * Validate the stored (or provided) key and sync the local state.
 	 *
 	 * The status carried in the response body wins, even when the API answers
 	 * a 4xx with `success` false. A transport failure keeps the local state
 	 * and returns a neutral notice only.
+	 *
+	 * The license itself is global: its `status` stays `active` while any
+	 * install holds an activation. What this site may show as active is
+	 * `domain_authorized` — the license being valid is not the same as THIS
+	 * domain being activated. Trusting `status` alone is what made a released
+	 * key come back as `active` on the next page load.
 	 *
 	 * @since  1.0.0
 	 * @param  string $license_key Optional key; falls back to the stored one.
@@ -306,6 +335,15 @@ class Fsweb_Ai_Automated_Contact_License {
 
 		$status  = $this->normalise_status( $body['status'] );
 		$expires = isset( $body['expires'] ) ? sanitize_text_field( $body['expires'] ) : '';
+
+		// `expired`/`invalid` are verdicts on the license itself and stay as
+		// they came. For an otherwise valid license the domain decides: this
+		// site is only `active` while the API reports the domain as
+		// authorized, and a released domain falls back to `pending` (the
+		// expiration is kept, so the date survives the deactivation).
+		if ( in_array( $status, array( 'active', 'pending' ), true ) && array_key_exists( 'domain_authorized', $body ) ) {
+			$status = ! empty( $body['domain_authorized'] ) ? 'active' : 'pending';
+		}
 
 		update_option( self::OPTION_STATUS, $status );
 		update_option( self::OPTION_EXPIRES, $expires );

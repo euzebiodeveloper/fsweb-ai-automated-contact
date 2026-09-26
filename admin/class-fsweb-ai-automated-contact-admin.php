@@ -149,7 +149,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 					'confirm_deactivate' => __( 'Are you sure you want to deactivate this license?', 'fsweb-ai-automated-contact' ),
 					'activating'         => __( 'Activating…', 'fsweb-ai-automated-contact' ),
 					'deactivating'       => __( 'Deactivating…', 'fsweb-ai-automated-contact' ),
-					'validating'         => __( 'Verifying…', 'fsweb-ai-automated-contact' ),
 					'testing'            => __( 'Testing…', 'fsweb-ai-automated-contact' ),
 					'custom_model'       => __( 'Other model (type it)', 'fsweb-ai-automated-contact' ),
 					'choose_image'       => __( 'Choose image', 'fsweb-ai-automated-contact' ),
@@ -834,9 +833,8 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			}
 		}
 
-		$is_active       = ( 'active' === $license_status );
-		$show_verify     = in_array( $license_status, array( 'expired', 'pending', 'invalid' ), true );
-		$has_expiration  = ( $is_active && ! empty( $license_expires ) );
+		$is_active      = ( 'active' === $license_status );
+		$has_expiration = ( $is_active && ! empty( $license_expires ) );
 		$expires_row_css = $has_expiration ? '' : 'display:none;';
 		$settings_url    = admin_url( 'admin.php?page=fsweb-ai-automated-contact' );
 		$tutorial_url    = admin_url( 'admin.php?page=fsweb-ai-automated-contact-tutorial' );
@@ -919,11 +917,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 							<span class="dashicons dashicons-dismiss"></span>
 							<?php esc_html_e( 'Deactivate', 'fsweb-ai-automated-contact' ); ?>
 						</button>
-						<button type="button" id="fsweb-aic-validate-license" class="button button-secondary" style="<?php echo $show_verify ? '' : 'display:none;'; ?>">
-							<span class="dashicons dashicons-update"></span>
-							<?php esc_html_e( 'Verify license', 'fsweb-ai-automated-contact' ); ?>
-						</button>
-						<span id="fsweb-aic-validate-spinner" class="spinner" style="display:none;"></span>
 					</div>
 
 					<div id="fsweb-aic-license-message" class="notice" style="display:none;"></div>
@@ -942,7 +935,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 						<li><span class="dashicons dashicons-clipboard"></span><?php esc_html_e( 'Paste the key you received after the purchase and click Activate.', 'fsweb-ai-automated-contact' ); ?></li>
 						<li><span class="dashicons dashicons-lock"></span><?php esc_html_e( 'The key is bound to this domain and unlocks automatic updates and the virtual assistant.', 'fsweb-ai-automated-contact' ); ?></li>
 						<li><span class="dashicons dashicons-update"></span><?php esc_html_e( 'The status is synced with the license server whenever you open this screen.', 'fsweb-ai-automated-contact' ); ?></li>
-						<li><span class="dashicons dashicons-search"></span><?php esc_html_e( 'Use Verify license to force a new check with the server.', 'fsweb-ai-automated-contact' ); ?></li>
 						<li><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Use Deactivate to release the key and activate it on another site.', 'fsweb-ai-automated-contact' ); ?></li>
 					</ul>
 
@@ -1107,25 +1099,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 		$this->guard_ajax();
 
 		wp_send_json_success( $this->license->deactivate() );
-	}
-
-	/**
-	 * AJAX handler — validate/sync the license status.
-	 *
-	 * @since    1.0.0
-	 * @return void
-	 */
-	public function ajax_validate_license() {
-		$this->guard_ajax();
-
-		$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
-		$result      = $this->license->validate( $license_key );
-
-		if ( $result['success'] ) {
-			wp_send_json_success( $result );
-		}
-
-		wp_send_json_error( $result );
 	}
 
 	/**

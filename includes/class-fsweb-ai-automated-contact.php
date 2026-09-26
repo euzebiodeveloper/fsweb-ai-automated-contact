@@ -194,7 +194,6 @@ class Fsweb_Ai_Automated_Contact {
 		// License management AJAX handlers.
 		$this->loader->add_action( 'wp_ajax_fsweb_aic_activate_license', $plugin_admin, 'ajax_activate_license' );
 		$this->loader->add_action( 'wp_ajax_fsweb_aic_deactivate_license', $plugin_admin, 'ajax_deactivate_license' );
-		$this->loader->add_action( 'wp_ajax_fsweb_aic_validate_license', $plugin_admin, 'ajax_validate_license' );
 
 		// Provider connectivity test.
 		$this->loader->add_action( 'wp_ajax_fsweb_aic_test_provider', $plugin_admin, 'ajax_test_provider' );

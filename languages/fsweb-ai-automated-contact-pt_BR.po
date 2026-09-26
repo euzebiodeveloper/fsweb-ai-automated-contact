@@ -33,9 +33,6 @@ msgstr "Ativando…"
 msgid "Deactivating…"
 msgstr "Desativando…"
 
-msgid "Verifying…"
-msgstr "Verificando…"
-
 msgid "Testing…"
 msgstr "Testando…"
 
@@ -354,9 +351,6 @@ msgstr "Expira em"
 msgid "Deactivate"
 msgstr "Desativar"
 
-msgid "Verify license"
-msgstr "Verificar licença"
-
 msgid "How it works"
 msgstr "Como funciona"
 
@@ -365,9 +359,6 @@ msgstr "Cole a chave recebida após a compra e clique em Ativar."
 
 msgid "The status is synced with the license server whenever you open this screen."
 msgstr "O status é sincronizado com o servidor de licenças sempre que você abre esta tela."
-
-msgid "Use Verify license to force a new check with the server."
-msgstr "Use Verificar licença para forçar uma nova consulta ao servidor."
 
 msgid "Use Deactivate to release the key and activate it on another site."
 msgstr "Use Desativar para liberar a chave e ativá-la em outro site."

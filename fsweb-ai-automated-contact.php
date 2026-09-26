@@ -54,11 +54,17 @@ define( 'FSWEB_AI_AUTOMATED_CONTACT_URL', plugin_dir_url( __FILE__ ) );
  * The client appends `/activate`, `/deactivate` and `/validate` to this
  * value; all three are served by the FSWEB license API (Laravel).
  *
+ * The constant is deliberately plugin-prefixed instead of the shared,
+ * unprefixed license-URL constant used by the sibling FSWEB plugins:
+ * WordPress loads plugins alphabetically and a sibling run that still defines
+ * the legacy shared name would win the `! defined()` race, poisoning this
+ * plugin with the dead legacy URL (HTTP 500) and breaking activation.
+ *
  * Override in wp-config.php if needed:
- *   define( 'FSWEB_LICENSE_API_URL', 'https://yoursite.com/api/license' );
+ *   define( 'FSWEB_AI_AUTOMATED_CONTACT_LICENSE_API_URL', 'https://yoursite.com/api/license' );
  */
-if ( ! defined( 'FSWEB_LICENSE_API_URL' ) ) {
-	define( 'FSWEB_LICENSE_API_URL', 'https://api.flowsyncweb.com/api/license' );
+if ( ! defined( 'FSWEB_AI_AUTOMATED_CONTACT_LICENSE_API_URL' ) ) {
+	define( 'FSWEB_AI_AUTOMATED_CONTACT_LICENSE_API_URL', 'https://api.flowsyncweb.com/api/license' );
 }
 
 /**

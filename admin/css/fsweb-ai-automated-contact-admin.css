@@ -565,6 +565,36 @@
 	margin: 0 0 32px;
 }
 
+/* Buttons that carry a Dashicon: icon and label on one row, like the license
+   screen. The hero and the license actions already handle this themselves. */
+.fsweb-aic-wrap .fsweb-aic-card__body .button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	min-height: 38px;
+	padding: 0 16px;
+	line-height: 1.4;
+}
+
+.fsweb-aic-wrap > form > .submit .button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	line-height: 1.4;
+}
+
+.fsweb-aic-wrap .button > .dashicons,
+.fsweb-aic-wrap .button > .dashicons:before {
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+	line-height: 1;
+}
+
+.fsweb-aic-wrap .button > .dashicons {
+	flex-shrink: 0;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Connectivity test result
 /* ------------------------------------------------------------------ */
@@ -920,6 +950,23 @@ body.fsweb-aic-onboarding-page #wpbody {
 	min-height: 44px;
 	width: 100%;
 	white-space: nowrap;
+}
+
+/* Dashicons inside the onboarding buttons stay on the same row as the label. */
+.fsweb-aic-onboarding .button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+}
+
+.fsweb-aic-onboarding .button .dashicons,
+.fsweb-aic-onboarding .button .dashicons:before {
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+	line-height: 1;
+	flex-shrink: 0;
 }
 
 .fsweb-aic-onboarding__hint {

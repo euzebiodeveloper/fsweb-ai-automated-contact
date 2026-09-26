@@ -69,6 +69,36 @@ class Fsweb_Ai_Automated_Contact_License {
 	}
 
 	/**
+	 * Format a stored expiration instant for display.
+	 *
+	 * The license API answers with an ISO 8601 instant (for example
+	 * `2027-09-11T00:00:00+00:00`). Rendering that instant in the site
+	 * timezone pushes midnight UTC to the previous day anywhere west of
+	 * Greenwich, so the date is always formatted in UTC: the calendar date
+	 * the API sent is the one the merchant sees, and the raw ISO string is
+	 * never printed.
+	 *
+	 * @since  1.0.4
+	 * @param  string $expires Raw expiration (ISO 8601 or Y-m-d H:i:s).
+	 * @return string Formatted date, or '' when empty or unreadable.
+	 */
+	public function format_expires( $expires ) {
+		$expires = trim( (string) $expires );
+
+		if ( '' === $expires ) {
+			return '';
+		}
+
+		$timestamp = strtotime( $expires );
+
+		if ( false === $timestamp ) {
+			return '';
+		}
+
+		return (string) wp_date( (string) get_option( 'date_format', 'Y-m-d' ), $timestamp, new DateTimeZone( 'UTC' ) );
+	}
+
+	/**
 	 * Persist the local license state.
 	 *
 	 * @since  1.0.0

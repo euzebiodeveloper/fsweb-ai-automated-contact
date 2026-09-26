@@ -143,7 +143,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 				'default_context' => Fsweb_Ai_Automated_Contact_Settings::default_context(),
 				'license'  => array(
 					'status'  => $this->license->get_status(),
-					'expires' => $this->license->get_expires(),
+					'expires' => $this->license->format_expires( $this->license->get_expires() ),
 				),
 				'i18n'     => array(
 					'confirm_deactivate' => __( 'Are you sure you want to deactivate this license?', 'fsweb-ai-automated-contact' ),
@@ -837,7 +837,12 @@ class Fsweb_Ai_Automated_Contact_Admin {
 		}
 
 		$is_active      = ( 'active' === $license_status );
-		$has_expiration = ( $is_active && ! empty( $license_expires ) );
+
+		// The UI prints this date as-is, so it leaves here already formatted
+		// in UTC — never as the raw ISO instant the API answers with.
+		$license_expires_display = $this->license->format_expires( $license_expires );
+
+		$has_expiration  = ( $is_active && '' !== $license_expires_display );
 		$expires_row_css = $has_expiration ? '' : 'display:none;';
 		$settings_url    = admin_url( 'admin.php?page=fsweb-ai-automated-contact' );
 		$tutorial_url    = admin_url( 'admin.php?page=fsweb-ai-automated-contact-tutorial' );
@@ -907,7 +912,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 
 						<div class="fsweb-aic-field" id="fsweb-aic-expires-row" style="<?php echo esc_attr( $expires_row_css ); ?>">
 							<label><?php esc_html_e( 'Expires on', 'fsweb-ai-automated-contact' ); ?></label>
-							<span class="fsweb-aic-license-value" id="fsweb-aic-license-expires"><?php echo ! empty( $license_expires ) ? esc_html( mysql2date( get_option( 'date_format' ), $license_expires ) ) : esc_html__( 'Lifetime', 'fsweb-ai-automated-contact' ); ?></span>
+							<span class="fsweb-aic-license-value" id="fsweb-aic-license-expires"><?php echo '' !== $license_expires_display ? esc_html( $license_expires_display ) : esc_html__( 'Lifetime', 'fsweb-ai-automated-contact' ); ?></span>
 						</div>
 					</div>
 
@@ -1084,6 +1089,10 @@ class Fsweb_Ai_Automated_Contact_Admin {
 
 		$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
 		$result      = $this->license->activate( $license_key );
+
+		// The screen writes this value straight into the "Expires on" field,
+		// so it must leave here already formatted, never as a raw ISO string.
+		$result['expires'] = $this->license->format_expires( $result['expires'] );
 
 		if ( $result['success'] ) {
 			wp_send_json_success( $result );

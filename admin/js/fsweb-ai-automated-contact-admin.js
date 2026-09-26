@@ -55,12 +55,10 @@
 			$( '#fsweb-aic-license-key' ).prop( 'readonly', true );
 			$( '#fsweb-aic-activate-license' ).hide();
 			$( '#fsweb-aic-deactivate-license' ).show();
-			$( '#fsweb-aic-validate-license' ).hide();
 		} else {
 			$( '#fsweb-aic-license-key' ).prop( 'readonly', false );
 			$( '#fsweb-aic-activate-license' ).show();
 			$( '#fsweb-aic-deactivate-license' ).hide();
-			$( '#fsweb-aic-validate-license' ).show();
 		}
 
 		if ( expires ) {
@@ -106,7 +104,7 @@
 				message( $message, 'error', config.i18n.network_error );
 			} )
 			.always( function () {
-				$button.prop( 'disabled', false ).text( onboarding ? 'Ativar' : 'Ativar' );
+				$button.prop( 'disabled', false ).text( config.i18n.activate );
 			} );
 	} );
 
@@ -135,35 +133,7 @@
 				message( $message, 'error', config.i18n.network_error );
 			} )
 			.always( function () {
-				$button.prop( 'disabled', false ).text( 'Desativar' );
-			} );
-	} );
-
-	$( document ).on( 'click', '#fsweb-aic-validate-license', function () {
-		var $button = $( this );
-		var $spinner = $( '#fsweb-aic-validate-spinner' );
-		var $message = $( '#fsweb-aic-license-message' );
-
-		$button.prop( 'disabled', true ).text( config.i18n.validating );
-		$spinner.show();
-
-		post( 'fsweb_aic_validate_license', { license_key: $( '#fsweb-aic-license-key' ).val() } )
-			.done( function ( response ) {
-				var payload = response && response.data ? response.data : {};
-
-				if ( response && response.success ) {
-					message( $message, 'success', payload.message || '' );
-					applyLicenseStatus( payload.status || 'pending', payload.expires || '' );
-				} else {
-					message( $message, 'error', ( payload && payload.message ) || config.i18n.network_error );
-				}
-			} )
-			.fail( function () {
-				message( $message, 'error', config.i18n.network_error );
-			} )
-			.always( function () {
-				$spinner.hide();
-				$button.prop( 'disabled', false ).text( 'Verificar licença' );
+				$button.prop( 'disabled', false ).text( config.i18n.deactivate );
 			} );
 	} );
 
@@ -197,7 +167,7 @@
 			} )
 			.always( function () {
 				$spinner.hide();
-				$button.prop( 'disabled', false ).text( 'Testar agora' );
+				$button.prop( 'disabled', false ).text( config.i18n.test_now );
 			} );
 	} );
 

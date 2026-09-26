@@ -16,7 +16,7 @@
  * Plugin Name:       AI Automated Contact
  * Plugin URI:        https://flowsyncweb.com
  * Description:       AI-powered virtual assistant for WooCommerce: answers questions, finds products, builds the cart and takes the customer to checkout.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            Flow Sync Web
  * Author URI:        https://flowsyncweb.com/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'FSWEB_AI_AUTOMATED_CONTACT_VERSION', '1.0.1' );
+define( 'FSWEB_AI_AUTOMATED_CONTACT_VERSION', '1.0.2' );
 
 /**
  * Plugin slug. Used for the license API and the update checker.
@@ -49,13 +49,16 @@ define( 'FSWEB_AI_AUTOMATED_CONTACT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FSWEB_AI_AUTOMATED_CONTACT_URL', plugin_dir_url( __FILE__ ) );
 
 /**
- * Base URL for the license API (fsweb-license-checker REST endpoints).
+ * Base URL for the license API (FSWEB license API).
+ *
+ * The client appends `/activate`, `/deactivate` and `/validate` to this
+ * value; all three are served by the FSWEB license API (Laravel).
  *
  * Override in wp-config.php if needed:
- *   define( 'FSWEB_LICENSE_API_URL', 'https://yoursite.com/wp-json/fsweb/v1/license' );
+ *   define( 'FSWEB_LICENSE_API_URL', 'https://yoursite.com/api/license' );
  */
 if ( ! defined( 'FSWEB_LICENSE_API_URL' ) ) {
-	define( 'FSWEB_LICENSE_API_URL', 'https://flowsyncweb.com/wp-json/fsweb/v1/license' );
+	define( 'FSWEB_LICENSE_API_URL', 'https://api.flowsyncweb.com/api/license' );
 }
 
 /**

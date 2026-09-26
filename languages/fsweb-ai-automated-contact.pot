@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: AI Automated Contact 1.0.0\n"
+"Project-Id-Version: AI Automated Contact 1.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/fsweb-ai-automated-contact\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-26T19:24:04+00:00\n"
+"POT-Creation-Date: 2026-09-26T20:54:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fsweb-ai-automated-contact\n"
@@ -78,7 +78,7 @@ msgid "Current setup: %1$s / %2$s"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:157
-#: includes/class-fsweb-ai-automated-contact-license.php:103
+#: includes/class-fsweb-ai-automated-contact-license.php:105
 msgid "Enter a license key."
 msgstr ""
 
@@ -755,60 +755,66 @@ msgstr ""
 msgid "Too many messages in a row. Please wait a few minutes and try again."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:112
+#: includes/class-fsweb-ai-automated-contact-license.php:114
 msgid "This license is already active."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:140
-msgid "Could not reach the license server. Your key was saved and is pending validation."
+#: includes/class-fsweb-ai-automated-contact-license.php:139
+msgid "The license server could not be reached right now. Your key was not changed — please try again in a moment."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:159
+#: includes/class-fsweb-ai-automated-contact-license.php:149
+msgid "The license server did not answer correctly right now. Your key was not changed — please try again in a moment."
+msgstr ""
+
+#: includes/class-fsweb-ai-automated-contact-license.php:164
 msgid "License activated successfully!"
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:170
-msgid "The license server returned an invalid response. Your key was saved and is pending validation."
-msgstr ""
-
-#: includes/class-fsweb-ai-automated-contact-license.php:180
-#: includes/class-fsweb-ai-automated-contact-license.php:329
+#: includes/class-fsweb-ai-automated-contact-license.php:178
+#: includes/class-fsweb-ai-automated-contact-license.php:331
 msgid "Invalid license key."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:220
+#: includes/class-fsweb-ai-automated-contact-license.php:221
 msgid "License deactivated."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:238
+#: includes/class-fsweb-ai-automated-contact-license.php:243
 msgid "No license saved. Enter a key first."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:258
-msgid "Could not reach the license server."
+#: includes/class-fsweb-ai-automated-contact-license.php:262
+msgid "The license server could not be reached right now."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:269
-msgid "Invalid response from the license server."
-msgstr ""
-
-#: includes/class-fsweb-ai-automated-contact-license.php:325
-msgid "License is active and valid."
+#: includes/class-fsweb-ai-automated-contact-license.php:273
+msgid "The license server did not answer correctly right now."
 msgstr ""
 
 #: includes/class-fsweb-ai-automated-contact-license.php:327
+msgid "License is active and valid."
+msgstr ""
+
+#: includes/class-fsweb-ai-automated-contact-license.php:329
 msgid "License expired. Renew it to keep receiving updates."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:331
+#: includes/class-fsweb-ai-automated-contact-license.php:333
 msgid "License pending activation."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:333
+#: includes/class-fsweb-ai-automated-contact-license.php:335
 msgid "License inactive."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:364
+#. translators: %d: HTTP status code returned by the license server.
+#: includes/class-fsweb-ai-automated-contact-license.php:431
+#, php-format
+msgid "The license server responded with error %d."
+msgstr ""
+
+#: includes/class-fsweb-ai-automated-contact-license.php:438
 msgid "The license server returned an empty response."
 msgstr ""
 

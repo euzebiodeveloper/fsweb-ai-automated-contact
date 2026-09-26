@@ -86,9 +86,11 @@ class Fsweb_Ai_Automated_Contact_License {
 	/**
 	 * Activate a license key against the remote server.
 	 *
-	 * A network failure or a malformed response never flips the key to
-	 * "invalid": the key is kept as "pending" so a flaky server cannot
-	 * silently disable the plugin.
+	 * The response body is the source of truth: a business rejection comes
+	 * back with `success` false plus a `message`, even when the HTTP status
+	 * is a 4xx. A transport failure (unreachable server, 5xx or a malformed
+	 * body) is not a verdict on the key: the local state is left untouched
+	 * and the caller gets a neutral notice.
 	 *
 	 * @since  1.0.0
 	 * @param  string $license_key Raw license key from the request.
@@ -133,20 +135,23 @@ class Fsweb_Ai_Automated_Contact_License {
 		);
 
 		if ( is_wp_error( $response ) ) {
-			$this->store( $license_key, 'pending' );
-
-			return array(
-				'success' => false,
-				'message' => __( 'Could not reach the license server. Your key was saved and is pending validation.', 'fsweb-ai-automated-contact' ),
-				'status'  => 'pending',
-				'expires' => '',
+			return $this->neutral_response(
+				__( 'The license server could not be reached right now. Your key was not changed — please try again in a moment.', 'fsweb-ai-automated-contact' )
 			);
 		}
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
-		$code = (int) wp_remote_retrieve_response_code( $response );
 
-		if ( 200 === $code && is_array( $body ) && ! empty( $body['success'] ) ) {
+		// A body outside the documented contract (success, status, expires,
+		// message) is transport garbage, not a verdict on the key.
+		if ( ! is_array( $body ) || ! array_key_exists( 'success', $body ) ) {
+			return $this->neutral_response(
+				__( 'The license server did not answer correctly right now. Your key was not changed — please try again in a moment.', 'fsweb-ai-automated-contact' )
+			);
+		}
+
+		// The body decides: only `success` true activates the license locally.
+		if ( ! empty( $body['success'] ) ) {
 			$expires = isset( $body['expires'] ) ? sanitize_text_field( $body['expires'] ) : '';
 			$this->store( $license_key, 'active', $expires );
 
@@ -162,23 +167,16 @@ class Fsweb_Ai_Automated_Contact_License {
 			);
 		}
 
-		if ( ! is_array( $body ) ) {
-			$this->store( $license_key, 'pending' );
-
-			return array(
-				'success' => false,
-				'message' => __( 'The license server returned an invalid response. Your key was saved and is pending validation.', 'fsweb-ai-automated-contact' ),
-				'status'  => 'pending',
-				'expires' => '',
-			);
-		}
-
-		$this->store( $license_key, 'invalid' );
+		// Business rejection: the API says why, so the message comes from it.
+		$status = $this->normalise_status( isset( $body['status'] ) ? $body['status'] : 'invalid' );
+		$this->store( $license_key, $status, isset( $body['expires'] ) ? sanitize_text_field( $body['expires'] ) : '' );
 
 		return array(
 			'success' => false,
-			'message' => isset( $body['message'] ) ? sanitize_text_field( $body['message'] ) : __( 'Invalid license key.', 'fsweb-ai-automated-contact' ),
-			'status'  => 'invalid',
+			'message' => ( isset( $body['message'] ) && '' !== trim( (string) $body['message'] ) )
+				? sanitize_text_field( (string) $body['message'] )
+				: __( 'Invalid license key.', 'fsweb-ai-automated-contact' ),
+			'status'  => $status,
 			'expires' => '',
 		);
 	}
@@ -186,7 +184,10 @@ class Fsweb_Ai_Automated_Contact_License {
 	/**
 	 * Deactivate the stored license key.
 	 *
-	 * The local state is always cleared, even when the remote call fails.
+	 * Releasing the key on the server is best effort: the local state is
+	 * always cleared below, whatever the API answers and whatever the HTTP
+	 * status is, so a transport failure never blocks the merchant from
+	 * moving the key to another site.
 	 *
 	 * @since  1.0.0
 	 * @return array{success:bool,message:string,status:string}
@@ -225,6 +226,10 @@ class Fsweb_Ai_Automated_Contact_License {
 	/**
 	 * Validate the stored (or provided) key and sync the local state.
 	 *
+	 * The status carried in the response body wins, even when the API answers
+	 * a 4xx with `success` false. A transport failure keeps the local state
+	 * and returns a neutral notice only.
+	 *
 	 * @since  1.0.0
 	 * @param  string $license_key Optional key; falls back to the stored one.
 	 * @return array{success:bool,message:string,status:string,expires:string}
@@ -253,26 +258,23 @@ class Fsweb_Ai_Automated_Contact_License {
 		$response = $this->request( 'GET', $url, array( 'timeout' => 15, 'sslverify' => false ) );
 
 		if ( is_wp_error( $response ) ) {
-			return array(
-				'success' => false,
-				'message' => __( 'Could not reach the license server.', 'fsweb-ai-automated-contact' ),
-				'status'  => $this->get_status(),
-				'expires' => $this->get_expires(),
+			return $this->neutral_response(
+				__( 'The license server could not be reached right now.', 'fsweb-ai-automated-contact' )
 			);
 		}
 
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
-		if ( ! is_array( $body ) || ! isset( $body['status'] ) ) {
-			return array(
-				'success' => false,
-				'message' => __( 'Invalid response from the license server.', 'fsweb-ai-automated-contact' ),
-				'status'  => $this->get_status(),
-				'expires' => $this->get_expires(),
+		// Without a status in the body there is nothing to sync; a body outside
+		// the documented contract (success, status, expires, message) is
+		// transport garbage, not a verdict on the key.
+		if ( ! is_array( $body ) || ! array_key_exists( 'success', $body ) || ! isset( $body['status'] ) ) {
+			return $this->neutral_response(
+				__( 'The license server did not answer correctly right now.', 'fsweb-ai-automated-contact' )
 			);
 		}
 
-		$status  = sanitize_key( $body['status'] );
+		$status  = $this->normalise_status( $body['status'] );
 		$expires = isset( $body['expires'] ) ? sanitize_text_field( $body['expires'] ) : '';
 
 		update_option( self::OPTION_STATUS, $status );
@@ -335,10 +337,45 @@ class Fsweb_Ai_Automated_Contact_License {
 	}
 
 	/**
+	 * Reply for a transient failure that says nothing about the key.
+	 *
+	 * Transport problems (unreachable server, 5xx, malformed payload) are not
+	 * a verdict on the license: the stored state is kept and the caller shows
+	 * a neutral notice instead of an alarming error.
+	 *
+	 * @since  1.0.2
+	 * @param  string $message Neutral notice to show.
+	 * @return array{success:bool,message:string,status:string,expires:string}
+	 */
+	private function neutral_response( $message ) {
+		return array(
+			'success' => false,
+			'message' => $message,
+			'status'  => $this->get_status(),
+			'expires' => $this->get_expires(),
+		);
+	}
+
+	/**
+	 * Keep only the statuses the plugin understands.
+	 *
+	 * @since  1.0.2
+	 * @param  string $status Raw status from the API body.
+	 * @return string active|expired|invalid|pending|inactive
+	 */
+	private function normalise_status( $status ) {
+		$status = sanitize_key( $status );
+
+		return in_array( $status, array( 'active', 'expired', 'invalid', 'pending', 'inactive' ), true ) ? $status : 'invalid';
+	}
+
+	/**
 	 * Perform a license API request with a retry layer.
 	 *
-	 * The license server can crash and answer with an empty body. Transient
-	 * failures are retried so a momentary blip never flips the license state.
+	 * Only transport failures (unreachable server, 5xx, empty body) are
+	 * retried, so a momentary blip never flips the license state. A business
+	 * answer — including a rejection — is returned right away: the caller
+	 * reads the body as the source of truth.
 	 *
 	 * @since  1.0.0
 	 * @param  string $method   'GET' or 'POST'.
@@ -350,24 +387,57 @@ class Fsweb_Ai_Automated_Contact_License {
 	private function request( $method, $url, $args = array(), $attempts = 3 ) {
 		$attempts = max( 1, absint( $attempts ) );
 		$method   = strtoupper( $method );
-		$last     = null;
+		$failure  = null;
 
 		for ( $i = 1; $i <= $attempts; $i++ ) {
 			$response = ( 'POST' === $method ) ? wp_remote_post( $url, $args ) : wp_remote_get( $url, $args );
+			$failure  = $this->transport_error( $response );
 
-			if ( ! is_wp_error( $response ) && '' !== trim( (string) wp_remote_retrieve_body( $response ) ) ) {
+			if ( null === $failure ) {
 				return $response;
 			}
 
-			$last = is_wp_error( $response )
-				? $response
-				: new WP_Error( 'fsweb_aic_empty_response', __( 'The license server returned an empty response.', 'fsweb-ai-automated-contact' ) );
-
 			if ( $i < $attempts ) {
-				sleep( $i );
+				usleep( 250000 * $i );
 			}
 		}
 
-		return $last;
+		return $failure;
+	}
+
+	/**
+	 * Describe a transport failure, or null when the server answered a request.
+	 *
+	 * An HTTP 5xx is transport, not a business decision, so it is treated as a
+	 * failure of the call. From 4xx down the server answered something and the
+	 * body carries the verdict.
+	 *
+	 * @since  1.0.2
+	 * @param  array|WP_Error $response Response from wp_remote_*.
+	 * @return WP_Error|null
+	 */
+	private function transport_error( $response ) {
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$code = (int) wp_remote_retrieve_response_code( $response );
+
+		if ( $code >= 500 ) {
+			return new WP_Error(
+				'fsweb_aic_server_error',
+				sprintf(
+					/* translators: %d: HTTP status code returned by the license server. */
+					__( 'The license server responded with error %d.', 'fsweb-ai-automated-contact' ),
+					$code
+				)
+			);
+		}
+
+		if ( '' === trim( (string) wp_remote_retrieve_body( $response ) ) ) {
+			return new WP_Error( 'fsweb_aic_empty_response', __( 'The license server returned an empty response.', 'fsweb-ai-automated-contact' ) );
+		}
+
+		return null;
 	}
 }

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: AI Automated Contact 1.0.1\n"
+"Project-Id-Version: AI Automated Contact 1.0.2\n"
 "Report-Msgid-Bugs-To: https://flowsyncweb.com\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -525,14 +525,14 @@ msgstr "Muitas mensagens em sequência. Aguarde alguns minutos e tente novamente
 msgid "This license is already active."
 msgstr "Esta licença já está ativa."
 
-msgid "Could not reach the license server. Your key was saved and is pending validation."
-msgstr "Não foi possível falar com o servidor de licenças. A chave foi salva e está pendente de validação."
+msgid "The license server could not be reached right now. Your key was not changed — please try again in a moment."
+msgstr "Não foi possível falar com o servidor de licenças agora. Sua chave não foi alterada — tente novamente em instantes."
 
 msgid "License activated successfully!"
 msgstr "Licença ativada com sucesso!"
 
-msgid "The license server returned an invalid response. Your key was saved and is pending validation."
-msgstr "O servidor de licenças respondeu de forma inválida. A chave foi salva e está pendente de validação."
+msgid "The license server did not answer correctly right now. Your key was not changed — please try again in a moment."
+msgstr "O servidor de licenças não respondeu corretamente agora. Sua chave não foi alterada — tente novamente em instantes."
 
 msgid "Invalid license key."
 msgstr "Chave de licença inválida."
@@ -543,11 +543,11 @@ msgstr "Licença desativada."
 msgid "No license saved. Enter a key first."
 msgstr "Nenhuma licença salva. Informe uma chave primeiro."
 
-msgid "Could not reach the license server."
-msgstr "Não foi possível falar com o servidor de licenças."
+msgid "The license server could not be reached right now."
+msgstr "Não foi possível falar com o servidor de licenças agora."
 
-msgid "Invalid response from the license server."
-msgstr "Resposta inválida do servidor de licenças."
+msgid "The license server did not answer correctly right now."
+msgstr "O servidor de licenças não respondeu corretamente agora."
 
 msgid "License is active and valid."
 msgstr "Licença ativa e válida."
@@ -560,6 +560,9 @@ msgstr "Licença aguardando ativação."
 
 msgid "License inactive."
 msgstr "Licença inativa."
+
+msgid "The license server responded with error %d."
+msgstr "O servidor de licenças respondeu com o erro %d."
 
 msgid "The license server returned an empty response."
 msgstr "O servidor de licenças retornou uma resposta vazia."

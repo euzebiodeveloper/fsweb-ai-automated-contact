@@ -1,3 +1,8 @@
+# 1.0.5 - 26/09/2026
+  * Fix: O sync da licença ao abrir a tela passa a olhar `domain_authorized` em vez do `status` da licença. Desativar a licença neste domínio mantém o status local em `pending` e a tela não volta mais para "Ativa" a cada recarregamento.
+  * Fix: `expired`/`invalid` continuam sendo o veredito da própria licença e passam como vêm da API; falha de transporte segue sem mexer no estado guardado.
+  * Fix: A desativação limpa o cache/transient do estado da licença (opções do site e cache do verificador de atualizações), para nenhuma cópia antiga responder "active" depois.
+
 # 1.0.4 - 26/09/2026
   * Fix: O placeholder do campo da chave de licença passa a mostrar o formato real — 32 caracteres em 4 grupos de 8, com alfabeto sem 0/O/1/I/L — em vez do exemplo aposentado `FSWEB-XXXX-XXXX-XXXX`.
   * Fix: A data de expiração da licença é formatada em UTC e nunca mais aparece como a string ISO crua; o valor não escorrega um dia para trás e fica igual no primeiro render e depois do AJAX/refresh.

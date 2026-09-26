@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: AI Automated Contact 1.0.0\n"
+"Project-Id-Version: AI Automated Contact 1.0.1\n"
 "Report-Msgid-Bugs-To: https://flowsyncweb.com\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -79,13 +79,13 @@ msgid "License"
 msgstr "Licença"
 
 msgid "AI Contact — Tutorial"
-msgstr ""
+msgstr "AI Contact — Tutorial"
 
 msgid "Tutorial"
 msgstr "Tutorial"
 
 msgid "AI Contact — Setup"
-msgstr ""
+msgstr "AI Contact — Configuração"
 
 msgid "Close"
 msgstr "Fechar"
@@ -99,8 +99,8 @@ msgstr "Ative sua licença para liberar o atendente virtual com IA: ele conversa
 msgid "License key"
 msgstr "Chave de licença"
 
-msgid "ex.: FSWEB-XXXX-XXXX-XXXX"
-msgstr ""
+msgid "e.g. FSWEB-XXXX-XXXX-XXXX"
+msgstr "ex.: FSWEB-XXXX-XXXX-XXXX"
 
 msgid "Activate"
 msgstr "Ativar"
@@ -232,7 +232,7 @@ msgid "Store context (instructions for the AI)"
 msgstr "Contexto da loja (instruções para a IA)"
 
 msgid "Write here everything the AI should know: main products and categories, delivery times, payment methods, returns and exchanges, opening hours, tone of voice. This text is sent as the assistant's priority context."
-msgstr ""
+msgstr "Escreva aqui tudo o que a IA precisa saber: principais produtos e categorias, prazos de entrega, formas de pagamento, trocas e devoluções, horário de atendimento, tom de voz. Este texto é enviado como contexto prioritário do atendente."
 
 msgid "Restore default text"
 msgstr "Restaurar texto padrão"

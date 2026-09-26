@@ -104,7 +104,7 @@
 				message( $message, 'error', config.i18n.network_error );
 			} )
 			.always( function () {
-				$button.prop( 'disabled', false ).text( onboarding ? 'Ativar' : 'Ativar' );
+				$button.prop( 'disabled', false ).text( config.i18n.activate );
 			} );
 	} );
 
@@ -133,7 +133,7 @@
 				message( $message, 'error', config.i18n.network_error );
 			} )
 			.always( function () {
-				$button.prop( 'disabled', false ).text( 'Desativar' );
+				$button.prop( 'disabled', false ).text( config.i18n.deactivate );
 			} );
 	} );
 
@@ -167,7 +167,7 @@
 			} )
 			.always( function () {
 				$spinner.hide();
-				$button.prop( 'disabled', false ).text( 'Testar agora' );
+				$button.prop( 'disabled', false ).text( config.i18n.test_now );
 			} );
 	} );
 

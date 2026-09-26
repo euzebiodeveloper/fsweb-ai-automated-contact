@@ -5,7 +5,7 @@ Tags: woocommerce, chat, ai, virtual assistant, customer support
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,10 @@ Yes. For variable products the assistant lists the available options, asks which
 
 == Changelog ==
 
+= 1.0.4 =
+* Fix: The license key placeholder now shows the real key format — 32 characters in four groups of eight on an alphabet without 0/O/1/I/L — instead of the retired FSWEB-XXXX-XXXX-XXXX example.
+* Fix: The license expiration is rendered as a date in UTC, so the raw ISO instant never reaches the screen and the date no longer slips a day on installs west of Greenwich; the value is identical on the first render and after activation or refresh.
+
 = 1.0.3 =
 * Fix: License activation and deactivation no longer depend on another FSWEB plugin's constants — each plugin now resolves the license API URL from its own constant, so an outdated sibling plugin can no longer point this one at the retired endpoint.
 
@@ -91,6 +95,9 @@ Yes. For variable products the assistant lists the available options, asks which
 * Per-domain license with onboarding and automatic updates.
 
 == Upgrade Notice ==
+
+= 1.0.4 =
+License screen fixes: the key placeholder matches the real key format, and the expiration date no longer shows the raw ISO value or shifts a day.
 
 = 1.0.3 =
 License fix: activation and deactivation now resolve the license API URL from the plugin's own constant, so an outdated sibling plugin can no longer break license calls with its shared constant.

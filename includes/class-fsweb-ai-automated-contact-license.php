@@ -119,7 +119,7 @@ class Fsweb_Ai_Automated_Contact_License {
 
 		$response = $this->request(
 			'POST',
-			FSWEB_LICENSE_API_URL . '/activate',
+			FSWEB_AI_AUTOMATED_CONTACT_LICENSE_API_URL . '/activate',
 			array(
 				'timeout'   => 15,
 				'sslverify' => false,
@@ -198,7 +198,7 @@ class Fsweb_Ai_Automated_Contact_License {
 		if ( '' !== $license_key ) {
 			$this->request(
 				'POST',
-				FSWEB_LICENSE_API_URL . '/deactivate',
+				FSWEB_AI_AUTOMATED_CONTACT_LICENSE_API_URL . '/deactivate',
 				array(
 					'timeout'   => 15,
 					'sslverify' => false,
@@ -252,7 +252,7 @@ class Fsweb_Ai_Automated_Contact_License {
 				'plugin_slug' => FSWEB_AI_AUTOMATED_CONTACT_SLUG,
 				'domain'      => rawurlencode( home_url() ),
 			),
-			FSWEB_LICENSE_API_URL . '/validate'
+			FSWEB_AI_AUTOMATED_CONTACT_LICENSE_API_URL . '/validate'
 		);
 
 		$response = $this->request( 'GET', $url, array( 'timeout' => 15, 'sslverify' => false ) );

@@ -379,7 +379,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 					<?php esc_html_e( 'Activate your license to unlock the AI virtual assistant: it chats with your customers, answers questions, finds products, builds the cart and sends them to checkout.', 'fsweb-ai-automated-contact' ); ?>
 				</p>
 
-				<div class="fsweb-aic-onboarding__license">
+				<div class="fsweb-aic-onboarding__license" id="fsweb-aic-onboarding-license">
 					<label class="fsweb-aic-onboarding__label" for="fsweb-aic-onboarding-license-key"><?php esc_html_e( 'License key', 'fsweb-ai-automated-contact' ); ?></label>
 
 					<div class="fsweb-aic-onboarding__row">

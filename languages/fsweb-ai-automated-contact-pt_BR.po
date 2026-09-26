@@ -357,6 +357,24 @@ msgstr "Desativar"
 msgid "Verify license"
 msgstr "Verificar licença"
 
+msgid "How it works"
+msgstr "Como funciona"
+
+msgid "Paste the key you received after the purchase and click Activate."
+msgstr "Cole a chave recebida após a compra e clique em Ativar."
+
+msgid "The status is synced with the license server whenever you open this screen."
+msgstr "O status é sincronizado com o servidor de licenças sempre que você abre esta tela."
+
+msgid "Use Verify license to force a new check with the server."
+msgstr "Use Verificar licença para forçar uma nova consulta ao servidor."
+
+msgid "Use Deactivate to release the key and activate it on another site."
+msgstr "Use Desativar para liberar a chave e ativá-la em outro site."
+
+msgid "While the license is active the assistant keeps running and updates arrive straight from the dashboard."
+msgstr "Enquanto a licença estiver ativa, o atendente continua no ar e as atualizações chegam direto pelo painel."
+
 msgid "Your virtual assistant is live in five steps."
 msgstr "Em cinco passos seu atendente virtual está no ar."
 

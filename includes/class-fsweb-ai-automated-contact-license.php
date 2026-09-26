@@ -343,7 +343,7 @@ class Fsweb_Ai_Automated_Contact_License {
 	 * a verdict on the license: the stored state is kept and the caller shows
 	 * a neutral notice instead of an alarming error.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.2
 	 * @param  string $message Neutral notice to show.
 	 * @return array{success:bool,message:string,status:string,expires:string}
 	 */
@@ -359,7 +359,7 @@ class Fsweb_Ai_Automated_Contact_License {
 	/**
 	 * Keep only the statuses the plugin understands.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.2
 	 * @param  string $status Raw status from the API body.
 	 * @return string active|expired|invalid|pending|inactive
 	 */
@@ -412,7 +412,7 @@ class Fsweb_Ai_Automated_Contact_License {
 	 * failure of the call. From 4xx down the server answered something and the
 	 * body carries the verdict.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.2
 	 * @param  array|WP_Error $response Response from wp_remote_*.
 	 * @return WP_Error|null
 	 */

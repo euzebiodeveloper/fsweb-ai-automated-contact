@@ -194,13 +194,13 @@ if ( ! class_exists( 'FSWEB_Update_Checker_AiAutomatedContact_1_0', false ) ) {
 			if ( $slug_used_by ) {
 				$message = sprintf(
 					/* translators: %1$s is the slug, %2$s is the path of the plugin that already uses it. */
-					__( 'Plugin slug "%1$s" is already in use by %2$s. Each plugin must have a unique slug.', 'fsweb-mercadopago' ),
+					__( 'Plugin slug "%1$s" is already in use by %2$s. Each plugin must have a unique slug.', 'fsweb-ai-automated-contact' ),
 					$this->slug,
 					$slug_used_by
 				);
 				wp_die(
 					esc_html( $message ),
-					esc_html__( 'Update Checker Conflict', 'fsweb-mercadopago' ),
+					esc_html__( 'Update Checker Conflict', 'fsweb-ai-automated-contact' ),
 					array( 'response' => 500 )
 				);
 			}
@@ -264,8 +264,14 @@ if ( ! class_exists( 'FSWEB_Update_Checker_AiAutomatedContact_1_0', false ) ) {
 					array( $this, 'enqueue_admin_assets' )
 				);
 
-				// Admin notice for license errors.
-				add_action( 'admin_notices', array( $this, 'license_admin_notice' ) );
+				// License notice inside the plugin's update row (where WordPress
+				// shows plugin update notifications). No top-of-admin notice.
+				add_action(
+					'after_plugin_row_' . $this->plugin_basename,
+					array( $this, 'license_row_notice' ),
+					10,
+					3
+				);
 			}
 		}
 
@@ -504,7 +510,7 @@ if ( ! class_exists( 'FSWEB_Update_Checker_AiAutomatedContact_1_0', false ) ) {
 						// is misleading when the user clicked "View version X.Y.Z").
 						return new \WP_Error(
 							'fsweb_readme_unavailable',
-							__( 'Update information is temporarily unavailable. Please try again in a few moments.', 'fsweb-mercadopago' )
+							__( 'Update information is temporarily unavailable. Please try again in a few moments.', 'fsweb-ai-automated-contact' )
 						);
 					}
 				}
@@ -572,60 +578,78 @@ if ( ! class_exists( 'FSWEB_Update_Checker_AiAutomatedContact_1_0', false ) ) {
 		}
 
 		/**
-		 * Admin notice — warns the user about license or server problems.
+		 * License notice rendered inside the plugin's row on the Plugins
+		 * screen — the same place WordPress shows plugin update notifications.
 		 *
-		 * Rendered via admin_notices hook when the license check returns
-		 * 401 (invalid key), 403 (domain mismatch / expired), or when the
-		 * update server is unreachable.
+		 * A rejected credential (401 invalid key, 403 domain mismatch or
+		 * expired key) always wins: when a key is configured the message
+		 * reports it as invalid or expired, and the generic "server
+		 * unreachable" warning is suppressed so it cannot mask the real cause.
+		 * With no key configured the user is invited to activate a license.
 		 *
+		 * Nothing is printed at the top of the admin (no admin_notices).
+		 *
+		 * @param string $plugin_file Plugin file (unused).
+		 * @param array  $plugin_data Plugin data (unused).
+		 * @param string $status      Plugin status (unused).
 		 * @return void
 		 */
-		public function license_admin_notice() {
-			$plugin_name = $this->updates->get_plugin_name();
+		public function license_row_notice( $plugin_file = '', $plugin_data = array(), $status = '' ) {
+			$plugin_name   = $this->updates->get_plugin_name();
+			$license_error = $this->metadata->get_last_license_error();
+			$server_error  = $this->metadata->get_last_server_error();
+			$has_key       = $this->metadata->has_license_key();
 
-			// Server error takes priority — user needs to know the API is down.
-			$server_error = $this->metadata->get_last_server_error();
-			if ( ! empty( $server_error ) ) {
-				printf(
-					'<div class="notice notice-error"><p><strong>%s:</strong> %s</p></div>',
-					esc_html( $plugin_name ),
-					esc_html( $server_error )
-				);
+			$type    = 'error';
+			$message = '';
+
+			// A rejected credential is the priority — never mask it with the
+			// generic "server unreachable" warning.
+			if ( ! empty( $license_error ) ) {
+				$message = $has_key
+					? sprintf(
+						/* translators: 1: plugin name, 2: opening link tag, 3: closing link tag */
+						__(
+							'%1$s: the license credential is invalid or expired. %2$sCheck your license%3$s to resume automatic updates.',
+							'fsweb-ai-automated-contact'
+						),
+						'<strong>' . esc_html( $plugin_name ) . '</strong>',
+						$this->license_url ? '<a href="' . esc_url( $this->license_url ) . '">' : '',
+						$this->license_url ? '</a>' : ''
+					)
+					: sprintf(
+						/* translators: 1: plugin name, 2: opening link tag, 3: closing link tag */
+						__(
+							'%1$s is not activated. %2$sPlease activate your license%3$s to receive automatic updates.',
+							'fsweb-ai-automated-contact'
+						),
+						'<strong>' . esc_html( $plugin_name ) . '</strong>',
+						$this->license_url ? '<a href="' . esc_url( $this->license_url ) . '">' : '',
+						$this->license_url ? '</a>' : ''
+					);
+			} elseif ( ! empty( $server_error ) && ! $has_key ) {
+				// Transient server failure — only actionable when there is no
+				// key yet. With a key configured it must not replace the
+				// credential message.
+				$type    = 'warning';
+				$message = '<strong>' . esc_html( $plugin_name ) . ':</strong> ' . esc_html( $server_error );
+			}
+
+			if ( '' === $message ) {
 				return;
 			}
 
-			$error = $this->metadata->get_last_license_error();
-
-			if ( empty( $error ) ) {
-				return;
-			}
-
-			if ( 'invalid_key' === $error ) {
-				$message = sprintf(
-					/* translators: 1: plugin name, 2: license page URL */
-					__(
-						'%1$s is not activated. %2$sPlease activate your license%3$s to receive automatic updates.',
-						'fsweb-mercadopago'
-					),
-					'<strong>' . esc_html( $plugin_name ) . '</strong>',
-					$this->license_url ? '<a href="' . esc_url( $this->license_url ) . '">' : '',
-					$this->license_url ? '</a>' : ''
-				);
-			} else {
-				$message = sprintf(
-					/* translators: 1: plugin name, 2: license page URL */
-					__(
-						'%1$s: Automatic updates are disabled — your license may be expired or assigned to a different domain. %2$sCheck your license status%3$s to resume updates.',
-						'fsweb-mercadopago'
-					),
-					'<strong>' . esc_html( $plugin_name ) . '</strong>',
-					$this->license_url ? '<a href="' . esc_url( $this->license_url ) . '">' : '',
-					$this->license_url ? '</a>' : ''
-				);
-			}
+			global $wp_list_table;
+			$columns = ( is_object( $wp_list_table ) && method_exists( $wp_list_table, 'get_column_count' ) )
+				? $wp_list_table->get_column_count()
+				: 4;
 
 			printf(
-				'<div class="notice notice-warning"><p>%s</p></div>',
+				'<tr class="plugin-update-tr fsweb-license-notice" id="%1$s-license-notice" data-slug="%1$s" data-plugin="%2$s"><td colspan="%3$d" class="plugin-update colspanchange"><div class="update-message notice inline notice-%4$s notice-alt"><p>%5$s</p></div></td></tr>',
+				esc_attr( $this->slug ),
+				esc_attr( $this->plugin_basename ),
+				(int) $columns,
+				esc_attr( $type ),
 				wp_kses(
 					$message,
 					array(
@@ -636,7 +660,6 @@ if ( ! class_exists( 'FSWEB_Update_Checker_AiAutomatedContact_1_0', false ) ) {
 			);
 		}
 
-		// ------------------------------------------------------------------//
 		//  Cleanup helpers
 		// ------------------------------------------------------------------//
 
@@ -654,7 +677,7 @@ if ( ! class_exists( 'FSWEB_Update_Checker_AiAutomatedContact_1_0', false ) ) {
 			remove_action( 'wp_ajax_fsweb_install_version_' . $this->slug, array( $this, 'ajax_install_version' ) );
 			remove_action( 'wp_ajax_fsweb_check_updates_' . $this->slug, array( $this, 'ajax_check_for_updates' ) );
 			remove_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
-			remove_action( 'admin_notices', array( $this, 'license_admin_notice' ) );
+			remove_action( 'after_plugin_row_' . $this->plugin_basename, array( $this, 'license_row_notice' ), 10 );
 			remove_filter( 'cron_schedules', array( $this->cron, 'register_schedule' ) );
 			remove_action( 'upgrader_process_complete', array( $this, 'on_upgrader_complete' ), 10 );
 		}

@@ -120,8 +120,8 @@ class AdminUi {
 			'<a href="%s" class="thickbox open-plugin-details-modal" aria-label="%s">%s</a>',
 			esc_url( $view_url ),
 			/* translators: %s: plugin name */
-			esc_attr( sprintf( __( 'View details for %s', 'fsweb-mercadopago' ), $this->plugin_name ) ),
-			esc_html__( 'View Details', 'fsweb-mercadopago' )
+			esc_attr( sprintf( __( 'View details for %s', 'fsweb-ai-automated-contact' ), $this->plugin_name ) ),
+			esc_html__( 'View Details', 'fsweb-ai-automated-contact' )
 		);
 
 		// Replace any existing "View Details" link.
@@ -142,7 +142,7 @@ class AdminUi {
 			'<a href="#" class="fsweb-check-updates" data-action="%s" data-nonce="%s">%s</a>',
 			esc_attr( 'fsweb_check_updates_' . $this->slug ),
 			esc_attr( wp_create_nonce( 'fsweb_check_updates_' . $this->slug ) ),
-			esc_html__( 'Check for Updates', 'fsweb-mercadopago' )
+			esc_html__( 'Check for Updates', 'fsweb-ai-automated-contact' )
 		);
 
 		// "Previous Versions" — thickbox modal.
@@ -161,11 +161,11 @@ class AdminUi {
 			esc_attr(
 				sprintf(
 					/* translators: %s: plugin name */
-					__( '%s — Previous Versions', 'fsweb-mercadopago' ),
+					__( '%s — Previous Versions', 'fsweb-ai-automated-contact' ),
 					$this->plugin_name
 				)
 			),
-			esc_html__( 'Previous Versions', 'fsweb-mercadopago' )
+			esc_html__( 'Previous Versions', 'fsweb-ai-automated-contact' )
 		);
 
 		return $links;
@@ -185,7 +185,7 @@ class AdminUi {
 			<title>
 				<?php echo esc_html( $this->plugin_name ); ?>
 				&mdash;
-				<?php esc_html_e( 'Previous Versions', 'fsweb-mercadopago' ); ?>
+				<?php esc_html_e( 'Previous Versions', 'fsweb-ai-automated-contact' ); ?>
 			</title>
 			<?php wp_admin_css( 'common' ); ?>
 			<?php wp_admin_css( 'forms' ); ?>
@@ -196,21 +196,21 @@ class AdminUi {
 			<h2>
 				<?php echo esc_html( $this->plugin_name ); ?>
 				&mdash;
-				<?php esc_html_e( 'Previous Versions', 'fsweb-mercadopago' ); ?>
+				<?php esc_html_e( 'Previous Versions', 'fsweb-ai-automated-contact' ); ?>
 			</h2>
 			<p>
-				<?php esc_html_e( 'Select a version to install. The current version is highlighted in green.', 'fsweb-mercadopago' ); ?>
+				<?php esc_html_e( 'Select a version to install. The current version is highlighted in green.', 'fsweb-ai-automated-contact' ); ?>
 			</p>
 
 			<?php if ( empty( $versions ) ) : ?>
-				<p><?php esc_html_e( 'No version history available.', 'fsweb-mercadopago' ); ?></p>
+				<p><?php esc_html_e( 'No version history available.', 'fsweb-ai-automated-contact' ); ?></p>
 			<?php else : ?>
 				<table class="wp-list-table widefat striped rollback-table">
 					<thead>
 						<tr>
-							<th width="50"><?php esc_html_e( 'Select', 'fsweb-mercadopago' ); ?></th>
-							<th><?php esc_html_e( 'Version', 'fsweb-mercadopago' ); ?></th>
-							<th><?php esc_html_e( 'Date', 'fsweb-mercadopago' ); ?></th>
+							<th width="50"><?php esc_html_e( 'Select', 'fsweb-ai-automated-contact' ); ?></th>
+							<th><?php esc_html_e( 'Version', 'fsweb-ai-automated-contact' ); ?></th>
+							<th><?php esc_html_e( 'Date', 'fsweb-ai-automated-contact' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -233,7 +233,7 @@ class AdminUi {
 									<strong><?php echo esc_html( $ver_obj->version ); ?></strong>
 									<?php if ( $is_current ) : ?>
 										<span class="current-label">
-											&mdash; <?php esc_html_e( 'installed', 'fsweb-mercadopago' ); ?>
+											&mdash; <?php esc_html_e( 'installed', 'fsweb-ai-automated-contact' ); ?>
 										</span>
 									<?php endif; ?>
 								</td>
@@ -246,12 +246,12 @@ class AdminUi {
 				<div class="rollback-footer">
 					<div>
 						<button class="button button-primary" id="fsweb-install-version" disabled>
-							<?php esc_html_e( 'Install Selected Version', 'fsweb-mercadopago' ); ?>
+							<?php esc_html_e( 'Install Selected Version', 'fsweb-ai-automated-contact' ); ?>
 						</button>
 					</div>
 					<div>
 						<button class="button" onclick="self.parent.tb_remove();">
-							<?php esc_html_e( 'Close', 'fsweb-mercadopago' ); ?>
+							<?php esc_html_e( 'Close', 'fsweb-ai-automated-contact' ); ?>
 						</button>
 					</div>
 				</div>
@@ -277,7 +277,7 @@ class AdminUi {
 			<title>
 				<?php echo esc_html( $this->plugin_name ); ?>
 				&mdash;
-				<?php esc_html_e( 'License Required', 'fsweb-mercadopago' ); ?>
+				<?php esc_html_e( 'License Required', 'fsweb-ai-automated-contact' ); ?>
 			</title>
 			<?php wp_admin_css( 'common' ); ?>
 			<?php wp_admin_css( 'forms' ); ?>
@@ -288,17 +288,17 @@ class AdminUi {
 			<h2>
 				<?php echo esc_html( $this->plugin_name ); ?>
 				&mdash;
-				<?php esc_html_e( 'License Required', 'fsweb-mercadopago' ); ?>
+				<?php esc_html_e( 'License Required', 'fsweb-ai-automated-contact' ); ?>
 			</h2>
 			<p>
-				<?php esc_html_e( 'A valid license key is required to access previous versions.', 'fsweb-mercadopago' ); ?>
+				<?php esc_html_e( 'A valid license key is required to access previous versions.', 'fsweb-ai-automated-contact' ); ?>
 			</p>
 			<p>
-				<?php esc_html_e( 'Please activate your license on the plugin settings page to unlock this feature.', 'fsweb-mercadopago' ); ?>
+				<?php esc_html_e( 'Please activate your license on the plugin settings page to unlock this feature.', 'fsweb-ai-automated-contact' ); ?>
 			</p>
 			<div class="rollback-footer">
 				<button class="button" onclick="self.parent.tb_remove();">
-					<?php esc_html_e( 'Close', 'fsweb-mercadopago' ); ?>
+					<?php esc_html_e( 'Close', 'fsweb-ai-automated-contact' ); ?>
 				</button>
 			</div>
 		</body></html>
@@ -343,13 +343,13 @@ class AdminUi {
 				'checkNonce'     => wp_create_nonce( 'fsweb_check_updates_' . $this->slug ),
 				'pluginBasename' => $this->plugin_basename,
 				'i18n'           => array(
-					'installBtn'    => __( 'Install Selected Version', 'fsweb-mercadopago' ),
-					'installing'    => __( 'Installing…', 'fsweb-mercadopago' ),
-					'downloading'   => __( 'Downloading and installing version', 'fsweb-mercadopago' ),
-					'networkError'  => __( 'Network error. Please try again.', 'fsweb-mercadopago' ),
-					'checking'      => __( 'Checking for updates…', 'fsweb-mercadopago' ),
-					'noLicense'     => __( 'A valid license key is required to check for updates.', 'fsweb-mercadopago' ),
-					'latestVersion' => __( 'You are running the latest version.', 'fsweb-mercadopago' ),
+					'installBtn'    => __( 'Install Selected Version', 'fsweb-ai-automated-contact' ),
+					'installing'    => __( 'Installing…', 'fsweb-ai-automated-contact' ),
+					'downloading'   => __( 'Downloading and installing version', 'fsweb-ai-automated-contact' ),
+					'networkError'  => __( 'Network error. Please try again.', 'fsweb-ai-automated-contact' ),
+					'checking'      => __( 'Checking for updates…', 'fsweb-ai-automated-contact' ),
+					'noLicense'     => __( 'A valid license key is required to check for updates.', 'fsweb-ai-automated-contact' ),
+					'latestVersion' => __( 'You are running the latest version.', 'fsweb-ai-automated-contact' ),
 				),
 			)
 		);
@@ -378,7 +378,7 @@ class AdminUi {
 		return esc_html(
 			wp_date(
 				/* translators: date format for version release date */
-				__( 'F j, Y', 'fsweb-mercadopago' ),
+				__( 'F j, Y', 'fsweb-ai-automated-contact' ),
 				$timestamp
 			)
 		);

@@ -117,13 +117,13 @@ class Assets {
 				'checkNonce'     => wp_create_nonce( 'fsweb_check_updates_' . $this->slug ),
 				'pluginBasename' => $this->plugin_basename,
 				'i18n'           => array(
-					'installBtn'    => __( 'Install Selected Version', 'fsweb-mercadopago' ),
-					'installing'    => __( 'Installing…', 'fsweb-mercadopago' ),
-					'downloading'   => __( 'Downloading and installing version', 'fsweb-mercadopago' ),
-					'networkError'  => __( 'Network error. Please try again.', 'fsweb-mercadopago' ),
-					'checking'      => __( 'Checking for updates…', 'fsweb-mercadopago' ),
-					'noLicense'     => __( 'A valid license key is required to check for updates.', 'fsweb-mercadopago' ),
-					'latestVersion' => __( 'You are running the latest version.', 'fsweb-mercadopago' ),
+					'installBtn'    => __( 'Install Selected Version', 'fsweb-ai-automated-contact' ),
+					'installing'    => __( 'Installing…', 'fsweb-ai-automated-contact' ),
+					'downloading'   => __( 'Downloading and installing version', 'fsweb-ai-automated-contact' ),
+					'networkError'  => __( 'Network error. Please try again.', 'fsweb-ai-automated-contact' ),
+					'checking'      => __( 'Checking for updates…', 'fsweb-ai-automated-contact' ),
+					'noLicense'     => __( 'A valid license key is required to check for updates.', 'fsweb-ai-automated-contact' ),
+					'latestVersion' => __( 'You are running the latest version.', 'fsweb-ai-automated-contact' ),
 				),
 			)
 		);

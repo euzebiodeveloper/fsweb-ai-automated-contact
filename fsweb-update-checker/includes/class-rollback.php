@@ -131,14 +131,14 @@ class Rollback {
 
 		if ( ! current_user_can( 'update_plugins' ) ) {
 			wp_send_json_error( array(
-				'message' => __( 'You do not have permission to install plugins.', 'fsweb-mercadopago' ),
+				'message' => __( 'You do not have permission to install plugins.', 'fsweb-ai-automated-contact' ),
 			) );
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce verified above.
 		if ( empty( $_POST['download_url'] ) ) {
 			wp_send_json_error( array(
-				'message' => __( 'No download URL provided.', 'fsweb-mercadopago' ),
+				'message' => __( 'No download URL provided.', 'fsweb-ai-automated-contact' ),
 			) );
 		}
 
@@ -182,7 +182,7 @@ class Rollback {
 
 		if ( ! $result ) {
 			wp_send_json_error( array(
-				'message' => __( 'Installation failed. Check filesystem permissions.', 'fsweb-mercadopago' ),
+				'message' => __( 'Installation failed. Check filesystem permissions.', 'fsweb-ai-automated-contact' ),
 			) );
 		}
 
@@ -193,7 +193,7 @@ class Rollback {
 				wp_send_json_error( array(
 					'message' => sprintf(
 						/* translators: %s: error message */
-						__( 'Version installed but could not re-activate: %s', 'fsweb-mercadopago' ),
+						__( 'Version installed but could not re-activate: %s', 'fsweb-ai-automated-contact' ),
 						$activated->get_error_message()
 					),
 				) );
@@ -201,7 +201,7 @@ class Rollback {
 		}
 
 		wp_send_json_success( array(
-			'message' => __( 'Version installed successfully!', 'fsweb-mercadopago' ),
+			'message' => __( 'Version installed successfully!', 'fsweb-ai-automated-contact' ),
 			'version' => $version,
 		) );
 	}
@@ -221,7 +221,7 @@ class Rollback {
 		// Block manual check if no license key is set or license is invalid/expired.
 		if ( ! $this->metadata->has_license() ) {
 			wp_send_json_error( array(
-				'message' => __( 'A valid license key is required to check for updates.', 'fsweb-mercadopago' ),
+				'message' => __( 'A valid license key is required to check for updates.', 'fsweb-ai-automated-contact' ),
 			) );
 		}
 
@@ -255,11 +255,11 @@ class Rollback {
 
 				// Translate known error codes to human-readable messages.
 				if ( 'invalid_key' === $error_message || 'forbidden' === $error_message ) {
-					$error_message = __( 'A valid license key is required to check for updates.', 'fsweb-mercadopago' );
+					$error_message = __( 'A valid license key is required to check for updates.', 'fsweb-ai-automated-contact' );
 				}
 
 				wp_send_json_error( array(
-					'message' => $error_message ?: __( 'Could not fetch update information.', 'fsweb-mercadopago' ),
+					'message' => $error_message ?: __( 'Could not fetch update information.', 'fsweb-ai-automated-contact' ),
 				) );
 			}
 		}
@@ -339,10 +339,10 @@ class Rollback {
 			'message'         => $has_update
 				? sprintf(
 					/* translators: %s: latest version number */
-					__( 'Update available: version %s', 'fsweb-mercadopago' ),
+					__( 'Update available: version %s', 'fsweb-ai-automated-contact' ),
 					$meta->version
 				)
-				: __( 'You are running the latest version.', 'fsweb-mercadopago' ),
+				: __( 'You are running the latest version.', 'fsweb-ai-automated-contact' ),
 		) );
 
 		wp_die();

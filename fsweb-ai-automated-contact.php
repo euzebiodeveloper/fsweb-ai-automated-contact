@@ -114,11 +114,12 @@ $fsweb_ai_automated_contact_update_checker->set_license_url(
 );
 
 // Inject license key so the update-checker sends it with every request.
-// Without a valid key the API returns 401 and updates are blocked.
+// Always set it — even when empty — so the checker tracks the current key and
+// clears stale errors only when the key actually changes (otherwise a removed
+// key would keep the previous key's state, and a rejection for an empty key
+// could never be cleared).
 $fsweb_ai_automated_contact_license_key = get_option( 'fsweb_aic_license_key', '' );
-if ( ! empty( $fsweb_ai_automated_contact_license_key ) ) {
-	$fsweb_ai_automated_contact_update_checker->set_license( $fsweb_ai_automated_contact_license_key );
-}
+$fsweb_ai_automated_contact_update_checker->set_license( $fsweb_ai_automated_contact_license_key );
 
 /**
  * Reset the update checker caches after the license is activated.

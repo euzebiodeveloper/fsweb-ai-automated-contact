@@ -3,7 +3,7 @@
 [![WordPress](https://img.shields.io/badge/wordpress-6.0%2B-blue?style=flat-square)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/php-8.1%2B-purple?style=flat-square)](https://www.php.net/)
 [![WooCommerce](https://img.shields.io/badge/woocommerce-required-96588a?style=flat-square)](https://woocommerce.com/)
-[![Version](https://img.shields.io/badge/version-1.0.5-orange?style=flat-square)](https://flowsyncweb.com/)
+[![Version](https://img.shields.io/badge/version-1.0.6-orange?style=flat-square)](https://flowsyncweb.com/)
 [![License](https://img.shields.io/badge/license-GPLv2-blue.svg?style=flat-square)](https://opensource.org/licenses/GPL-2.0)
 
 **Contributors:** [flowsyncweb](https://github.com/flowsyncweb)  

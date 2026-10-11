@@ -1,12 +1,12 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: AI Automated Contact 1.0.5\n"
+"Project-Id-Version: AI Automated Contact 1.0.6\n"
 "Report-Msgid-Bugs-To: https://flowsyncweb.com\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: fsweb-ai-automated-contact\n"
 
 msgid "AI Automated Contact"
@@ -677,3 +677,192 @@ msgstr "Atendimento online"
 
 msgid "Type your message"
 msgstr "Escreva sua mensagem"
+
+#. translators: %1$s is the slug, %2$s is the path of the plugin that already uses it.
+#: fsweb-update-checker/class-fsweb-update-checker.php:197
+#, php-format
+msgid "Plugin slug \"%1$s\" is already in use by %2$s. Each plugin must have a unique slug."
+msgstr "O slug \"%1$s\" do plugin já está em uso por %2$s. Cada plugin deve ter um slug único."
+
+#: fsweb-update-checker/class-fsweb-update-checker.php:203
+msgid "Update Checker Conflict"
+msgstr "Conflito do verificador de atualizações"
+
+#: fsweb-update-checker/class-fsweb-update-checker.php:507
+msgid "Update information is temporarily unavailable. Please try again in a few moments."
+msgstr "As informações de atualização estão temporariamente indisponíveis. Tente novamente em instantes."
+
+#. translators: 1: plugin name, 2: license page URL
+#: fsweb-update-checker/class-fsweb-update-checker.php:606
+#, php-format
+msgid "%1$s is not activated. %2$sPlease activate your license%3$s to receive automatic updates."
+msgstr "%1$s não está ativado. %2$sAtive sua licença%3$s para receber atualizações automáticas."
+
+#. translators: 1: plugin name, 2: opening link tag, 3: closing link tag
+#: fsweb-update-checker/class-fsweb-update-checker.php:600
+#, php-format
+msgid "%1$s: the license credential is invalid or expired. %2$sCheck your license%3$s to resume automatic updates."
+msgstr "%1$s: a credencial de licença é inválida ou expirou. %2$sVerifique sua licença%3$s para retomar as atualizações automáticas."
+
+#. translators: 1: plugin name, 2: license page URL
+#: fsweb-update-checker/class-fsweb-update-checker.php:617
+#, php-format
+msgid "%1$s: Automatic updates are disabled — your license may be expired or assigned to a different domain. %2$sCheck your license status%3$s to resume updates."
+msgstr "%1$s: As atualizações automáticas estão desativadas — sua licença pode ter expirado ou estar atribuída a outro domínio. %2$sVerifique o status da sua licença%3$s para retomar as atualizações."
+
+#. translators: %s: plugin name
+#: fsweb-update-checker/includes/class-admin-ui.php:123
+#, php-format
+msgid "View details for %s"
+msgstr "Ver detalhes de %s"
+
+#: fsweb-update-checker/includes/class-admin-ui.php:124
+msgid "View Details"
+msgstr "Ver detalhes"
+
+#: fsweb-update-checker/includes/class-admin-ui.php:145
+msgid "Check for Updates"
+msgstr "Verificar atualizações"
+
+#. translators: %s: plugin name
+#: fsweb-update-checker/includes/class-admin-ui.php:164
+#, php-format
+msgid "%s — Previous Versions"
+msgstr "%s — Versões anteriores"
+
+#: fsweb-update-checker/includes/class-admin-ui.php:168
+#: fsweb-update-checker/includes/class-admin-ui.php:188
+#: fsweb-update-checker/includes/class-admin-ui.php:199
+msgid "Previous Versions"
+msgstr "Versões anteriores"
+
+#: fsweb-update-checker/includes/class-admin-ui.php:202
+msgid "Select a version to install. The current version is highlighted in green."
+msgstr "Selecione uma versão para instalar. A versão atual está destacada em verde."
+
+#: fsweb-update-checker/includes/class-admin-ui.php:206
+msgid "No version history available."
+msgstr "Nenhum histórico de versões disponível."
+
+#: fsweb-update-checker/includes/class-admin-ui.php:211
+msgid "Select"
+msgstr "Selecionar"
+
+#: fsweb-update-checker/includes/class-admin-ui.php:212
+msgid "Version"
+msgstr "Versão"
+
+#: fsweb-update-checker/includes/class-admin-ui.php:213
+msgid "Date"
+msgstr "Data"
+
+#: fsweb-update-checker/includes/class-admin-ui.php:236
+msgid "installed"
+msgstr "instalada"
+
+#: fsweb-update-checker/includes/class-admin-ui.php:249
+#: fsweb-update-checker/includes/class-admin-ui.php:346
+#: fsweb-update-checker/includes/class-assets.php:120
+msgid "Install Selected Version"
+msgstr "Instalar versão selecionada"
+
+#: fsweb-update-checker/includes/class-admin-ui.php:280
+#: fsweb-update-checker/includes/class-admin-ui.php:291
+msgid "License Required"
+msgstr "Licença necessária"
+
+#: fsweb-update-checker/includes/class-admin-ui.php:294
+msgid "A valid license key is required to access previous versions."
+msgstr "É necessária uma chave de licença válida para acessar versões anteriores."
+
+#: fsweb-update-checker/includes/class-admin-ui.php:297
+msgid "Please activate your license on the plugin settings page to unlock this feature."
+msgstr "Ative sua licença na página de configurações do plugin para desbloquear este recurso."
+
+#: fsweb-update-checker/includes/class-admin-ui.php:347
+#: fsweb-update-checker/includes/class-assets.php:121
+msgid "Installing…"
+msgstr "Instalando…"
+
+#: fsweb-update-checker/includes/class-admin-ui.php:348
+#: fsweb-update-checker/includes/class-assets.php:122
+msgid "Downloading and installing version"
+msgstr "Baixando e instalando a versão"
+
+#: fsweb-update-checker/includes/class-admin-ui.php:350
+#: fsweb-update-checker/includes/class-assets.php:124
+msgid "Checking for updates…"
+msgstr "Verificando atualizações…"
+
+#: fsweb-update-checker/includes/class-admin-ui.php:351
+#: fsweb-update-checker/includes/class-assets.php:125
+#: fsweb-update-checker/includes/class-rollback.php:224
+#: fsweb-update-checker/includes/class-rollback.php:258
+msgid "A valid license key is required to check for updates."
+msgstr "É necessária uma chave de licença válida para verificar atualizações."
+
+#: fsweb-update-checker/includes/class-admin-ui.php:352
+#: fsweb-update-checker/includes/class-assets.php:126
+#: fsweb-update-checker/includes/class-rollback.php:345
+msgid "You are running the latest version."
+msgstr "Você está usando a versão mais recente."
+
+#. translators: date format for version release date
+#: fsweb-update-checker/includes/class-admin-ui.php:381
+msgid "F j, Y"
+msgstr "j \\d\\e F \\d\\e Y"
+
+#: fsweb-update-checker/includes/class-cron.php:114
+#, php-format
+msgid "Every %d hours"
+msgstr "A cada %d horas"
+
+#: fsweb-update-checker/includes/class-metadata.php:191
+msgid "Update server is temporarily unreachable. Please try again later."
+msgstr "O servidor de atualizações está temporariamente inacessível. Tente novamente mais tarde."
+
+#: fsweb-update-checker/includes/class-metadata.php:218
+msgid "Update server returned an error. Please try again later."
+msgstr "O servidor de atualizações retornou um erro. Tente novamente mais tarde."
+
+#: fsweb-update-checker/includes/class-metadata.php:240
+msgid "Update server returned an invalid response. Please try again later."
+msgstr "O servidor de atualizações retornou uma resposta inválida. Tente novamente mais tarde."
+
+#. translators: 1: error code, 2: error message
+#: fsweb-update-checker/includes/class-metadata.php:511
+#, php-format
+msgid "[FSWEB Update Checker - %1$s] %2$s"
+msgstr "[FSWEB Update Checker - %1$s] %2$s"
+
+#: fsweb-update-checker/includes/class-rollback.php:134
+msgid "You do not have permission to install plugins."
+msgstr "Você não tem permissão para instalar plugins."
+
+#: fsweb-update-checker/includes/class-rollback.php:141
+msgid "No download URL provided."
+msgstr "Nenhuma URL de download fornecida."
+
+#: fsweb-update-checker/includes/class-rollback.php:185
+msgid "Installation failed. Check filesystem permissions."
+msgstr "Falha na instalação. Verifique as permissões do sistema de arquivos."
+
+#. translators: %s: error message
+#: fsweb-update-checker/includes/class-rollback.php:196
+#, php-format
+msgid "Version installed but could not re-activate: %s"
+msgstr "Versão instalada, mas não foi possível reativar: %s"
+
+#: fsweb-update-checker/includes/class-rollback.php:204
+msgid "Version installed successfully!"
+msgstr "Versão instalada com sucesso!"
+
+#: fsweb-update-checker/includes/class-rollback.php:262
+msgid "Could not fetch update information."
+msgstr "Não foi possível obter as informações de atualização."
+
+#. translators: %s: latest version number
+#: fsweb-update-checker/includes/class-rollback.php:342
+#, php-format
+msgid "Update available: version %s"
+msgstr "Atualização disponível: versão %s"

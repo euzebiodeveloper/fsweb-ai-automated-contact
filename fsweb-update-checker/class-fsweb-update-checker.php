@@ -597,46 +597,56 @@ if ( ! class_exists( 'FSWEB_Update_Checker_AiAutomatedContact_1_0', false ) ) {
 		public function license_row_notice( $plugin_file = '', $plugin_data = array(), $status = '' ) {
 			$plugin_name   = $this->updates->get_plugin_name();
 			$license_error = $this->metadata->get_last_license_error();
-			$server_error  = $this->metadata->get_last_server_error();
 			$has_key       = $this->metadata->has_license_key();
 
 			$type    = 'error';
 			$message = '';
 
-			// A rejected credential is the priority — never mask it with the
-			// generic "server unreachable" warning.
-			if ( ! empty( $license_error ) ) {
-				$message = $has_key
-					? sprintf(
-						/* translators: 1: plugin name, 2: opening link tag, 3: closing link tag */
-						__(
-							'%1$s: the license credential is invalid or expired. %2$sCheck your license%3$s to resume automatic updates.',
-							'fsweb-ai-automated-contact'
-						),
-						'<strong>' . esc_html( $plugin_name ) . '</strong>',
-						$this->license_url ? '<a href="' . esc_url( $this->license_url ) . '">' : '',
-						$this->license_url ? '</a>' : ''
-					)
-					: sprintf(
-						/* translators: 1: plugin name, 2: opening link tag, 3: closing link tag */
-						__(
-							'%1$s is not activated. %2$sPlease activate your license%3$s to receive automatic updates.',
-							'fsweb-ai-automated-contact'
-						),
-						'<strong>' . esc_html( $plugin_name ) . '</strong>',
-						$this->license_url ? '<a href="' . esc_url( $this->license_url ) . '">' : '',
-						$this->license_url ? '</a>' : ''
-					);
-			} elseif ( ! empty( $server_error ) && ! $has_key ) {
-				// Transient server failure — only actionable when there is no
-				// key yet. With a key configured it must not replace the
-				// credential message.
+			if ( ! $has_key ) {
+				// No credential configured yet. The releases endpoint answers an
+				// empty key with HTTP 422, so the generic server error must never
+				// surface here — invite activation instead.
 				$type    = 'warning';
-				$message = '<strong>' . esc_html( $plugin_name ) . ':</strong> ' . esc_html( $server_error );
+				$message = sprintf(
+					/* translators: 1: plugin name, 2: opening link tag, 3: closing link tag */
+					__(
+						'%1$s is not activated. %2$sPlease activate your license%3$s to receive automatic updates.',
+						'fsweb-ai-automated-contact'
+					),
+					'<strong>' . esc_html( $plugin_name ) . '</strong>',
+					$this->license_url ? '<a href="' . esc_url( $this->license_url ) . '">' : '',
+					$this->license_url ? '</a>' : ''
+				);
+			} elseif ( ! empty( $license_error ) ) {
+				// A configured credential was rejected (401 invalid key, 403
+				// domain mismatch or expired key). Report that instead of the
+				// generic "server unreachable" warning so the real cause wins.
+				$message = sprintf(
+					/* translators: 1: plugin name, 2: opening link tag, 3: closing link tag */
+					__(
+						'%1$s: the license credential is invalid or expired. %2$sCheck your license%3$s to resume automatic updates.',
+						'fsweb-ai-automated-contact'
+					),
+					'<strong>' . esc_html( $plugin_name ) . '</strong>',
+					$this->license_url ? '<a href="' . esc_url( $this->license_url ) . '">' : '',
+					$this->license_url ? '</a>' : ''
+				);
 			}
+			// With a valid credential and a transient server failure nothing is
+			// printed, so the generic error can never mask the real state.
 
 			if ( '' === $message ) {
 				return;
+			}
+
+			// Mirror WordPress core's own plugin-update row: the `active` class
+			// on the <tr> is what gives the row its background on the Plugins
+			// screen, and the column count must match the current list table.
+			$active_class = '';
+			if ( is_network_admin() ) {
+				$active_class = is_plugin_active_for_network( $this->plugin_basename ) ? ' active' : '';
+			} elseif ( function_exists( 'is_plugin_active' ) ) {
+				$active_class = is_plugin_active( $this->plugin_basename ) ? ' active' : '';
 			}
 
 			global $wp_list_table;
@@ -645,7 +655,8 @@ if ( ! class_exists( 'FSWEB_Update_Checker_AiAutomatedContact_1_0', false ) ) {
 				: 4;
 
 			printf(
-				'<tr class="plugin-update-tr fsweb-license-notice" id="%1$s-license-notice" data-slug="%1$s" data-plugin="%2$s"><td colspan="%3$d" class="plugin-update colspanchange"><div class="update-message notice inline notice-%4$s notice-alt"><p>%5$s</p></div></td></tr>',
+				'<tr class="plugin-update-tr%1$s fsweb-license-notice" id="%2$s-license-notice" data-slug="%2$s" data-plugin="%3$s"><td colspan="%4$d" class="plugin-update colspanchange"><div class="update-message notice inline notice-%5$s notice-alt"><p>%6$s</p></div></td></tr>',
+				$active_class,
 				esc_attr( $this->slug ),
 				esc_attr( $this->plugin_basename ),
 				(int) $columns,

@@ -201,6 +201,16 @@ class Metadata {
 	 * @return object|null Decoded JSON metadata, or null on failure.
 	 */
 	public function fetch_and_cache() {
+		// No credential configured yet — the releases endpoint requires a
+		// license key (an empty key is answered with HTTP 422), so there is
+		// nothing to authenticate. Record the "not activated" state instead
+		// of a misleading generic server error.
+		if ( '' === $this->license_key ) {
+			$this->clear_cache();
+			update_option( $this->option_name . '_license_error', 'missing' );
+			return null;
+		}
+
 		$response = $this->fetch( $this->metadata_url );
 
 		if ( is_wp_error( $response ) ) {
@@ -227,6 +237,15 @@ class Metadata {
 			$this->clear_cache();
 			update_option( $this->option_name . '_license_error', 'forbidden' );
 			$this->log( 'license_forbidden', 'Update server denied access — domain mismatch or license expired (403).' );
+			return null;
+		}
+
+		// 422 — validation failure (e.g. an empty or malformed license key
+		// rejected before authentication). Never treat it as a server error.
+		if ( 422 === $code ) {
+			$this->clear_cache();
+			update_option( $this->option_name . '_license_error', 'invalid_key' );
+			$this->log( 'license_unprocessable', 'Update server rejected the license request (422).' );
 			return null;
 		}
 

@@ -96,14 +96,14 @@ class Assets {
 			'fsweb-update-checker-admin',
 			$this->assets_url . 'css/admin.css',
 			array(),
-			$this->version
+			$this->asset_version( 'css/admin.css' )
 		);
 
 		wp_enqueue_script(
 			'fsweb-update-checker-admin',
 			$this->assets_url . 'js/admin.js',
 			array( 'jquery' ),
-			$this->version,
+			$this->asset_version( 'js/admin.js' ),
 			true
 		);
 
@@ -127,5 +127,25 @@ class Assets {
 				),
 			)
 		);
+	}
+
+	/**
+	 * Cache-busting version for an asset file.
+	 *
+	 * The declared version is the base; the file's modification time is
+	 * appended so a changed asset is always re-fetched, even when the plugin
+	 * version itself did not change.
+	 *
+	 * @param string $relative Relative path inside assets/, e.g. 'css/admin.css'.
+	 * @return string Version string.
+	 */
+	private function asset_version( $relative ) {
+		$path = str_replace(
+			content_url( '/' ),
+			trailingslashit( WP_CONTENT_DIR ),
+			$this->assets_url . $relative
+		);
+
+		return file_exists( $path ) ? $this->version . '.' . filemtime( $path ) : $this->version;
 	}
 }

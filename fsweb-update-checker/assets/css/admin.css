@@ -249,3 +249,17 @@
 .plugin-update-tr .update-message.notice-error p::before {
 	color: #d63638 !important;
 }
+
+/* ------------------------------------------------------------------ */
+/*  License notice row — fuse with the plugin row above                 */
+/* ------------------------------------------------------------------ */
+/* WordPress only drops a plugin row's trailing border when the row is  */
+/* flagged `update` (class-wp-plugins-list-table.php). Our license row  */
+/* is a sibling rendered on after_plugin_row, so the plugin row kept    */
+/* its bottom line and a stray stroke showed between the two rows.      */
+/* Remove it here exactly like core does for real update rows.          */
+.plugins tr:has(+ tr.fsweb-license-notice) > td,
+.plugins tr:has(+ tr.fsweb-license-notice) > th {
+	box-shadow: none;
+	border-bottom: 0;
+}

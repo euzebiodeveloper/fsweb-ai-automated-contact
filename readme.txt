@@ -4,8 +4,8 @@ Donate link: https://flowsyncweb.com/
 Tags: woocommerce, chat, ai, virtual assistant, customer support
 Requires at least: 6.0
 Tested up to: 7.1
-Requires PHP: 8.1
-Stable tag: 1.0.5
+Requires PHP: 8.2
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,6 +67,10 @@ Yes. For variable products the assistant lists the available options, asks which
 
 == Changelog ==
 
+= 1.0.6 =
+* Fix: An invalid or expired license is now reported as such — the admin notice no longer shows the generic "Update server is temporarily unreachable" warning; a 401/403 rejection from the update server now reads "the license credential is invalid or expired".
+* Fix: The stored license error is no longer wiped on every page load, so a rejected credential is actually shown; it is cleared only when the key changes or after a successful check.
+
 = 1.0.5 =
 * Fix: The license status synced on page load now follows `domain_authorized` instead of the license `status`, so deactivating on this domain keeps the local status as pending and the screen no longer flips back to active on every reload.
 * Fix: An expired or invalid license keeps the verdict the API sends, and a transport failure still leaves the stored state untouched.
@@ -100,6 +104,9 @@ Yes. For variable products the assistant lists the available options, asks which
 * Per-domain license with onboarding and automatic updates.
 
 == Upgrade Notice ==
+
+= 1.0.6 =
+License notice fix: a rejected credential now shows as invalid/expired instead of the misleading "update server unreachable" warning.
 
 = 1.0.5 =
 License fix: deactivating on this domain no longer shows the license as active again after a reload.

@@ -111,7 +111,7 @@ class Cron {
 		if ( ! isset( $schedules[ $key ] ) ) {
 			/* translators: %d: number of hours */
 			$display_label = sprintf(
-				__( 'Every %d hours', 'fsweb-mercadopago' ),
+				__( 'Every %d hours', 'fsweb-ai-automated-contact' ),
 				$this->check_period
 			);
 			$schedules[ $key ] = array(

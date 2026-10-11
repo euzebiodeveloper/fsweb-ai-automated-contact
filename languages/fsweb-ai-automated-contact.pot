@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: AI Automated Contact 1.0.5\n"
+"Project-Id-Version: AI Automated Contact 1.0.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/fsweb-ai-automated-contact\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-26T20:54:00+00:00\n"
+"POT-Creation-Date: 2026-10-11T20:32:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fsweb-ai-automated-contact\n"
@@ -78,22 +78,24 @@ msgid "Current setup: %1$s / %2$s"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:157
-#: includes/class-fsweb-ai-automated-contact-license.php:105
+#: includes/class-fsweb-ai-automated-contact-license.php:135
 msgid "Enter a license key."
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:158
+#: fsweb-update-checker/includes/class-admin-ui.php:349
+#: fsweb-update-checker/includes/class-assets.php:123
 msgid "Network error. Please try again."
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:159
 #: admin/class-fsweb-ai-automated-contact-admin.php:393
-#: admin/class-fsweb-ai-automated-contact-admin.php:917
+#: admin/class-fsweb-ai-automated-contact-admin.php:922
 msgid "Activate"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:160
-#: admin/class-fsweb-ai-automated-contact-admin.php:921
+#: admin/class-fsweb-ai-automated-contact-admin.php:926
 msgid "Deactivate"
 msgstr ""
 
@@ -103,33 +105,33 @@ msgid "Test now"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:162
-#: admin/class-fsweb-ai-automated-contact-admin.php:910
+#: admin/class-fsweb-ai-automated-contact-admin.php:915
 msgid "Lifetime"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:163
 #: admin/class-fsweb-ai-automated-contact-admin.php:471
-#: admin/class-fsweb-ai-automated-contact-admin.php:889
+#: admin/class-fsweb-ai-automated-contact-admin.php:894
 msgid "Active"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:164
-#: admin/class-fsweb-ai-automated-contact-admin.php:901
+#: admin/class-fsweb-ai-automated-contact-admin.php:906
 msgid "Inactive"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:165
-#: admin/class-fsweb-ai-automated-contact-admin.php:892
+#: admin/class-fsweb-ai-automated-contact-admin.php:897
 msgid "Expired"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:166
-#: admin/class-fsweb-ai-automated-contact-admin.php:895
+#: admin/class-fsweb-ai-automated-contact-admin.php:900
 msgid "Invalid"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:167
-#: admin/class-fsweb-ai-automated-contact-admin.php:898
+#: admin/class-fsweb-ai-automated-contact-admin.php:903
 msgid "Pending"
 msgstr ""
 
@@ -142,19 +144,19 @@ msgstr ""
 #: admin/class-fsweb-ai-automated-contact-admin.php:228
 #: admin/class-fsweb-ai-automated-contact-admin.php:229
 #: admin/class-fsweb-ai-automated-contact-admin.php:450
-#: admin/class-fsweb-ai-automated-contact-admin.php:869
-#: admin/class-fsweb-ai-automated-contact-admin.php:978
+#: admin/class-fsweb-ai-automated-contact-admin.php:874
+#: admin/class-fsweb-ai-automated-contact-admin.php:983
 msgid "License"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:237
-#: admin/class-fsweb-ai-automated-contact-admin.php:968
+#: admin/class-fsweb-ai-automated-contact-admin.php:973
 msgid "AI Contact — Tutorial"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:238
 #: admin/class-fsweb-ai-automated-contact-admin.php:446
-#: admin/class-fsweb-ai-automated-contact-admin.php:856
+#: admin/class-fsweb-ai-automated-contact-admin.php:861
 msgid "Tutorial"
 msgstr ""
 
@@ -164,6 +166,8 @@ msgid "AI Contact — Setup"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:369
+#: fsweb-update-checker/includes/class-admin-ui.php:254
+#: fsweb-update-checker/includes/class-admin-ui.php:301
 #: public/class-fsweb-ai-automated-contact-public.php:241
 #: public/partials/fsweb-ai-automated-contact-widget.php:54
 msgid "Close"
@@ -178,7 +182,7 @@ msgid "Activate your license to unlock the AI virtual assistant: it chats with y
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:385
-#: admin/class-fsweb-ai-automated-contact-admin.php:875
+#: admin/class-fsweb-ai-automated-contact-admin.php:880
 msgid "License key"
 msgstr ""
 
@@ -492,157 +496,340 @@ msgstr ""
 msgid "Save settings"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:850
+#: admin/class-fsweb-ai-automated-contact-admin.php:855
 msgid "AI Contact — License"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:851
+#: admin/class-fsweb-ai-automated-contact-admin.php:856
 msgid "Enter your key to receive automatic updates and support."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:860
-#: admin/class-fsweb-ai-automated-contact-admin.php:974
-#: admin/class-fsweb-ai-automated-contact-admin.php:1031
+#: admin/class-fsweb-ai-automated-contact-admin.php:865
+#: admin/class-fsweb-ai-automated-contact-admin.php:979
+#: admin/class-fsweb-ai-automated-contact-admin.php:1036
 msgid "Go to settings"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:880
-#: admin/class-fsweb-ai-automated-contact-admin.php:939
+#: admin/class-fsweb-ai-automated-contact-admin.php:885
+#: admin/class-fsweb-ai-automated-contact-admin.php:944
 msgid "The key is bound to this domain and unlocks automatic updates and the virtual assistant."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:884
+#: admin/class-fsweb-ai-automated-contact-admin.php:889
 msgid "Status"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:909
+#: admin/class-fsweb-ai-automated-contact-admin.php:914
 msgid "Expires on"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:933
+#: admin/class-fsweb-ai-automated-contact-admin.php:938
 msgid "How it works"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:938
+#: admin/class-fsweb-ai-automated-contact-admin.php:943
 msgid "Paste the key you received after the purchase and click Activate."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:940
+#: admin/class-fsweb-ai-automated-contact-admin.php:945
 msgid "The status is synced with the license server whenever you open this screen."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:941
+#: admin/class-fsweb-ai-automated-contact-admin.php:946
 msgid "Use Deactivate to release the key and activate it on another site."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:946
+#: admin/class-fsweb-ai-automated-contact-admin.php:951
 msgid "While the license is active the assistant keeps running and updates arrive straight from the dashboard."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:969
+#: admin/class-fsweb-ai-automated-contact-admin.php:974
 msgid "Your virtual assistant is live in five steps."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:987
+#: admin/class-fsweb-ai-automated-contact-admin.php:992
 msgid "Step by step"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:994
+#: admin/class-fsweb-ai-automated-contact-admin.php:999
 msgid "Pick the AI"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:995
+#: admin/class-fsweb-ai-automated-contact-admin.php:1000
 msgid "Pick OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq or an OpenAI-compatible endpoint. Paste the API key of the chosen provider."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1000
+#: admin/class-fsweb-ai-automated-contact-admin.php:1005
 msgid "Pick the model"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1001
+#: admin/class-fsweb-ai-automated-contact-admin.php:1006
 msgid "The list is pre-filled per provider. You can type any specific model, including recent releases."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1006
+#: admin/class-fsweb-ai-automated-contact-admin.php:1011
 msgid "Write the store context"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1007
+#: admin/class-fsweb-ai-automated-contact-admin.php:1012
 msgid "The more context, the better the service: delivery times, shipping, payment, returns, tone of voice and the details the AI must not invent."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1012
+#: admin/class-fsweb-ai-automated-contact-admin.php:1017
 msgid "Enable WooCommerce in the chat"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1013
+#: admin/class-fsweb-ai-automated-contact-admin.php:1018
 msgid "With catalogue access enabled, the AI searches products, shows price and availability, adds to the cart (after confirmation) and sends the customer to checkout."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1018
+#: admin/class-fsweb-ai-automated-contact-admin.php:1023
 msgid "Style the widget"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1019
+#: admin/class-fsweb-ai-automated-contact-admin.php:1024
 msgid "Choose the icon, the colours and whether the chat opens by itself. You can also fine-tune it with custom CSS."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1024
+#: admin/class-fsweb-ai-automated-contact-admin.php:1029
 msgid "Test and enable the widget"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1025
+#: admin/class-fsweb-ai-automated-contact-admin.php:1030
 msgid "Use the connection test, save the settings and tick \"Show the chat on the site\". Open the store as a visitor to check the experience."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1040
+#: admin/class-fsweb-ai-automated-contact-admin.php:1045
 msgid "What the assistant does for your store"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1045
+#: admin/class-fsweb-ai-automated-contact-admin.php:1050
 msgid "Checks the catalogue in real time: name, price, availability, variations and product link."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1046
+#: admin/class-fsweb-ai-automated-contact-admin.php:1051
 msgid "Confirms with the customer before putting any item in the cart."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1047
+#: admin/class-fsweb-ai-automated-contact-admin.php:1052
 msgid "Answers questions about shipping, payment, deadlines and returns using the context you wrote."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1048
+#: admin/class-fsweb-ai-automated-contact-admin.php:1053
 msgid "Speaks the customer's language and keeps the tone of voice you defined."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1049
+#: admin/class-fsweb-ai-automated-contact-admin.php:1054
 msgid "Sends the customer to checkout as soon as the cart is ready."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1050
+#: admin/class-fsweb-ai-automated-contact-admin.php:1055
 msgid "Conversations stay in the visitor's browser and are not stored on the server."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1072
+#: admin/class-fsweb-ai-automated-contact-admin.php:1077
 msgid "Permission denied."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1123
+#: admin/class-fsweb-ai-automated-contact-admin.php:1132
 msgid "Select an AI provider first."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1139
+#: admin/class-fsweb-ai-automated-contact-admin.php:1148
 msgid "Paste the API key of the selected provider to run the test."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1156
+#: admin/class-fsweb-ai-automated-contact-admin.php:1165
 msgid "Provide the base URL of the OpenAI-compatible endpoint."
 msgstr ""
 
 #. translators: 1: provider id, 2: model name, 3: answer from the model.
-#: admin/class-fsweb-ai-automated-contact-admin.php:1208
+#: admin/class-fsweb-ai-automated-contact-admin.php:1217
 #, php-format
 msgid "Success with %1$s / %2$s. Model answered: %3$s"
+msgstr ""
+
+#. translators: %1$s is the slug, %2$s is the path of the plugin that already uses it.
+#: fsweb-update-checker/class-fsweb-update-checker.php:197
+#, php-format
+msgid "Plugin slug \"%1$s\" is already in use by %2$s. Each plugin must have a unique slug."
+msgstr ""
+
+#: fsweb-update-checker/class-fsweb-update-checker.php:203
+msgid "Update Checker Conflict"
+msgstr ""
+
+#: fsweb-update-checker/class-fsweb-update-checker.php:513
+msgid "Update information is temporarily unavailable. Please try again in a few moments."
+msgstr ""
+
+#. translators: 1: plugin name, 2: opening link tag, 3: closing link tag
+#: fsweb-update-checker/class-fsweb-update-checker.php:612
+#, php-format
+msgid "%1$s: the license credential is invalid or expired. %2$sCheck your license%3$s to resume automatic updates."
+msgstr ""
+
+#. translators: 1: plugin name, 2: opening link tag, 3: closing link tag
+#: fsweb-update-checker/class-fsweb-update-checker.php:622
+#, php-format
+msgid "%1$s is not activated. %2$sPlease activate your license%3$s to receive automatic updates."
+msgstr ""
+
+#. translators: %s: plugin name
+#: fsweb-update-checker/includes/class-admin-ui.php:123
+#, php-format
+msgid "View details for %s"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:124
+msgid "View Details"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:145
+msgid "Check for Updates"
+msgstr ""
+
+#. translators: %s: plugin name
+#: fsweb-update-checker/includes/class-admin-ui.php:164
+#, php-format
+msgid "%s — Previous Versions"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:168
+#: fsweb-update-checker/includes/class-admin-ui.php:188
+#: fsweb-update-checker/includes/class-admin-ui.php:199
+msgid "Previous Versions"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:202
+msgid "Select a version to install. The current version is highlighted in green."
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:206
+msgid "No version history available."
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:211
+msgid "Select"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:212
+msgid "Version"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:213
+msgid "Date"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:236
+msgid "installed"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:249
+#: fsweb-update-checker/includes/class-admin-ui.php:346
+#: fsweb-update-checker/includes/class-assets.php:120
+msgid "Install Selected Version"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:280
+#: fsweb-update-checker/includes/class-admin-ui.php:291
+msgid "License Required"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:294
+msgid "A valid license key is required to access previous versions."
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:297
+msgid "Please activate your license on the plugin settings page to unlock this feature."
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:347
+#: fsweb-update-checker/includes/class-assets.php:121
+msgid "Installing…"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:348
+#: fsweb-update-checker/includes/class-assets.php:122
+msgid "Downloading and installing version"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:350
+#: fsweb-update-checker/includes/class-assets.php:124
+msgid "Checking for updates…"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:351
+#: fsweb-update-checker/includes/class-assets.php:125
+#: fsweb-update-checker/includes/class-rollback.php:224
+#: fsweb-update-checker/includes/class-rollback.php:258
+msgid "A valid license key is required to check for updates."
+msgstr ""
+
+#: fsweb-update-checker/includes/class-admin-ui.php:352
+#: fsweb-update-checker/includes/class-assets.php:126
+#: fsweb-update-checker/includes/class-rollback.php:345
+msgid "You are running the latest version."
+msgstr ""
+
+#. translators: date format for version release date
+#: fsweb-update-checker/includes/class-admin-ui.php:381
+msgid "F j, Y"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-cron.php:114
+#, php-format
+msgid "Every %d hours"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-metadata.php:210
+msgid "Update server is temporarily unreachable. Please try again later."
+msgstr ""
+
+#: fsweb-update-checker/includes/class-metadata.php:237
+msgid "Update server returned an error. Please try again later."
+msgstr ""
+
+#: fsweb-update-checker/includes/class-metadata.php:259
+msgid "Update server returned an invalid response. Please try again later."
+msgstr ""
+
+#. translators: 1: error code, 2: error message
+#: fsweb-update-checker/includes/class-metadata.php:530
+#, php-format
+msgid "[FSWEB Update Checker - %1$s] %2$s"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-rollback.php:134
+msgid "You do not have permission to install plugins."
+msgstr ""
+
+#: fsweb-update-checker/includes/class-rollback.php:141
+msgid "No download URL provided."
+msgstr ""
+
+#: fsweb-update-checker/includes/class-rollback.php:185
+msgid "Installation failed. Check filesystem permissions."
+msgstr ""
+
+#. translators: %s: error message
+#: fsweb-update-checker/includes/class-rollback.php:196
+#, php-format
+msgid "Version installed but could not re-activate: %s"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-rollback.php:204
+msgid "Version installed successfully!"
+msgstr ""
+
+#: fsweb-update-checker/includes/class-rollback.php:262
+msgid "Could not fetch update information."
+msgstr ""
+
+#. translators: %s: latest version number
+#: fsweb-update-checker/includes/class-rollback.php:342
+#, php-format
+msgid "Update available: version %s"
 msgstr ""
 
 #: includes/class-fsweb-ai-automated-contact-ai-client.php:72
@@ -755,66 +942,66 @@ msgstr ""
 msgid "Too many messages in a row. Please wait a few minutes and try again."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:114
+#: includes/class-fsweb-ai-automated-contact-license.php:144
 msgid "This license is already active."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:139
+#: includes/class-fsweb-ai-automated-contact-license.php:169
 msgid "The license server could not be reached right now. Your key was not changed — please try again in a moment."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:149
+#: includes/class-fsweb-ai-automated-contact-license.php:179
 msgid "The license server did not answer correctly right now. Your key was not changed — please try again in a moment."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:164
+#: includes/class-fsweb-ai-automated-contact-license.php:194
 msgid "License activated successfully!"
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:178
-#: includes/class-fsweb-ai-automated-contact-license.php:331
+#: includes/class-fsweb-ai-automated-contact-license.php:208
+#: includes/class-fsweb-ai-automated-contact-license.php:399
 msgid "Invalid license key."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:221
+#: includes/class-fsweb-ai-automated-contact-license.php:252
 msgid "License deactivated."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:243
+#: includes/class-fsweb-ai-automated-contact-license.php:302
 msgid "No license saved. Enter a key first."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:262
+#: includes/class-fsweb-ai-automated-contact-license.php:321
 msgid "The license server could not be reached right now."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:273
+#: includes/class-fsweb-ai-automated-contact-license.php:332
 msgid "The license server did not answer correctly right now."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:327
+#: includes/class-fsweb-ai-automated-contact-license.php:395
 msgid "License is active and valid."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:329
+#: includes/class-fsweb-ai-automated-contact-license.php:397
 msgid "License expired. Renew it to keep receiving updates."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:333
+#: includes/class-fsweb-ai-automated-contact-license.php:401
 msgid "License pending activation."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:335
+#: includes/class-fsweb-ai-automated-contact-license.php:403
 msgid "License inactive."
 msgstr ""
 
 #. translators: %d: HTTP status code returned by the license server.
-#: includes/class-fsweb-ai-automated-contact-license.php:431
+#: includes/class-fsweb-ai-automated-contact-license.php:499
 #, php-format
 msgid "The license server responded with error %d."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:438
+#: includes/class-fsweb-ai-automated-contact-license.php:506
 msgid "The license server returned an empty response."
 msgstr ""
 

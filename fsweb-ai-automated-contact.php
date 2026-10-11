@@ -16,7 +16,9 @@
  * Plugin Name:       AI Automated Contact
  * Plugin URI:        https://flowsyncweb.com
  * Description:       AI-powered virtual assistant for WooCommerce: answers questions, finds products, builds the cart and takes the customer to checkout.
- * Version:           1.0.5
+ * Version:           1.0.6
+ * Requires at least: 6.0
+ * Requires PHP:      8.2
  * Author:            Flow Sync Web
  * Author URI:        https://flowsyncweb.com/
  * License:           GPL-2.0+
@@ -35,7 +37,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'FSWEB_AI_AUTOMATED_CONTACT_VERSION', '1.0.5' );
+define( 'FSWEB_AI_AUTOMATED_CONTACT_VERSION', '1.0.6' );
 
 /**
  * Plugin slug. Used for the license API and the update checker.
@@ -114,11 +116,12 @@ $fsweb_ai_automated_contact_update_checker->set_license_url(
 );
 
 // Inject license key so the update-checker sends it with every request.
-// Without a valid key the API returns 401 and updates are blocked.
+// Always set it — even when empty — so the checker tracks the current key and
+// clears stale errors only when the key actually changes (otherwise a removed
+// key would keep the previous key's state, and a rejection for an empty key
+// could never be cleared).
 $fsweb_ai_automated_contact_license_key = get_option( 'fsweb_aic_license_key', '' );
-if ( ! empty( $fsweb_ai_automated_contact_license_key ) ) {
-	$fsweb_ai_automated_contact_update_checker->set_license( $fsweb_ai_automated_contact_license_key );
-}
+$fsweb_ai_automated_contact_update_checker->set_license( $fsweb_ai_automated_contact_license_key );
 
 /**
  * Reset the update checker caches after the license is activated.

@@ -96,14 +96,14 @@ class Assets {
 			'fsweb-update-checker-admin',
 			$this->assets_url . 'css/admin.css',
 			array(),
-			$this->version
+			$this->asset_version( 'css/admin.css' )
 		);
 
 		wp_enqueue_script(
 			'fsweb-update-checker-admin',
 			$this->assets_url . 'js/admin.js',
 			array( 'jquery' ),
-			$this->version,
+			$this->asset_version( 'js/admin.js' ),
 			true
 		);
 
@@ -117,15 +117,35 @@ class Assets {
 				'checkNonce'     => wp_create_nonce( 'fsweb_check_updates_' . $this->slug ),
 				'pluginBasename' => $this->plugin_basename,
 				'i18n'           => array(
-					'installBtn'    => __( 'Install Selected Version', 'fsweb-mercadopago' ),
-					'installing'    => __( 'Installing…', 'fsweb-mercadopago' ),
-					'downloading'   => __( 'Downloading and installing version', 'fsweb-mercadopago' ),
-					'networkError'  => __( 'Network error. Please try again.', 'fsweb-mercadopago' ),
-					'checking'      => __( 'Checking for updates…', 'fsweb-mercadopago' ),
-					'noLicense'     => __( 'A valid license key is required to check for updates.', 'fsweb-mercadopago' ),
-					'latestVersion' => __( 'You are running the latest version.', 'fsweb-mercadopago' ),
+					'installBtn'    => __( 'Install Selected Version', 'fsweb-ai-automated-contact' ),
+					'installing'    => __( 'Installing…', 'fsweb-ai-automated-contact' ),
+					'downloading'   => __( 'Downloading and installing version', 'fsweb-ai-automated-contact' ),
+					'networkError'  => __( 'Network error. Please try again.', 'fsweb-ai-automated-contact' ),
+					'checking'      => __( 'Checking for updates…', 'fsweb-ai-automated-contact' ),
+					'noLicense'     => __( 'A valid license key is required to check for updates.', 'fsweb-ai-automated-contact' ),
+					'latestVersion' => __( 'You are running the latest version.', 'fsweb-ai-automated-contact' ),
 				),
 			)
 		);
+	}
+
+	/**
+	 * Cache-busting version for an asset file.
+	 *
+	 * The declared version is the base; the file's modification time is
+	 * appended so a changed asset is always re-fetched, even when the plugin
+	 * version itself did not change.
+	 *
+	 * @param string $relative Relative path inside assets/, e.g. 'css/admin.css'.
+	 * @return string Version string.
+	 */
+	private function asset_version( $relative ) {
+		$path = str_replace(
+			content_url( '/' ),
+			trailingslashit( WP_CONTENT_DIR ),
+			$this->assets_url . $relative
+		);
+
+		return file_exists( $path ) ? $this->version . '.' . filemtime( $path ) : $this->version;
 	}
 }

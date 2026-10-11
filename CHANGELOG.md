@@ -1,3 +1,7 @@
+# 1.0.6 - 11/10/2026
+  * Fix: Licença inválida ou expirada agora é reportada como tal — o aviso do admin não mostra mais o genérico "servidor de atualizações temporariamente inacessível". Com uma chave preenchida e recusa 401/403, o aviso passa a "credencial de licença inválida ou expirada"; o aviso genérico de servidor some enquanto houver chave.
+  * Fix: O verificador de atualizações não apaga mais o erro de licença a cada carregamento — a recusa era escondida por um erro de servidor antigo em vez de aparecer; o erro só é limpo quando a chave muda ou após uma verificação bem-sucedida.
+
 # 1.0.5 - 26/09/2026
   * Fix: O sync da licença ao abrir a tela passa a olhar `domain_authorized` em vez do `status` da licença. Desativar a licença neste domínio mantém o status local em `pending` e a tela não volta mais para "Ativa" a cada recarregamento.
   * Fix: `expired`/`invalid` continuam sendo o veredito da própria licença e passam como vêm da API; falha de transporte segue sem mexer no estado guardado.

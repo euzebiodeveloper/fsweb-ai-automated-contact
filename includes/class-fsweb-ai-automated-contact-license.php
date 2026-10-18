@@ -50,6 +50,31 @@ class Fsweb_Ai_Automated_Contact_License {
 	const PLUGIN_SLUG = 'fsweb-ai-automated-contact-pro';
 
 	/**
+	 * Slug sent to the license API.
+	 *
+	 * The free edition and the PRO add-on share a single license, so both
+	 * send the base slug: a key generated for `fsweb-ai-automated-contact`
+	 * also unlocks the add-on, and the other way round.
+	 *
+	 * @since  1.0.0
+	 * @return string
+	 */
+	public static function plugin_slug() {
+		return self::normalize_slug( self::PLUGIN_SLUG );
+	}
+
+	/**
+	 * Removes the `-pro` suffix from a plugin slug.
+	 *
+	 * @since  1.0.0
+	 * @param  string $slug Plugin slug.
+	 * @return string
+	 */
+	public static function normalize_slug( $slug ) {
+		return (string) preg_replace( '/-pro$/i', '', trim( (string) $slug ) );
+	}
+
+	/**
 	 * Stored license key.
 	 *
 	 * @since  1.0.0
@@ -153,7 +178,7 @@ class Fsweb_Ai_Automated_Contact_License {
 					array(
 						'license_key' => $license_key,
 						'domain'      => home_url(),
-						'plugin_slug' => self::PLUGIN_SLUG,
+						'plugin_slug' => self::plugin_slug(),
 					)
 				),
 				'headers' => array( 'Content-Type' => 'application/json' ),
@@ -226,7 +251,7 @@ class Fsweb_Ai_Automated_Contact_License {
 						array(
 							'license_key' => $license_key,
 							'domain'      => home_url(),
-							'plugin_slug' => self::PLUGIN_SLUG,
+							'plugin_slug' => self::plugin_slug(),
 						)
 					),
 					'headers' => array( 'Content-Type' => 'application/json' ),
@@ -265,7 +290,7 @@ class Fsweb_Ai_Automated_Contact_License {
 		$url = add_query_arg(
 			array(
 				'license_key' => rawurlencode( $license_key ),
-				'plugin_slug' => self::PLUGIN_SLUG,
+				'plugin_slug' => self::plugin_slug(),
 				'domain'      => rawurlencode( home_url() ),
 			),
 			self::API_URL . '/validate'

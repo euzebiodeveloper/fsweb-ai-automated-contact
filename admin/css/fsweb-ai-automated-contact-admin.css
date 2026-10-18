@@ -1164,3 +1164,8 @@ body.fsweb-aic-onboarding-page #wpbody {
 		justify-content: center;
 	}
 }
+
+/* Context card: button on its own line, helper text underneath. */
+.fsweb-aic-context-actions {
+	margin: 14px 0 4px;
+}

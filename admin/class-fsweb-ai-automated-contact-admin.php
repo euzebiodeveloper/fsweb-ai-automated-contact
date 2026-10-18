@@ -461,18 +461,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php esc_html_e( 'Parameters', 'fsweb-ai-automated-contact' ); ?></th>
-									<td>
-										<label><?php esc_html_e( 'Temperature', 'fsweb-ai-automated-contact' ); ?>
-											<input type="number" step="0.1" min="0" max="2" name="<?php echo esc_attr( $option ); ?>[temperature]" value="<?php echo esc_attr( (string) $settings['temperature'] ); ?>" class="small-text">
-										</label>
-										&nbsp;&nbsp;
-										<label><?php esc_html_e( 'Max tokens', 'fsweb-ai-automated-contact' ); ?>
-											<input type="number" step="1" min="128" max="8000" name="<?php echo esc_attr( $option ); ?>[max_tokens]" value="<?php echo esc_attr( (string) $settings['max_tokens'] ); ?>" class="small-text">
-										</label>
-									</td>
-								</tr>
-								<tr>
 									<th scope="row"><?php esc_html_e( 'Connection test', 'fsweb-ai-automated-contact' ); ?></th>
 									<td>
 										<button type="button" class="button" id="fsweb-aic-test-provider">
@@ -499,13 +487,13 @@ class Fsweb_Ai_Automated_Contact_Admin {
 						<div class="fsweb-aic-card__body">
 							<p class="description"><?php esc_html_e( 'Write here everything the AI should know: main products and categories, delivery times, payment methods, returns and exchanges, opening hours, tone of voice. This text is sent as the assistant\'s priority context.', 'fsweb-ai-automated-contact' ); ?></p>
 							<textarea class="large-text code" rows="14" id="fsweb-aic-context" name="<?php echo esc_attr( $option ); ?>[context]"><?php echo esc_textarea( $settings['context'] ); ?></textarea>
-							<p>
+							<p class="fsweb-aic-context-actions">
 								<button type="button" class="button" id="fsweb-aic-context-reset">
 									<span class="dashicons dashicons-undo"></span>
 									<?php esc_html_e( 'Restore default text', 'fsweb-ai-automated-contact' ); ?>
 								</button>
-								<span class="description"><?php esc_html_e( 'Reloads the original text with the service rules.', 'fsweb-ai-automated-contact' ); ?></span>
 							</p>
+							<p class="description"><?php esc_html_e( 'Reloads the original text with the service rules.', 'fsweb-ai-automated-contact' ); ?></p>
 						</div>
 					</div>
 

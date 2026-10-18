@@ -268,11 +268,10 @@ class Fsweb_Ai_Automated_Contact_Settings {
 		$output['model']   = isset( $input['model'] ) ? sanitize_text_field( $input['model'] ) : $defaults['model'];
 		$output['context'] = isset( $output['context'] ) ? $output['context'] : '';
 
-		$temperature = isset( $input['temperature'] ) ? (float) $input['temperature'] : (float) $defaults['temperature'];
-		$output['temperature'] = max( 0, min( 2, round( $temperature, 2 ) ) );
-
-		$max_tokens = isset( $input['max_tokens'] ) ? absint( $input['max_tokens'] ) : (int) $defaults['max_tokens'];
-		$output['max_tokens'] = max( 128, min( 8000, $max_tokens ) );
+		// Temperature and max tokens are PRO features: the free edition keeps
+		// the shipped values and the add-on filters them at runtime.
+		$output['temperature'] = (float) $defaults['temperature'];
+		$output['max_tokens']  = (int) $defaults['max_tokens'];
 
 		$limit = isset( $input['product_limit'] ) ? absint( $input['product_limit'] ) : (int) $defaults['product_limit'];
 		$output['product_limit'] = max( 1, min( 10, $limit ) );

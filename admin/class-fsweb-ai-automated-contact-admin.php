@@ -51,6 +51,15 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	private $settings_page_hook = '';
 
 	/**
+	 * Hook suffix of the conversations screen.
+	 *
+	 * @since  1.1.0
+	 * @access private
+	 * @var    string
+	 */
+	private $conversations_page_hook = '';
+
+	/**
 	 * License client shared with the PRO add-on.
 	 *
 	 * @since    1.0.0
@@ -242,6 +251,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	 */
 	private function is_plugin_screen( $hook_suffix ) {
 		return ( $this->settings_page_hook === $hook_suffix )
+			|| ( $this->conversations_page_hook === $hook_suffix )
 			|| $this->is_tutorial_page();
 	}
 
@@ -265,13 +275,13 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			58
 		);
 
-		add_submenu_page(
+		$this->conversations_page_hook = add_submenu_page(
 			'fsweb-ai-automated-contact',
-			__( 'AI Contact — Tutorial', 'fsweb-ai-automated-contact' ),
-			__( 'Tutorial', 'fsweb-ai-automated-contact' ),
+			__( 'AI Contact — Conversations', 'fsweb-ai-automated-contact' ),
+			__( 'Conversations', 'fsweb-ai-automated-contact' ),
 			'manage_options',
-			'fsweb-ai-automated-contact-tutorial',
-			array( $this, 'render_tutorial_page' )
+			'fsweb-ai-automated-contact-conversations',
+			array( $this, 'render_conversations_page' )
 		);
 
 		add_submenu_page(
@@ -345,6 +355,9 @@ class Fsweb_Ai_Automated_Contact_Admin {
 
 		/** This filter is documented in public/partials/fsweb-ai-automated-contact-widget.php */
 		$preview_icon = (string) apply_filters( 'fsweb_aic_launcher_icon', $preview_icon, $settings );
+
+		$totals            = Fsweb_Ai_Automated_Contact_Conversations::totals();
+		$conversations_url = admin_url( 'admin.php?page=fsweb-ai-automated-contact-conversations' );
 		?>
 		<div class="wrap fsweb-aic-wrap fsweb-aic-wrap--has-preview">
 			<hr class="wp-header-end">
@@ -380,6 +393,19 @@ class Fsweb_Ai_Automated_Contact_Admin {
 					<span class="fsweb-aic-pill <?php echo $woo ? 'is-on' : 'is-off'; ?>">
 						<?php echo $woo ? esc_html__( 'Active', 'fsweb-ai-automated-contact' ) : esc_html__( 'Missing', 'fsweb-ai-automated-contact' ); ?>
 					</span>
+				</div>
+				<div class="fsweb-aic-stat-card">
+					<span class="fsweb-aic-stat-label"><?php esc_html_e( 'Spent on AI', 'fsweb-ai-automated-contact' ); ?></span>
+					<span class="fsweb-aic-stat-value"><?php echo esc_html( Fsweb_Ai_Automated_Contact_Conversations::format_cost( $totals['cost'] ) ); ?></span>
+					<a href="<?php echo esc_url( $conversations_url ); ?>" class="description">
+						<?php
+						printf(
+							/* translators: %s: number of stored conversations. */
+							esc_html__( '%s conversations', 'fsweb-ai-automated-contact' ),
+							esc_html( number_format_i18n( $totals['conversations'] ) )
+						);
+						?>
+					</a>
 				</div>
 			</div>
 
@@ -427,6 +453,9 @@ class Fsweb_Ai_Automated_Contact_Admin {
 							</h2>
 						</div>
 						<div class="fsweb-aic-card__body">
+							<div class="notice notice-info inline">
+								<p><strong><?php esc_html_e( 'The provider is yours.', 'fsweb-ai-automated-contact' ); ?></strong> <?php esc_html_e( 'This plugin does not include AI credits, resell tokens or share a key. Create the account with the provider, generate the API key and pay the provider directly. Keys are stored only on this site and are never sent to the visitor\'s browser.', 'fsweb-ai-automated-contact' ); ?></p>
+							</div>
 							<table class="form-table" role="presentation">
 								<tr>
 									<th scope="row"><label for="fsweb-aic-provider"><?php esc_html_e( 'Provider', 'fsweb-ai-automated-contact' ); ?></label></th>
@@ -564,6 +593,44 @@ class Fsweb_Ai_Automated_Contact_Admin {
 									<td><input type="number" min="1" max="10" id="fsweb-aic-limit" name="<?php echo esc_attr( $option ); ?>[product_limit]" value="<?php echo esc_attr( (string) $settings['product_limit'] ); ?>" class="small-text"></td>
 								</tr>
 							</table>
+						</div>
+					</div>
+
+					<div class="fsweb-aic-card">
+						<div class="fsweb-aic-card__header">
+							<h2>
+								<span class="dashicons dashicons-chart-area"></span>
+								<?php esc_html_e( 'Usage and spending', 'fsweb-ai-automated-contact' ); ?>
+							</h2>
+						</div>
+						<div class="fsweb-aic-card__body">
+							<p class="description"><?php esc_html_e( 'Each conversation is stored on this site with its messages, token counts and estimated cost. The estimate uses the prices below; the provider bills you directly, so copy the current price from your provider account.', 'fsweb-ai-automated-contact' ); ?></p>
+							<table class="form-table" role="presentation">
+								<tr>
+									<th scope="row"><?php esc_html_e( 'Price per 1M tokens', 'fsweb-ai-automated-contact' ); ?></th>
+									<td>
+										<label for="fsweb-aic-price-input"><?php esc_html_e( 'Input (US$)', 'fsweb-ai-automated-contact' ); ?></label>
+										<input type="number" min="0" step="0.000001" id="fsweb-aic-price-input" name="<?php echo esc_attr( $option ); ?>[price_input]" value="<?php echo esc_attr( (string) $settings['price_input'] ); ?>" class="small-text">
+										&nbsp;&nbsp;
+										<label for="fsweb-aic-price-output"><?php esc_html_e( 'Output (US$)', 'fsweb-ai-automated-contact' ); ?></label>
+										<input type="number" min="0" step="0.000001" id="fsweb-aic-price-output" name="<?php echo esc_attr( $option ); ?>[price_output]" value="<?php echo esc_attr( (string) $settings['price_output'] ); ?>" class="small-text">
+										<p class="description"><?php esc_html_e( 'Prices apply to the model currently selected above. Example: 0.15 for US$ 0.15 per million input tokens.', 'fsweb-ai-automated-contact' ); ?></p>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row"><label for="fsweb-aic-cost-limit"><?php esc_html_e( 'Limit per conversation (US$)', 'fsweb-ai-automated-contact' ); ?></label></th>
+									<td>
+										<input type="number" min="0" step="0.01" id="fsweb-aic-cost-limit" name="<?php echo esc_attr( $option ); ?>[conversation_cost_limit]" value="<?php echo esc_attr( (string) $settings['conversation_cost_limit'] ); ?>" class="small-text">
+										<p class="description"><?php esc_html_e( 'When the estimated cost of a conversation reaches this amount, the assistant stops answering in that conversation. Use 0 for no limit.', 'fsweb-ai-automated-contact' ); ?></p>
+									</td>
+								</tr>
+							</table>
+							<p>
+								<a class="button" href="<?php echo esc_url( $conversations_url ); ?>">
+									<span class="dashicons dashicons-visibility"></span>
+									<?php esc_html_e( 'View conversations and spending', 'fsweb-ai-automated-contact' ); ?>
+								</a>
+							</p>
 						</div>
 					</div>
 
@@ -922,7 +989,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 						<li class="fsweb-aic-step">
 							<div class="fsweb-aic-step__content">
 								<h3><?php esc_html_e( 'Pick the AI', 'fsweb-ai-automated-contact' ); ?></h3>
-								<p><?php esc_html_e( 'Pick OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq or an OpenAI-compatible endpoint. Paste the API key of the chosen provider. Keys stay in this site and are never exposed to visitors.', 'fsweb-ai-automated-contact' ); ?></p>
+								<p><?php esc_html_e( 'Pick OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq or an OpenAI-compatible endpoint. The provider account is yours: create it, generate the API key and pay the provider directly — the plugin does not include AI credits or share a key. The key stays on this site and is never exposed to visitors.', 'fsweb-ai-automated-contact' ); ?></p>
 							</div>
 						</li>
 						<li class="fsweb-aic-step">
@@ -977,12 +1044,399 @@ class Fsweb_Ai_Automated_Contact_Admin {
 						<li><?php esc_html_e( 'Answers questions about shipping, payment, deadlines and returns using the context you wrote.', 'fsweb-ai-automated-contact' ); ?></li>
 						<li><?php esc_html_e( 'Speaks the customer\'s language and keeps the tone of voice you defined.', 'fsweb-ai-automated-contact' ); ?></li>
 						<li><?php esc_html_e( 'Sends the customer to checkout as soon as the cart is ready.', 'fsweb-ai-automated-contact' ); ?></li>
-						<li><?php esc_html_e( 'Conversations stay in the visitor\'s browser and are not stored on the server.', 'fsweb-ai-automated-contact' ); ?></li>
+						<li><?php esc_html_e( 'Conversations are stored on this site with messages, token counts and the estimated cost, so you can review spending and delete them at any time.', 'fsweb-ai-automated-contact' ); ?></li>
 					</ul>
 				</div>
 			</div>
 		</div>
 		<?php
+	}
+
+	// ------------------------------------------------------------------//
+	//  Conversations
+	// ------------------------------------------------------------------//
+
+	/**
+	 * Render the conversation list or a single conversation.
+	 *
+	 * @since 1.1.0
+	 * @return void
+	 */
+	public function render_conversations_page() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only screen routing.
+		$conversation_id = isset( $_GET['conversation'] ) ? absint( wp_unslash( $_GET['conversation'] ) ) : 0;
+		$deleted         = isset( $_GET['deleted'] ) && '1' === sanitize_key( wp_unslash( $_GET['deleted'] ) );
+		$page            = isset( $_GET['paged'] ) ? max( 1, absint( wp_unslash( $_GET['paged'] ) ) ) : 1;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+		if ( $conversation_id ) {
+			$this->render_conversation_detail( $conversation_id );
+			return;
+		}
+
+		$list              = Fsweb_Ai_Automated_Contact_Conversations::paginate( array( 'page' => $page, 'per_page' => 20 ) );
+		$totals            = Fsweb_Ai_Automated_Contact_Conversations::totals();
+		$settings_url      = admin_url( 'admin.php?page=fsweb-ai-automated-contact' );
+		$conversations_url = admin_url( 'admin.php?page=fsweb-ai-automated-contact-conversations' );
+		?>
+		<div class="wrap fsweb-aic-wrap">
+			<hr class="wp-header-end">
+
+			<div class="fsweb-aic-hero fsweb-aic-hero--split">
+				<div>
+					<h1><?php esc_html_e( 'Conversations', 'fsweb-ai-automated-contact' ); ?></h1>
+					<p><?php esc_html_e( 'Every conversation handled by the assistant, with token usage and the estimated amount spent. Conversations are stored on this site; delete the ones you no longer need.', 'fsweb-ai-automated-contact' ); ?></p>
+				</div>
+				<div class="fsweb-aic-hero__actions">
+					<a class="button" href="<?php echo esc_url( $settings_url ); ?>">
+						<span class="dashicons dashicons-admin-settings"></span>
+						<?php esc_html_e( 'Settings', 'fsweb-ai-automated-contact' ); ?>
+					</a>
+				</div>
+			</div>
+
+			<?php if ( $deleted ) : ?>
+				<div class="notice notice-success is-dismissible"><p><?php esc_html_e( 'Conversation deleted.', 'fsweb-ai-automated-contact' ); ?></p></div>
+			<?php endif; ?>
+
+			<div class="fsweb-aic-stats">
+				<div class="fsweb-aic-stat-card">
+					<span class="fsweb-aic-stat-label"><?php esc_html_e( 'Conversations', 'fsweb-ai-automated-contact' ); ?></span>
+					<span class="fsweb-aic-stat-value"><?php echo esc_html( number_format_i18n( $totals['conversations'] ) ); ?></span>
+				</div>
+				<div class="fsweb-aic-stat-card">
+					<span class="fsweb-aic-stat-label"><?php esc_html_e( 'Messages', 'fsweb-ai-automated-contact' ); ?></span>
+					<span class="fsweb-aic-stat-value"><?php echo esc_html( number_format_i18n( $totals['messages'] ) ); ?></span>
+				</div>
+				<div class="fsweb-aic-stat-card">
+					<span class="fsweb-aic-stat-label"><?php esc_html_e( 'Tokens', 'fsweb-ai-automated-contact' ); ?></span>
+					<span class="fsweb-aic-stat-value"><?php echo esc_html( number_format_i18n( $totals['tokens'] ) ); ?></span>
+				</div>
+				<div class="fsweb-aic-stat-card">
+					<span class="fsweb-aic-stat-label"><?php esc_html_e( 'Total spent', 'fsweb-ai-automated-contact' ); ?></span>
+					<span class="fsweb-aic-stat-value"><?php echo esc_html( Fsweb_Ai_Automated_Contact_Conversations::format_cost( $totals['cost'] ) ); ?></span>
+				</div>
+			</div>
+
+			<?php if ( ! Fsweb_Ai_Automated_Contact_Conversations::has_pricing() ) : ?>
+				<div class="notice notice-warning inline">
+					<p><?php esc_html_e( 'Token prices are not filled in, so the spent column shows zero. Open Settings → Usage and spending and enter the input and output price per one million tokens from your provider.', 'fsweb-ai-automated-contact' ); ?></p>
+				</div>
+			<?php endif; ?>
+
+			<div class="fsweb-aic-card fsweb-aic-card--wide">
+				<div class="fsweb-aic-card__header">
+					<h2>
+						<span class="dashicons dashicons-format-chat"></span>
+						<?php esc_html_e( 'Stored conversations', 'fsweb-ai-automated-contact' ); ?>
+					</h2>
+				</div>
+				<div class="fsweb-aic-card__body">
+					<table class="wp-list-table widefat fixed striped">
+						<thead>
+							<tr>
+								<th scope="col"><?php esc_html_e( 'Last activity', 'fsweb-ai-automated-contact' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Conversation', 'fsweb-ai-automated-contact' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Visitor', 'fsweb-ai-automated-contact' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Provider / model', 'fsweb-ai-automated-contact' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Messages', 'fsweb-ai-automated-contact' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Tokens', 'fsweb-ai-automated-contact' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Spent', 'fsweb-ai-automated-contact' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Status', 'fsweb-ai-automated-contact' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Actions', 'fsweb-ai-automated-contact' ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if ( empty( $list['rows'] ) ) : ?>
+								<tr>
+									<td colspan="9"><?php esc_html_e( 'No conversation stored yet. They appear here as soon as a visitor talks to the assistant.', 'fsweb-ai-automated-contact' ); ?></td>
+								</tr>
+							<?php else : ?>
+								<?php foreach ( $list['rows'] as $conversation ) : ?>
+									<?php
+									$detail_url = add_query_arg(
+										array(
+											'page'         => 'fsweb-ai-automated-contact-conversations',
+											'conversation' => (int) $conversation->id,
+										),
+										admin_url( 'admin.php' )
+									);
+									$delete_url = wp_nonce_url(
+										add_query_arg(
+											array(
+												'action'       => 'fsweb_aic_delete_conversation',
+												'conversation' => (int) $conversation->id,
+											),
+											admin_url( 'admin-post.php' )
+										),
+										'fsweb_aic_delete_conversation_' . (int) $conversation->id
+									);
+									?>
+									<tr>
+										<td><?php echo esc_html( $this->format_datetime( $conversation->updated_at ) ); ?></td>
+										<td>
+											<a href="<?php echo esc_url( $detail_url ); ?>"><code><?php echo esc_html( substr( $conversation->conversation_key, 0, 8 ) ); ?></code></a>
+											<br><span class="description"><?php echo esc_html( $this->format_datetime( $conversation->started_at ) ); ?></span>
+										</td>
+										<td><?php echo esc_html( $this->conversation_visitor( $conversation ) ); ?></td>
+										<td><?php echo esc_html( $conversation->provider . ' / ' . $conversation->model ); ?></td>
+										<td><?php echo esc_html( number_format_i18n( (int) $conversation->message_count ) ); ?></td>
+										<td><?php echo esc_html( number_format_i18n( (int) $conversation->total_tokens ) ); ?></td>
+										<td><strong><?php echo esc_html( Fsweb_Ai_Automated_Contact_Conversations::format_cost( $conversation->cost ) ); ?></strong></td>
+										<td>
+											<span class="fsweb-aic-pill <?php echo 'limited' === $conversation->status ? 'is-off' : 'is-on'; ?>">
+												<?php echo esc_html( $this->conversation_status_label( $conversation->status ) ); ?>
+											</span>
+										</td>
+										<td>
+											<a class="button button-small" href="<?php echo esc_url( $detail_url ); ?>"><?php esc_html_e( 'View', 'fsweb-ai-automated-contact' ); ?></a>
+											<a class="button button-small button-link-delete fsweb-aic-delete-conversation" href="<?php echo esc_url( $delete_url ); ?>" data-confirm="<?php esc_attr_e( 'Delete this conversation and all of its messages?', 'fsweb-ai-automated-contact' ); ?>"><?php esc_html_e( 'Delete', 'fsweb-ai-automated-contact' ); ?></a>
+										</td>
+									</tr>
+								<?php endforeach; ?>
+							<?php endif; ?>
+						</tbody>
+					</table>
+
+					<?php if ( $list['pages'] > 1 ) : ?>
+						<div class="tablenav">
+							<div class="tablenav-pages">
+								<?php
+								echo wp_kses_post(
+									paginate_links(
+										array(
+											'base'      => add_query_arg( 'paged', '%#%', $conversations_url ),
+											'format'    => '',
+											'current'   => $list['page'],
+											'total'     => $list['pages'],
+											'prev_text' => '&laquo;',
+											'next_text' => '&raquo;',
+										)
+									)
+								);
+								?>
+							</div>
+						</div>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render one conversation with its transcript.
+	 *
+	 * @since 1.1.0
+	 * @param int $conversation_id Conversation id.
+	 * @return void
+	 */
+	private function render_conversation_detail( $conversation_id ) {
+		$conversation = Fsweb_Ai_Automated_Contact_Conversations::get( $conversation_id );
+		$list_url     = admin_url( 'admin.php?page=fsweb-ai-automated-contact-conversations' );
+
+		if ( ! $conversation ) {
+			?>
+			<div class="wrap fsweb-aic-wrap">
+				<hr class="wp-header-end">
+				<h1><?php esc_html_e( 'Conversation', 'fsweb-ai-automated-contact' ); ?></h1>
+				<div class="notice notice-error"><p><?php esc_html_e( 'Conversation not found.', 'fsweb-ai-automated-contact' ); ?></p></div>
+				<p><a class="button" href="<?php echo esc_url( $list_url ); ?>"><?php esc_html_e( 'Back to conversations', 'fsweb-ai-automated-contact' ); ?></a></p>
+			</div>
+			<?php
+			return;
+		}
+
+		$messages   = Fsweb_Ai_Automated_Contact_Conversations::get_messages( (int) $conversation->id );
+		$delete_url = wp_nonce_url(
+			add_query_arg(
+				array(
+					'action'       => 'fsweb_aic_delete_conversation',
+					'conversation' => (int) $conversation->id,
+				),
+				admin_url( 'admin-post.php' )
+			),
+			'fsweb_aic_delete_conversation_' . (int) $conversation->id
+		);
+		?>
+		<div class="wrap fsweb-aic-wrap">
+			<hr class="wp-header-end">
+
+			<div class="fsweb-aic-hero fsweb-aic-hero--split">
+				<div>
+					<h1><?php esc_html_e( 'Conversation', 'fsweb-ai-automated-contact' ); ?></h1>
+					<p><code><?php echo esc_html( $conversation->conversation_key ); ?></code></p>
+				</div>
+				<div class="fsweb-aic-hero__actions">
+					<a class="button" href="<?php echo esc_url( $list_url ); ?>">
+						<span class="dashicons dashicons-arrow-left-alt2"></span>
+						<?php esc_html_e( 'Back', 'fsweb-ai-automated-contact' ); ?>
+					</a>
+					<a class="button button-link-delete fsweb-aic-delete-conversation" href="<?php echo esc_url( $delete_url ); ?>" data-confirm="<?php esc_attr_e( 'Delete this conversation and all of its messages?', 'fsweb-ai-automated-contact' ); ?>">
+						<?php esc_html_e( 'Delete', 'fsweb-ai-automated-contact' ); ?>
+					</a>
+				</div>
+			</div>
+
+			<div class="fsweb-aic-stats">
+				<div class="fsweb-aic-stat-card">
+					<span class="fsweb-aic-stat-label"><?php esc_html_e( 'Provider / model', 'fsweb-ai-automated-contact' ); ?></span>
+					<span class="fsweb-aic-stat-value"><?php echo esc_html( $conversation->provider . ' / ' . $conversation->model ); ?></span>
+				</div>
+				<div class="fsweb-aic-stat-card">
+					<span class="fsweb-aic-stat-label"><?php esc_html_e( 'Tokens', 'fsweb-ai-automated-contact' ); ?></span>
+					<span class="fsweb-aic-stat-value"><?php echo esc_html( number_format_i18n( (int) $conversation->total_tokens ) ); ?></span>
+					<span class="description"><?php echo esc_html( sprintf( /* translators: 1: prompt tokens, 2: completion tokens. */ __( '%1$s in / %2$s out', 'fsweb-ai-automated-contact' ), number_format_i18n( (int) $conversation->prompt_tokens ), number_format_i18n( (int) $conversation->completion_tokens ) ) ); ?></span>
+				</div>
+				<div class="fsweb-aic-stat-card">
+					<span class="fsweb-aic-stat-label"><?php esc_html_e( 'Spent', 'fsweb-ai-automated-contact' ); ?></span>
+					<span class="fsweb-aic-stat-value"><?php echo esc_html( Fsweb_Ai_Automated_Contact_Conversations::format_cost( $conversation->cost ) ); ?></span>
+				</div>
+				<div class="fsweb-aic-stat-card">
+					<span class="fsweb-aic-stat-label"><?php esc_html_e( 'Visitor', 'fsweb-ai-automated-contact' ); ?></span>
+					<span class="fsweb-aic-stat-value"><?php echo esc_html( $this->conversation_visitor( $conversation ) ); ?></span>
+					<span class="description"><?php echo esc_html( $this->format_datetime( $conversation->started_at ) ); ?></span>
+				</div>
+			</div>
+
+			<?php if ( ! Fsweb_Ai_Automated_Contact_Conversations::has_pricing() ) : ?>
+				<div class="notice notice-warning inline">
+					<p><?php esc_html_e( 'Token prices are not filled in, so the spent value is zero. Enter the provider prices in Settings → Usage and spending.', 'fsweb-ai-automated-contact' ); ?></p>
+				</div>
+			<?php endif; ?>
+
+			<div class="fsweb-aic-card fsweb-aic-card--wide">
+				<div class="fsweb-aic-card__header">
+					<h2>
+						<span class="dashicons dashicons-media-text"></span>
+						<?php esc_html_e( 'Transcript', 'fsweb-ai-automated-contact' ); ?>
+					</h2>
+				</div>
+				<div class="fsweb-aic-card__body">
+					<table class="wp-list-table widefat fixed striped fsweb-aic-transcript">
+						<thead>
+							<tr>
+								<th scope="col" class="fsweb-aic-transcript__col-when"><?php esc_html_e( 'When', 'fsweb-ai-automated-contact' ); ?></th>
+								<th scope="col" class="fsweb-aic-transcript__col-role"><?php esc_html_e( 'Role', 'fsweb-ai-automated-contact' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Message', 'fsweb-ai-automated-contact' ); ?></th>
+								<th scope="col" class="fsweb-aic-transcript__col-tokens"><?php esc_html_e( 'Tokens', 'fsweb-ai-automated-contact' ); ?></th>
+								<th scope="col" class="fsweb-aic-transcript__col-cost"><?php esc_html_e( 'Cost', 'fsweb-ai-automated-contact' ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if ( empty( $messages ) ) : ?>
+								<tr><td colspan="5"><?php esc_html_e( 'No message stored for this conversation.', 'fsweb-ai-automated-contact' ); ?></td></tr>
+							<?php else : ?>
+								<?php foreach ( $messages as $message ) : ?>
+									<tr>
+										<td><?php echo esc_html( $this->format_datetime( $message->created_at ) ); ?></td>
+										<td><strong><?php echo esc_html( 'user' === $message->role ? __( 'Visitor', 'fsweb-ai-automated-contact' ) : __( 'Assistant', 'fsweb-ai-automated-contact' ) ); ?></strong></td>
+										<td><?php echo nl2br( esc_html( $message->content ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?></td>
+										<td><?php echo esc_html( number_format_i18n( (int) $message->total_tokens ) ); ?></td>
+										<td><?php echo esc_html( Fsweb_Ai_Automated_Contact_Conversations::format_cost( $message->cost ) ); ?></td>
+									</tr>
+								<?php endforeach; ?>
+							<?php endif; ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Local date/time for a UTC database value.
+	 *
+	 * @since  1.1.0
+	 * @param  string $gmt MySQL UTC datetime.
+	 * @return string
+	 */
+	private function format_datetime( $gmt ) {
+		if ( empty( $gmt ) ) {
+			return '—';
+		}
+
+		$timestamp = strtotime( $gmt . ' UTC' );
+
+		if ( ! $timestamp ) {
+			return '—';
+		}
+
+		return wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $timestamp );
+	}
+
+	/**
+	 * Visitor label for a conversation.
+	 *
+	 * @since  1.1.0
+	 * @param  object $conversation Conversation row.
+	 * @return string
+	 */
+	private function conversation_visitor( $conversation ) {
+		if ( ! empty( $conversation->user_id ) ) {
+			$user = get_userdata( (int) $conversation->user_id );
+
+			if ( $user ) {
+				return $user->display_name;
+			}
+
+			return sprintf(
+				/* translators: %d: user id. */
+				__( 'User #%d', 'fsweb-ai-automated-contact' ),
+				(int) $conversation->user_id
+			);
+		}
+
+		return __( 'Guest', 'fsweb-ai-automated-contact' );
+	}
+
+	/**
+	 * Status label for a conversation.
+	 *
+	 * @since  1.1.0
+	 * @param  string $status Stored status.
+	 * @return string
+	 */
+	private function conversation_status_label( $status ) {
+		if ( 'limited' === $status ) {
+			return __( 'Limit reached', 'fsweb-ai-automated-contact' );
+		}
+
+		return __( 'Open', 'fsweb-ai-automated-contact' );
+	}
+
+	/**
+	 * Delete one conversation from the admin screen.
+	 *
+	 * @since 1.1.0
+	 * @return void
+	 */
+	public function handle_delete_conversation() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to delete conversations.', 'fsweb-ai-automated-contact' ) );
+		}
+
+		$conversation_id = isset( $_POST['conversation'] ) ? absint( wp_unslash( $_POST['conversation'] ) ) : 0;
+
+		check_admin_referer( 'fsweb_aic_delete_conversation_' . $conversation_id );
+
+		Fsweb_Ai_Automated_Contact_Conversations::delete( $conversation_id );
+
+		wp_safe_redirect(
+			add_query_arg(
+				array(
+					'page'    => 'fsweb-ai-automated-contact-conversations',
+					'deleted' => '1',
+				),
+				admin_url( 'admin.php' )
+			)
+		);
+		exit;
 	}
 
 	// ------------------------------------------------------------------//

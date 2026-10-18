@@ -221,6 +221,14 @@
 
 	$( document ).on( 'click', '[data-fsweb-aic-close]', closePreview );
 
+	$( document ).on( 'click', '.fsweb-aic-delete-conversation', function ( event ) {
+		var message = $( this ).data( 'confirm' );
+
+		if ( message && ! window.confirm( message ) ) {
+			event.preventDefault();
+		}
+	} );
+
 	$( document ).on( 'keydown', function ( event ) {
 		if ( 'Escape' === event.key || 27 === event.keyCode ) {
 			closePreview();

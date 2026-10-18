@@ -254,6 +254,19 @@
 	text-transform: uppercase;
 }
 
+.fsweb-aic-stat-value {
+	display: block;
+	color: #1d2327;
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 1.25;
+}
+
+.fsweb-aic-stat-card .description {
+	display: block;
+	margin-top: 4px;
+}
+
 @media (max-width: 960px) {
 	.fsweb-aic-stats {
 		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -1353,4 +1366,25 @@ body.fsweb-aic-onboarding-page #wpbody {
 
 body.fsweb-aic-preview-is-open {
 	overflow: hidden;
+}
+
+/* Conversations transcript table */
+.fsweb-aic-transcript__col-when {
+	width: 150px;
+}
+
+.fsweb-aic-transcript__col-role {
+	width: 100px;
+}
+
+.fsweb-aic-transcript__col-tokens {
+	width: 90px;
+}
+
+.fsweb-aic-transcript__col-cost {
+	width: 110px;
+}
+
+.fsweb-aic-transcript td {
+	vertical-align: top;
 }

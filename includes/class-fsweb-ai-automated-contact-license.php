@@ -259,33 +259,13 @@ class Fsweb_Ai_Automated_Contact_License {
 			);
 		}
 
-		$this->store( $license_key, 'pending' );
+		// Release the key locally too: the screen goes back to the initial
+		// state, with the field empty and only the activate button available.
+		$this->store( '', 'inactive' );
 
 		return array(
 			'success' => true,
 			'message' => __( 'License deactivated.', 'fsweb-ai-automated-contact' ),
-			'status'  => 'pending',
-		);
-	}
-
-	/**
-	 * Drop the stored key and go back to the inactive state.
-	 *
-	 * Used when a key is saved locally but the license was never activated or
-	 * the merchant wants to paste a different one. Nothing is sent to the API:
-	 * releasing the domain is the job of deactivate().
-	 *
-	 * @since  1.0.0
-	 * @return array{success:bool,message:string,status:string,expires:string}
-	 */
-	public function forget() {
-		delete_option( self::OPTION_KEY );
-		delete_option( self::OPTION_STATUS );
-		delete_option( self::OPTION_EXPIRES );
-
-		return array(
-			'success' => true,
-			'message' => __( 'License key removed.', 'fsweb-ai-automated-contact' ),
 			'status'  => 'inactive',
 			'expires' => '',
 		);

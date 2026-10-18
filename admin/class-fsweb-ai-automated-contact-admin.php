@@ -592,6 +592,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 							</table>
 						</div>
 					</div>
+					<?php if ( ! defined( 'FSWEB_AIC_PRO_VERSION' ) ) : ?>
 					<div class="fsweb-aic-card fsweb-aic-card--wide fsweb-aic-card--pro">
 						<div class="fsweb-aic-card__body">
 							<div class="fsweb-aic-pro-card">
@@ -619,6 +620,20 @@ class Fsweb_Ai_Automated_Contact_Admin {
 							</div>
 						</div>
 					</div>
+					<?php endif; ?>
+
+					<?php
+					/**
+					 * Print extra settings cards inside the free settings grid.
+					 *
+					 * The PRO add-on hooks here to render its own fields in the
+					 * same form, keeping a single settings screen.
+					 *
+					 * @since 1.0.0
+					 * @param array $settings Current settings.
+					 */
+					do_action( 'fsweb_aic_admin_settings_sections', $settings );
+					?>
 				</div>
 
 				<p class="submit">

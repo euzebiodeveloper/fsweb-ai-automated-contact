@@ -259,9 +259,9 @@ class Fsweb_Ai_Automated_Contact_License {
 			);
 		}
 
-		// Release the key locally too: the screen goes back to the initial
-		// state, with the field empty and only the activate button available.
-		$this->store( '', 'inactive' );
+		// The key stays in the field so the merchant can activate it again;
+		// only the status changes, which brings back the activate button alone.
+		$this->store( $license_key, 'inactive' );
 
 		return array(
 			'success' => true,

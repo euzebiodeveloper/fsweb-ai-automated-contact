@@ -73,7 +73,6 @@ class Fsweb_Ai_Automated_Contact {
 		$this->plugin_name = 'fsweb-ai-automated-contact';
 
 		$this->load_dependencies();
-		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_rest_hooks();
 		$this->define_public_hooks();
@@ -92,12 +91,6 @@ class Fsweb_Ai_Automated_Contact {
 		 * core plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-loader.php';
-
-		/**
-		 * The class responsible for defining internationalization functionality
-		 * of the plugin.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-i18n.php';
 
 		/**
 		 * Settings schema and AI provider catalogue.
@@ -141,20 +134,6 @@ class Fsweb_Ai_Automated_Contact {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-fsweb-ai-automated-contact-public.php';
 
 		$this->loader = new Fsweb_Ai_Automated_Contact_Loader();
-	}
-
-	/**
-	 * Define the locale for this plugin for internationalization.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function set_locale() {
-
-		$plugin_i18n = new Fsweb_Ai_Automated_Contact_i18n();
-
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
 	}
 
 	/**

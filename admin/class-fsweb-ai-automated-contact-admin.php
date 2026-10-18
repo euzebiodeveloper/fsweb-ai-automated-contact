@@ -892,10 +892,17 @@ class Fsweb_Ai_Automated_Contact_Admin {
 								</button>
 							<?php endif; ?>
 
-							<?php if ( $active || '' !== $key ) : ?>
+							<?php if ( $active ) : ?>
 								<button type="submit" class="button fsweb-aic-button--danger" name="license_action" value="deactivate"
 									data-confirm="<?php esc_attr_e( 'Deactivate this license? The PRO fields stay locked until you activate the key again.', 'fsweb-ai-automated-contact' ); ?>">
 									<?php esc_html_e( 'Deactivate', 'fsweb-ai-automated-contact' ); ?>
+								</button>
+							<?php endif; ?>
+
+							<?php if ( ! $active && '' !== $key ) : ?>
+								<button type="submit" class="button" name="license_action" value="forget"
+									data-confirm="<?php esc_attr_e( 'Remove the stored key from this site? You can paste it again later.', 'fsweb-ai-automated-contact' ); ?>">
+									<?php esc_html_e( 'Remove key', 'fsweb-ai-automated-contact' ); ?>
 								</button>
 							<?php endif; ?>
 						</div>
@@ -946,6 +953,8 @@ class Fsweb_Ai_Automated_Contact_Admin {
 
 		if ( 'deactivate' === $license_action ) {
 			$result = $this->license->deactivate();
+		} elseif ( 'forget' === $license_action ) {
+			$result = $this->license->forget();
 		} elseif ( 'check' === $license_action ) {
 			$result = $this->license->validate( $license_key );
 		} else {

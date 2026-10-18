@@ -342,15 +342,15 @@ class Fsweb_Ai_Automated_Contact_License {
 	public function status_message( $status ) {
 		switch ( $status ) {
 			case 'active':
-				return __( 'License is active and valid.', 'fsweb-ai-automated-contact' );
+				return __( 'License active', 'fsweb-ai-automated-contact' );
 			case 'expired':
-				return __( 'License expired. Renew it to keep receiving updates.', 'fsweb-ai-automated-contact' );
+				return __( 'License expired', 'fsweb-ai-automated-contact' );
 			case 'invalid':
-				return __( 'Invalid license key.', 'fsweb-ai-automated-contact' );
+				return __( 'Invalid key', 'fsweb-ai-automated-contact' );
 			case 'pending':
-				return __( 'License pending activation.', 'fsweb-ai-automated-contact' );
+				return __( 'License pending', 'fsweb-ai-automated-contact' );
 			default:
-				return __( 'License inactive.', 'fsweb-ai-automated-contact' );
+				return __( 'License inactive', 'fsweb-ai-automated-contact' );
 		}
 	}
 

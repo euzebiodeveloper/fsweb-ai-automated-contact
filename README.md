@@ -3,7 +3,7 @@
 [![WordPress](https://img.shields.io/badge/wordpress-6.0%2B-blue?style=flat-square)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/php-8.1%2B-purple?style=flat-square)](https://www.php.net/)
 [![WooCommerce](https://img.shields.io/badge/woocommerce-required-96588a?style=flat-square)](https://woocommerce.com/)
-[![Version](https://img.shields.io/badge/version-1.0.6-orange?style=flat-square)](https://flowsyncweb.com/)
+[![Version](https://img.shields.io/badge/version-1.0.0-orange?style=flat-square)](https://flowsyncweb.com/)
 [![License](https://img.shields.io/badge/license-GPLv2-blue.svg?style=flat-square)](https://opensource.org/licenses/GPL-2.0)
 
 **Contributors:** [flowsyncweb](https://github.com/flowsyncweb)  
@@ -12,21 +12,31 @@
 **Requires at least:** 6.0  
 **Tested up to:** 7.1  
 **Requires PHP:** 8.1  
-**Stable version:** 1.0.5  
+**Stable version:** 1.0.0  
 **License:** GPLv2 or later
 
-AI-powered virtual assistant for WooCommerce: it answers questions, finds products, builds the cart and takes the customer to checkout.
+AI-powered virtual assistant for WooCommerce: it answers questions and finds products in the catalogue.
+
+The free edition is fully functional with the basic feature set. Advanced features live in the separate **AI Automated Contact PRO** add-on.
 
 ---
 
 ## ✨ Features
 
-- 🤖 **Multiple AI providers** — OpenAI (ChatGPT), Anthropic (Claude), DeepSeek, xAI (Grok), Groq and any OpenAI-compatible endpoint
+- 🤖 **Any AI provider** — OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq or any OpenAI-compatible endpoint
 - 🔎 **Catalogue aware** — searches products in real time, with price, availability, images and variations
 - 🛒 **Builds the cart** — confirms the item with the customer, adds it to the cart and hands over the checkout
-- 🎨 **Configurable widget** — icon, colours, position, auto open and custom CSS
-- 🧠 **Your context, your rules** — you write the store context the assistant must follow
-- 🔐 **License & Automatic Updates** — activate a license key to receive one-click updates from your own server
+- 💬 **Store questions** — delivery, shipping, payment and returns, answered from the context you write
+- 🎨 **Configurable widget** — name, icon, colours and position
+- 🛡️ **Rate limiting** — 30 messages per visitor every 10 minutes
+- 🔌 **Extensible** — filters for providers, settings and tools, used by the PRO add-on
+
+### PRO add-on (separate plugin)
+
+- Custom message limit per visitor
+- Custom avatar image and editable welcome message
+- Auto-open with delay and custom CSS
+- License activation and automatic updates
 
 ---
 

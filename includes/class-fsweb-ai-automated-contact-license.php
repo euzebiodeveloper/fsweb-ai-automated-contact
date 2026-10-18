@@ -259,12 +259,15 @@ class Fsweb_Ai_Automated_Contact_License {
 			);
 		}
 
-		$this->store( $license_key, 'pending' );
+		// The key stays in the field so the merchant can activate it again;
+		// only the status changes, which brings back the activate button alone.
+		$this->store( $license_key, 'inactive' );
 
 		return array(
 			'success' => true,
 			'message' => __( 'License deactivated.', 'fsweb-ai-automated-contact' ),
-			'status'  => 'pending',
+			'status'  => 'inactive',
+			'expires' => '',
 		);
 	}
 

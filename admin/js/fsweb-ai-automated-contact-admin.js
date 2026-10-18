@@ -221,6 +221,14 @@
 
 	$( document ).on( 'click', '[data-fsweb-aic-close]', closePreview );
 
+	$( document ).on( 'click', 'button[data-confirm]', function ( event ) {
+		var message = $( this ).data( 'confirm' );
+
+		if ( message && ! window.confirm( message ) ) {
+			event.preventDefault();
+		}
+	} );
+
 	$( document ).on( 'click', '.fsweb-aic-delete-conversation', function ( event ) {
 		var message = $( this ).data( 'confirm' );
 

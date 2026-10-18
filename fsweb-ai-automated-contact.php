@@ -1,12 +1,7 @@
 <?php
 
 /**
- * The plugin bootstrap file
- *
- * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also includes all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
+ * The plugin bootstrap file.
  *
  * @link              https://flowsyncweb.com
  * @since             1.0.0
@@ -14,11 +9,11 @@
  *
  * @wordpress-plugin
  * Plugin Name:       AI Automated Contact
- * Plugin URI:        https://flowsyncweb.com
- * Description:       AI-powered virtual assistant for WooCommerce: answers questions, finds products, builds the cart and takes the customer to checkout.
- * Version:           1.0.6
+ * Plugin URI:        https://flowsyncweb.com/ai-automated-contact/
+ * Description:       AI-powered virtual assistant for WooCommerce: answers questions, finds products and guides the customer to the cart and checkout.
+ * Version:           1.0.0
  * Requires at least: 6.0
- * Requires PHP:      8.2
+ * Requires PHP:      8.1
  * Author:            Flow Sync Web
  * Author URI:        https://flowsyncweb.com/
  * License:           GPL-2.0+
@@ -34,13 +29,11 @@ if ( ! defined( 'WPINC' ) ) {
 
 /**
  * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
  */
-define( 'FSWEB_AI_AUTOMATED_CONTACT_VERSION', '1.0.6' );
+define( 'FSWEB_AI_AUTOMATED_CONTACT_VERSION', '1.0.0' );
 
 /**
- * Plugin slug. Used for the license API and the update checker.
+ * Plugin slug. Used for the settings page and the text domain.
  */
 define( 'FSWEB_AI_AUTOMATED_CONTACT_SLUG', 'fsweb-ai-automated-contact' );
 
@@ -51,135 +44,67 @@ define( 'FSWEB_AI_AUTOMATED_CONTACT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FSWEB_AI_AUTOMATED_CONTACT_URL', plugin_dir_url( __FILE__ ) );
 
 /**
- * Base URL for the license API (FSWEB license API).
+ * Landing page of the PRO version.
  *
- * The client appends `/activate`, `/deactivate` and `/validate` to this
- * value; all three are served by the FSWEB license API (Laravel).
- *
- * The constant is deliberately plugin-prefixed instead of the shared,
- * unprefixed license-URL constant used by the sibling FSWEB plugins:
- * WordPress loads plugins alphabetically and a sibling run that still defines
- * the legacy shared name would win the `! defined()` race, poisoning this
- * plugin with the dead legacy URL (HTTP 500) and breaking activation.
- *
- * Override in wp-config.php if needed:
- *   define( 'FSWEB_AI_AUTOMATED_CONTACT_LICENSE_API_URL', 'https://yoursite.com/api/license' );
+ * The free plugin never contains premium code: advanced features live in a
+ * separate add-on plugin, as required by the WordPress.org plugin guidelines.
+ * Override in wp-config.php to point at another page.
  */
-if ( ! defined( 'FSWEB_AI_AUTOMATED_CONTACT_LICENSE_API_URL' ) ) {
-	define( 'FSWEB_AI_AUTOMATED_CONTACT_LICENSE_API_URL', 'https://api.flowsyncweb.com/api/license' );
+if ( ! defined( 'FSWEB_AI_AUTOMATED_CONTACT_PRO_URL' ) ) {
+	define( 'FSWEB_AI_AUTOMATED_CONTACT_PRO_URL', 'https://flowsyncweb.com/produto/ai-automated-contact-pro/' );
 }
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-fsweb-ai-automated-contact-activator.php
  */
-function activate_fsweb_ai_automated_contact() {
+function fsweb_ai_automated_contact_activate() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-fsweb-ai-automated-contact-activator.php';
 	Fsweb_Ai_Automated_Contact_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-fsweb-ai-automated-contact-deactivator.php
  */
-function deactivate_fsweb_ai_automated_contact() {
+function fsweb_ai_automated_contact_deactivate() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-fsweb-ai-automated-contact-deactivator.php';
 	Fsweb_Ai_Automated_Contact_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_fsweb_ai_automated_contact' );
-register_deactivation_hook( __FILE__, 'deactivate_fsweb_ai_automated_contact' );
+register_activation_hook( __FILE__, 'fsweb_ai_automated_contact_activate' );
+register_deactivation_hook( __FILE__, 'fsweb_ai_automated_contact_deactivate' );
 
 /**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
+ * The core plugin class.
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-fsweb-ai-automated-contact.php';
 
 /**
- * FSWEB Update Checker — automatic updates from your own server.
+ * Whether the plugin features are enabled.
  *
- * Bundled per-plugin copy (own class name + namespace) so it can coexist
- * with the same library shipped by other FSWEB plugins.
- *
- * @see https://github.com/flowsyncweb/fsweb-update-checker
- */
-require plugin_dir_path( __FILE__ ) . 'fsweb-update-checker/index.php';
-$fsweb_ai_automated_contact_update_checker = new FSWEB_Update_Checker_AiAutomatedContact_1_0(
-	'https://api.flowsyncweb.com/api/releases/' . FSWEB_AI_AUTOMATED_CONTACT_SLUG,
-	__FILE__
-);
-
-// Set the license page URL so admin notices link to the correct page.
-$fsweb_ai_automated_contact_update_checker->set_license_url(
-	admin_url( 'admin.php?page=fsweb-ai-automated-contact-license' )
-);
-
-// Inject license key so the update-checker sends it with every request.
-// Always set it — even when empty — so the checker tracks the current key and
-// clears stale errors only when the key actually changes (otherwise a removed
-// key would keep the previous key's state, and a rejection for an empty key
-// could never be cleared).
-$fsweb_ai_automated_contact_license_key = get_option( 'fsweb_aic_license_key', '' );
-$fsweb_ai_automated_contact_update_checker->set_license( $fsweb_ai_automated_contact_license_key );
-
-/**
- * Reset the update checker caches after the license is activated.
- *
- * The update checker persists its metadata and error flags (license/server)
- * in wp_options. When a license is (re)activated, stale errors recorded under
- * the previous key must be wiped so they don't keep showing admin notices or
- * blocking the "Previous Versions" feature until the next successful fetch.
+ * The free version has no license gate: it is fully functional with the
+ * basic feature set. The PRO add-on can hook this filter if it needs a
+ * different behaviour.
  *
  * @since 1.0.0
- * @return void
- */
-function fsweb_ai_automated_contact_reset_update_checker_cache() {
-	global $fsweb_ai_automated_contact_update_checker;
-
-	if ( isset( $fsweb_ai_automated_contact_update_checker )
-		&& is_object( $fsweb_ai_automated_contact_update_checker )
-		&& method_exists( $fsweb_ai_automated_contact_update_checker, 'reset_cache' ) ) {
-		$fsweb_ai_automated_contact_update_checker->reset_cache();
-	}
-}
-
-/**
- * Whether the plugin license is currently active (valid).
- *
- * This is the single gate for everything the plugin loads on the front end
- * (chat widget, REST endpoints, WooCommerce tools). The admin screens for
- * license activation and onboarding stay available so the user can activate
- * the key.
- *
- * @since 1.0.0
- * @return bool True when the stored license status is "active".
+ * @return bool
  */
 function fsweb_ai_automated_contact_license_is_active() {
-	$active = ( 'active' === get_option( 'fsweb_aic_license_status', '' ) );
-
 	/**
-	 * Filter whether the plugin license is considered active.
+	 * Filter whether the plugin features are enabled.
 	 *
 	 * @since 1.0.0
-	 * @param bool $active Whether the license is active.
+	 * @param bool $active Always true in the free version.
 	 */
-	return (bool) apply_filters( 'fsweb_ai_automated_contact_license_is_active', $active );
+	return (bool) apply_filters( 'fsweb_ai_automated_contact_features_enabled', true );
 }
 
 /**
  * Begins execution of the plugin.
  *
- * Since everything within the plugin is registered via hooks,
- * then kicking off the plugin from this point in the file does
- * not affect the page life cycle.
- *
- * @since    1.0.0
+ * @since 1.0.0
  */
-function run_fsweb_ai_automated_contact() {
-
+function fsweb_ai_automated_contact_run() {
 	$plugin = new Fsweb_Ai_Automated_Contact();
 	$plugin->run();
-
 }
-run_fsweb_ai_automated_contact();
+fsweb_ai_automated_contact_run();

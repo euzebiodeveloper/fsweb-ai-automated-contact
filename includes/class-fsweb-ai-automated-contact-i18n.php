@@ -34,11 +34,7 @@ class Fsweb_Ai_Automated_Contact_i18n {
 	 */
 	public function load_plugin_textdomain() {
 
-		load_plugin_textdomain(
-			'fsweb-ai-automated-contact',
-			false,
-			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
-		);
+		// WordPress loads the plugin translations automatically since 4.6.
 
 	}
 

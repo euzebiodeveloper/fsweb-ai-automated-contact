@@ -3,8 +3,8 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * Owns the settings screen, the license screen, the onboarding flow and the
- * license AJAX handlers. All rendering escapes on output; all input is
+ * Owns the settings screen, the PRO upgrade page, the tutorial and the
+ * provider connection test. All rendering escapes on output; all input is
  * sanitized by the settings sanitize callback or by the AJAX handlers.
  *
  * @link       https://flowsyncweb.com
@@ -42,15 +42,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	private $version;
 
 	/**
-	 * License client.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      Fsweb_Ai_Automated_Contact_License
-	 */
-	private $license;
-
-	/**
 	 * Hook suffix of the settings screen.
 	 *
 	 * @since    1.0.0
@@ -60,26 +51,44 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	private $settings_page_hook = '';
 
 	/**
-	 * Hook suffix of the license screen.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      string
-	 */
-	private $license_page_hook = '';
-
-	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
-	 * @param    string                               $plugin_name The name of this plugin.
-	 * @param    string                               $version     The version of this plugin.
-	 * @param    Fsweb_Ai_Automated_Contact_License   $license     License client.
+	 * @param    string $plugin_name The name of this plugin.
+	 * @param    string $version     The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version, $license ) {
+	public function __construct( $plugin_name, $version ) {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
-		$this->license     = $license;
+	}
+
+	/**
+	 * Warn the merchant when WooCommerce is inactive.
+	 *
+	 * The chat keeps answering store questions without WooCommerce; only the
+	 * catalogue tools (search, product details, cart and checkout) stay off.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function maybe_woocommerce_notice() {
+		if ( class_exists( 'WooCommerce' ) || ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$screen = get_current_screen();
+
+		if ( ! $screen || false === strpos( (string) $screen->id, 'fsweb-ai-automated-contact' ) ) {
+			return;
+		}
+
+		printf(
+			'<div class="notice notice-warning"><p>%s</p></div>',
+			esc_html__(
+				'AI Automated Contact: WooCommerce is not active. The assistant still answers store questions, but product search, product details, cart and checkout are unavailable until WooCommerce is activated.',
+				'fsweb-ai-automated-contact'
+			)
+		);
 	}
 
 	// ------------------------------------------------------------------//
@@ -141,33 +150,34 @@ class Fsweb_Ai_Automated_Contact_Admin {
 				'nonce'    => wp_create_nonce( 'fsweb_aic_admin_action' ),
 				'providers' => $this->providers_for_js(),
 				'default_context' => Fsweb_Ai_Automated_Contact_Settings::default_context(),
-				'license'  => array(
-					'status'  => $this->license->get_status(),
-					'expires' => $this->license->format_expires( $this->license->get_expires() ),
+				'avatar_icons'    => array(
+					'chat'     => Fsweb_Ai_Automated_Contact_Public::icon_svg( 'chat' ),
+					'initials' => '<span class="fsweb-aic-initial">' . esc_html( $this->agent_initial() ) . '</span>',
 				),
 				'i18n'     => array(
-					'confirm_deactivate' => __( 'Are you sure you want to deactivate this license?', 'fsweb-ai-automated-contact' ),
 					'activating'         => __( 'Activating…', 'fsweb-ai-automated-contact' ),
 					'deactivating'       => __( 'Deactivating…', 'fsweb-ai-automated-contact' ),
 					'testing'            => __( 'Testing…', 'fsweb-ai-automated-contact' ),
 					'custom_model'       => __( 'Other model (type it)', 'fsweb-ai-automated-contact' ),
-					'choose_image'       => __( 'Choose image', 'fsweb-ai-automated-contact' ),
-					'use_image'          => __( 'Use this image', 'fsweb-ai-automated-contact' ),
+					/* translators: 1: AI provider name, 2: model name. */
 					'current_setup'      => __( 'Current setup: %1$s / %2$s', 'fsweb-ai-automated-contact' ),
-					'empty_key'          => __( 'Enter a license key.', 'fsweb-ai-automated-contact' ),
 					'network_error'      => __( 'Network error. Please try again.', 'fsweb-ai-automated-contact' ),
-					'activate'           => __( 'Activate', 'fsweb-ai-automated-contact' ),
-					'deactivate'         => __( 'Deactivate', 'fsweb-ai-automated-contact' ),
 					'test_now'           => __( 'Test now', 'fsweb-ai-automated-contact' ),
-					'lifetime'           => __( 'Lifetime', 'fsweb-ai-automated-contact' ),
-					'status_active'      => __( 'Active', 'fsweb-ai-automated-contact' ),
-					'status_inactive'    => __( 'Inactive', 'fsweb-ai-automated-contact' ),
-					'status_expired'     => __( 'Expired', 'fsweb-ai-automated-contact' ),
-					'status_invalid'     => __( 'Invalid', 'fsweb-ai-automated-contact' ),
-					'status_pending'     => __( 'Pending', 'fsweb-ai-automated-contact' ),
 				),
 			)
 		);
+	}
+
+	/**
+	 * First letter of the assistant name, for the preview avatar.
+	 *
+	 * @since  1.0.0
+	 * @return string
+	 */
+	private function agent_initial() {
+		$name = (string) Fsweb_Ai_Automated_Contact_Settings::get( 'agent_name', '' );
+
+		return function_exists( 'mb_substr' ) ? mb_substr( $name, 0, 1 ) : substr( $name, 0, 1 );
 	}
 
 	/**
@@ -198,8 +208,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	 */
 	private function is_plugin_screen( $hook_suffix ) {
 		return ( $this->settings_page_hook === $hook_suffix )
-			|| ( $this->license_page_hook === $hook_suffix )
-			|| $this->is_onboarding_page()
 			|| $this->is_tutorial_page();
 	}
 
@@ -208,7 +216,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	// ------------------------------------------------------------------//
 
 	/**
-	 * Register the top-level menu, License, Tutorial and onboarding screens.
+	 * Register the top-level menu, PRO and Tutorial screens.
 	 *
 	 * @since    1.0.0
 	 */
@@ -223,15 +231,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			58
 		);
 
-		$this->license_page_hook = add_submenu_page(
-			'fsweb-ai-automated-contact',
-			__( 'License', 'fsweb-ai-automated-contact' ),
-			__( 'License', 'fsweb-ai-automated-contact' ),
-			'manage_options',
-			'fsweb-ai-automated-contact-license',
-			array( $this, 'render_license_page' )
-		);
-
 		add_submenu_page(
 			'fsweb-ai-automated-contact',
 			__( 'AI Contact — Tutorial', 'fsweb-ai-automated-contact' ),
@@ -241,25 +240,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			array( $this, 'render_tutorial_page' )
 		);
 
-		// Hidden onboarding/setup page (reachable via URL / redirect).
-		add_submenu_page(
-			null,
-			__( 'AI Contact — Setup', 'fsweb-ai-automated-contact' ),
-			__( 'AI Contact — Setup', 'fsweb-ai-automated-contact' ),
-			'manage_options',
-			'fsweb-ai-automated-contact-onboarding',
-			array( $this, 'render_onboarding_page' )
-		);
-	}
-
-	/**
-	 * Whether the current admin screen is the onboarding page.
-	 *
-	 * @since  1.0.0
-	 * @return bool
-	 */
-	private function is_onboarding_page() {
-		return isset( $_GET['page'] ) && 'fsweb-ai-automated-contact-onboarding' === sanitize_key( wp_unslash( $_GET['page'] ) );
 	}
 
 	/**
@@ -269,62 +249,8 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	 * @return bool
 	 */
 	private function is_tutorial_page() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen check.
 		return isset( $_GET['page'] ) && 'fsweb-ai-automated-contact-tutorial' === sanitize_key( wp_unslash( $_GET['page'] ) );
-	}
-
-	/**
-	 * Redirect to onboarding on first activation and while the license is
-	 * not active.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function maybe_redirect_to_onboarding() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		if ( wp_doing_ajax() || wp_doing_cron() ) {
-			return;
-		}
-
-		// "Close" action on the onboarding screen: dismiss it for good.
-		if ( $this->is_onboarding_page() && isset( $_GET['dismiss'] ) ) {
-			update_option( 'fsweb_aic_onboarding_dismissed', 'yes' );
-			wp_safe_redirect( admin_url() );
-			exit;
-		}
-
-		if ( $this->is_onboarding_page() ) {
-			return;
-		}
-
-		$page      = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
-		$status    = $this->license->get_status();
-		$dismissed = get_option( 'fsweb_aic_onboarding_dismissed', 'no' );
-
-		$on_plugin_page = in_array( $page, array( 'fsweb-ai-automated-contact', 'fsweb-ai-automated-contact-license' ), true );
-
-		if ( 'active' !== $status && 'yes' !== $dismissed && $on_plugin_page ) {
-			wp_safe_redirect( admin_url( 'admin.php?page=fsweb-ai-automated-contact-onboarding' ) );
-			exit;
-		}
-	}
-
-	/**
-	 * Add a body class on the onboarding screen so the WP admin chrome can be
-	 * hidden for a full-screen setup experience.
-	 *
-	 * @since  1.0.0
-	 * @param  string $classes Existing body classes.
-	 * @return string
-	 */
-	public function admin_body_class( $classes ) {
-		if ( $this->is_onboarding_page() ) {
-			$classes .= ' fsweb-aic-onboarding-page';
-		}
-
-		return $classes;
 	}
 
 	// ------------------------------------------------------------------//
@@ -354,70 +280,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	// ------------------------------------------------------------------//
 
 	/**
-	 * Render the onboarding / license activation screen.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function render_onboarding_page() {
-		$license_key  = $this->license->get_key();
-		$logo_url     = FSWEB_AI_AUTOMATED_CONTACT_URL . 'includes/assets/images/flowsyncweblogo.webp';
-		$title_url    = FSWEB_AI_AUTOMATED_CONTACT_URL . 'includes/assets/images/flowsyncwebtitulo.webp';
-		$tutorial_url = admin_url( 'admin.php?page=fsweb-ai-automated-contact-tutorial' );
-		?>
-		<div class="fsweb-aic-onboarding">
-			<a class="fsweb-aic-onboarding__close" href="<?php echo esc_url( admin_url( 'admin.php?page=fsweb-ai-automated-contact-onboarding&dismiss=1' ) ); ?>" aria-label="<?php esc_attr_e( 'Close', 'fsweb-ai-automated-contact' ); ?>">&times;</a>
-
-			<div class="fsweb-aic-onboarding__brand">
-				<img class="fsweb-aic-onboarding__brand-img" src="<?php echo esc_url( $title_url ); ?>" alt="<?php esc_attr_e( 'AI Automated Contact', 'fsweb-ai-automated-contact' ); ?>">
-			</div>
-
-			<div class="fsweb-aic-onboarding__panel">
-				<img class="fsweb-aic-onboarding__logo" src="<?php echo esc_url( $logo_url ); ?>" alt="<?php esc_attr_e( 'Flow Sync Web', 'fsweb-ai-automated-contact' ); ?>">
-
-				<h1 class="fsweb-aic-onboarding__title"><?php esc_html_e( 'Welcome to AI Automated Contact', 'fsweb-ai-automated-contact' ); ?></h1>
-
-				<p class="fsweb-aic-onboarding__lead">
-					<?php esc_html_e( 'Activate your license to unlock the AI virtual assistant: it chats with your customers, answers questions, finds products, builds the cart and sends them to checkout.', 'fsweb-ai-automated-contact' ); ?>
-				</p>
-
-				<div class="fsweb-aic-onboarding__license" id="fsweb-aic-onboarding-license">
-					<label class="fsweb-aic-onboarding__label" for="fsweb-aic-onboarding-license-key"><?php esc_html_e( 'License key', 'fsweb-ai-automated-contact' ); ?></label>
-
-					<div class="fsweb-aic-onboarding__row">
-						<input type="text" id="fsweb-aic-onboarding-license-key" class="fsweb-aic-onboarding__input"
-							value="<?php echo esc_attr( $license_key ); ?>"
-							placeholder="<?php esc_attr_e( 'e.g. A7B9C2D4-E6F8G3H5-J7K9M2N4-P6Q8R3S5', 'fsweb-ai-automated-contact' ); ?>">
-						<button type="button" id="fsweb-aic-onboarding-activate" class="button button-primary fsweb-aic-onboarding__button">
-							<span class="dashicons dashicons-yes-alt"></span>
-							<?php esc_html_e( 'Activate', 'fsweb-ai-automated-contact' ); ?>
-						</button>
-					</div>
-
-					<p class="fsweb-aic-onboarding__hint">
-						<?php esc_html_e( 'Enter your key to receive automatic updates and unlock the virtual assistant on this domain.', 'fsweb-ai-automated-contact' ); ?>
-					</p>
-				</div>
-
-				<div id="fsweb-aic-onboarding-message" class="notice" style="display:none;"></div>
-
-				<div class="fsweb-aic-onboarding__done" id="fsweb-aic-onboarding-done" style="display:none;">
-					<p><?php esc_html_e( 'License active! Now configure your store\'s AI.', 'fsweb-ai-automated-contact' ); ?></p>
-					<a href="<?php echo esc_url( admin_url( 'admin.php?page=fsweb-ai-automated-contact' ) ); ?>" class="button button-primary">
-						<span class="dashicons dashicons-arrow-right-alt2"></span>
-						<?php esc_html_e( 'Continue', 'fsweb-ai-automated-contact' ); ?>
-					</a>
-					<a href="<?php echo esc_url( $tutorial_url ); ?>" class="button button-secondary">
-						<span class="dashicons dashicons-editor-help"></span>
-						<?php esc_html_e( 'See the tutorial', 'fsweb-ai-automated-contact' ); ?>
-					</a>
-				</div>
-			</div>
-		</div>
-		<?php
-	}
-
-	/**
 	 * Render the settings screen (provider, context, WooCommerce, appearance).
 	 *
 	 * @since 1.0.0
@@ -430,7 +292,16 @@ class Fsweb_Ai_Automated_Contact_Admin {
 		$option       = Fsweb_Ai_Automated_Contact_Settings::OPTION;
 		$woo          = class_exists( 'WooCommerce' );
 		$tutorial_url = admin_url( 'admin.php?page=fsweb-ai-automated-contact-tutorial' );
-		$license_url  = admin_url( 'admin.php?page=fsweb-ai-automated-contact-license' );
+		$pro_url      = FSWEB_AI_AUTOMATED_CONTACT_PRO_URL;
+
+		$avatar_type   = isset( $settings['avatar_type'] ) ? $settings['avatar_type'] : 'chat';
+		$avatar_letter = function_exists( 'mb_substr' ) ? mb_substr( (string) $settings['agent_name'], 0, 1 ) : substr( (string) $settings['agent_name'], 0, 1 );
+		$preview_icon  = ( 'initials' === $avatar_type )
+			? '<span class="fsweb-aic-initial">' . esc_html( $avatar_letter ) . '</span>'
+			: Fsweb_Ai_Automated_Contact_Public::icon_svg( $avatar_type );
+
+		/** This filter is documented in public/partials/fsweb-ai-automated-contact-widget.php */
+		$preview_icon = (string) apply_filters( 'fsweb_aic_launcher_icon', $preview_icon, $settings );
 		?>
 		<div class="wrap fsweb-aic-wrap">
 			<hr class="wp-header-end">
@@ -444,10 +315,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 					<a class="button" href="<?php echo esc_url( $tutorial_url ); ?>">
 						<span class="dashicons dashicons-editor-help"></span>
 						<?php esc_html_e( 'Tutorial', 'fsweb-ai-automated-contact' ); ?>
-					</a>
-					<a class="button" href="<?php echo esc_url( $license_url ); ?>">
-						<span class="dashicons dashicons-awards"></span>
-						<?php esc_html_e( 'License', 'fsweb-ai-automated-contact' ); ?>
 					</a>
 				</div>
 			</div>
@@ -505,23 +372,30 @@ class Fsweb_Ai_Automated_Contact_Admin {
 										<p class="description"><?php esc_html_e( 'The entries show up in WooCommerce → Status → Logs, under the source "fsweb-ai-automated-contact". Leave it off on a live store.', 'fsweb-ai-automated-contact' ); ?></p>
 									</td>
 								</tr>
-								<tr>
-									<th scope="row"><label for="fsweb-aic-agent-name"><?php esc_html_e( 'Assistant name', 'fsweb-ai-automated-contact' ); ?></label></th>
-									<td><input type="text" class="regular-text" id="fsweb-aic-agent-name" name="<?php echo esc_attr( $option ); ?>[agent_name]" value="<?php echo esc_attr( $settings['agent_name'] ); ?>"></td>
-								</tr>
-								<tr>
-									<th scope="row"><label for="fsweb-aic-welcome"><?php esc_html_e( 'Welcome message', 'fsweb-ai-automated-contact' ); ?></label></th>
-									<td><textarea class="large-text" rows="3" id="fsweb-aic-welcome" name="<?php echo esc_attr( $option ); ?>[welcome_message]"><?php echo esc_textarea( $settings['welcome_message'] ); ?></textarea></td>
-								</tr>
-								<tr>
-									<th scope="row"><label for="fsweb-aic-privacy"><?php esc_html_e( 'Privacy notice', 'fsweb-ai-automated-contact' ); ?></label></th>
-									<td><textarea class="large-text" rows="2" id="fsweb-aic-privacy" name="<?php echo esc_attr( $option ); ?>[privacy_note]"><?php echo esc_textarea( $settings['privacy_note'] ); ?></textarea></td>
-								</tr>
-								<tr>
-									<th scope="row"><label for="fsweb-aic-rate"><?php esc_html_e( 'Message limit / 10 min', 'fsweb-ai-automated-contact' ); ?></label></th>
+								<tr class="fsweb-aic-pro-row">
+									<th scope="row">
+										<?php esc_html_e( 'Assistant name', 'fsweb-ai-automated-contact' ); ?>
+										<span class="fsweb-aic-pro-tag"><?php esc_html_e( 'PRO', 'fsweb-ai-automated-contact' ); ?></span>
+									</th>
 									<td>
-										<input type="number" min="1" max="300" id="fsweb-aic-rate" name="<?php echo esc_attr( $option ); ?>[rate_limit]" value="<?php echo esc_attr( (string) $settings['rate_limit'] ); ?>">
-										<p class="description"><?php esc_html_e( 'Abuse protection per visitor.', 'fsweb-ai-automated-contact' ); ?></p>
+										<div class="fsweb-aic-pro-lock">
+											<input type="text" class="regular-text" value="<?php echo esc_attr( $settings['agent_name'] ); ?>" disabled>
+											<a class="fsweb-aic-pro-lock__link" href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text"><?php esc_html_e( 'Available in the PRO version', 'fsweb-ai-automated-contact' ); ?></span></a>
+										</div>
+										<p class="description"><?php esc_html_e( 'Editable in the PRO version.', 'fsweb-ai-automated-contact' ); ?></p>
+									</td>
+								</tr>
+								<tr class="fsweb-aic-pro-row">
+									<th scope="row">
+										<?php esc_html_e( 'Privacy notice', 'fsweb-ai-automated-contact' ); ?>
+										<span class="fsweb-aic-pro-tag"><?php esc_html_e( 'PRO', 'fsweb-ai-automated-contact' ); ?></span>
+									</th>
+									<td>
+										<div class="fsweb-aic-pro-lock">
+											<textarea class="large-text" rows="2" disabled><?php echo esc_textarea( $settings['privacy_note'] ); ?></textarea>
+											<a class="fsweb-aic-pro-lock__link" href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text"><?php esc_html_e( 'Available in the PRO version', 'fsweb-ai-automated-contact' ); ?></span></a>
+										</div>
+										<p class="description"><?php esc_html_e( 'Editable in the PRO version.', 'fsweb-ai-automated-contact' ); ?></p>
 									</td>
 								</tr>
 							</table>
@@ -681,15 +555,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php esc_html_e( 'Cart', 'fsweb-ai-automated-contact' ); ?></th>
-									<td>
-										<label>
-											<input type="checkbox" name="<?php echo esc_attr( $option ); ?>[allow_add_to_cart]" value="yes" <?php checked( 'yes', $settings['allow_add_to_cart'] ); ?>>
-											<?php esc_html_e( 'Allow adding products to the cart', 'fsweb-ai-automated-contact' ); ?>
-										</label>
-									</td>
-								</tr>
-								<tr>
 									<th scope="row"><label for="fsweb-aic-limit"><?php esc_html_e( 'Products per search', 'fsweb-ai-automated-contact' ); ?></label></th>
 									<td><input type="number" min="1" max="10" id="fsweb-aic-limit" name="<?php echo esc_attr( $option ); ?>[product_limit]" value="<?php echo esc_attr( (string) $settings['product_limit'] ); ?>" class="small-text"></td>
 								</tr>
@@ -712,57 +577,44 @@ class Fsweb_Ai_Automated_Contact_Admin {
 										<select id="fsweb-aic-avatar" name="<?php echo esc_attr( $option ); ?>[avatar_type]">
 											<option value="chat" <?php selected( 'chat', $settings['avatar_type'] ); ?>><?php esc_html_e( 'Chat bubble', 'fsweb-ai-automated-contact' ); ?></option>
 											<option value="initials" <?php selected( 'initials', $settings['avatar_type'] ); ?>><?php esc_html_e( 'Initial letter', 'fsweb-ai-automated-contact' ); ?></option>
-											<option value="whatsapp" <?php selected( 'whatsapp', $settings['avatar_type'] ); ?>>WhatsApp</option>
-											<option value="telegram" <?php selected( 'telegram', $settings['avatar_type'] ); ?>>Telegram</option>
-											<option value="robot" <?php selected( 'robot', $settings['avatar_type'] ); ?>><?php esc_html_e( 'Robot', 'fsweb-ai-automated-contact' ); ?></option>
-											<option value="custom" <?php selected( 'custom', $settings['avatar_type'] ); ?>><?php esc_html_e( 'Custom image', 'fsweb-ai-automated-contact' ); ?></option>
 										</select>
 
-										<div class="fsweb-aic-avatar-custom" id="fsweb-aic-avatar-custom"<?php echo 'custom' === $settings['avatar_type'] ? '' : ' hidden'; ?>>
-											<input type="url" class="regular-text" id="fsweb-aic-avatar-image"
-												name="<?php echo esc_attr( $option ); ?>[avatar_image]"
-												value="<?php echo esc_attr( $settings['avatar_image'] ); ?>"
-												placeholder="https://...">
-											<button type="button" class="button" id="fsweb-aic-avatar-pick">
-												<span class="dashicons dashicons-format-image"></span>
-												<?php esc_html_e( 'Choose image', 'fsweb-ai-automated-contact' ); ?>
-											</button>
-											<button type="button" class="button" id="fsweb-aic-avatar-clear">
-												<span class="dashicons dashicons-no-alt"></span>
-												<?php esc_html_e( 'Clear', 'fsweb-ai-automated-contact' ); ?>
-											</button>
-										</div>
 										<p class="description"><?php esc_html_e( 'Shown on the floating button and in the chat header.', 'fsweb-ai-automated-contact' ); ?></p>
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php esc_html_e( 'Colours', 'fsweb-ai-automated-contact' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Colour', 'fsweb-ai-automated-contact' ); ?></th>
 									<td>
 										<div class="fsweb-aic-colors">
 											<label><span><?php esc_html_e( 'Primary', 'fsweb-ai-automated-contact' ); ?></span>
 												<input type="color" id="fsweb-aic-color-primary" name="<?php echo esc_attr( $option ); ?>[accent_color]" value="<?php echo esc_attr( $settings['accent_color'] ); ?>"></label>
-											<label><span><?php esc_html_e( 'Title &amp; icon', 'fsweb-ai-automated-contact' ); ?></span>
-												<input type="color" id="fsweb-aic-color-title" name="<?php echo esc_attr( $option ); ?>[color_title]" value="<?php echo esc_attr( $settings['color_title'] ); ?>"></label>
-											<label><span><?php esc_html_e( 'Chat background', 'fsweb-ai-automated-contact' ); ?></span>
-												<input type="color" id="fsweb-aic-color-bg" name="<?php echo esc_attr( $option ); ?>[chat_background]" value="<?php echo esc_attr( $settings['chat_background'] ); ?>"></label>
-											<label><span><?php esc_html_e( 'Chat text', 'fsweb-ai-automated-contact' ); ?></span>
-												<input type="color" id="fsweb-aic-color-text" name="<?php echo esc_attr( $option ); ?>[chat_text]" value="<?php echo esc_attr( $settings['chat_text'] ); ?>"></label>
-											<label><span><?php esc_html_e( 'Assistant bubble', 'fsweb-ai-automated-contact' ); ?></span>
-												<input type="color" id="fsweb-aic-color-bubble" name="<?php echo esc_attr( $option ); ?>[bubble_agent]" value="<?php echo esc_attr( $settings['bubble_agent'] ); ?>"></label>
+											<div class="fsweb-aic-pro-lock fsweb-aic-colors__pro">
+												<label><span><?php esc_html_e( 'Title & icon', 'fsweb-ai-automated-contact' ); ?></span>
+													<input type="color" value="<?php echo esc_attr( $settings['color_title'] ); ?>" disabled></label>
+												<label><span><?php esc_html_e( 'Chat background', 'fsweb-ai-automated-contact' ); ?></span>
+													<input type="color" value="<?php echo esc_attr( $settings['chat_background'] ); ?>" disabled></label>
+												<label><span><?php esc_html_e( 'Chat text', 'fsweb-ai-automated-contact' ); ?></span>
+													<input type="color" value="<?php echo esc_attr( $settings['chat_text'] ); ?>" disabled></label>
+												<label><span><?php esc_html_e( 'Assistant bubble', 'fsweb-ai-automated-contact' ); ?></span>
+													<input type="color" value="<?php echo esc_attr( $settings['bubble_agent'] ); ?>" disabled></label>
+												<a class="fsweb-aic-pro-lock__link" href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text"><?php esc_html_e( 'Available in the PRO version', 'fsweb-ai-automated-contact' ); ?></span></a>
+											</div>
 										</div>
+										<p class="description"><?php esc_html_e( 'The free edition ships one brand colour. The full palette is part of the PRO add-on.', 'fsweb-ai-automated-contact' ); ?> <span class="fsweb-aic-pro-tag"><?php esc_html_e( 'PRO', 'fsweb-ai-automated-contact' ); ?></span></p>
 										<div class="fsweb-aic-preview" id="fsweb-aic-preview">
 											<div class="fsweb-aic-preview__panel">
 												<div class="fsweb-aic-preview__header">
-													<span class="fsweb-aic-preview__avatar" id="fsweb-aic-preview-avatar"></span>
+													<span class="fsweb-aic-preview__avatar" id="fsweb-aic-preview-avatar"><?php echo wp_kses_post( Fsweb_Ai_Automated_Contact_Public::avatar_markup( $settings ) ); ?></span>
 													<span class="fsweb-aic-preview__name"><?php echo esc_html( $settings['agent_name'] ); ?></span>
 												</div>
 												<div class="fsweb-aic-preview__body" id="fsweb-aic-preview-body">
 													<span class="fsweb-aic-preview__bubble" id="fsweb-aic-preview-bubble"><?php esc_html_e( 'Hi! How can I help?', 'fsweb-ai-automated-contact' ); ?></span>
 												</div>
 											</div>
-											<span class="fsweb-aic-preview__ball" id="fsweb-aic-preview-ball"></span>
+											<span class="fsweb-aic-preview__ball" id="fsweb-aic-preview-ball"><?php echo wp_kses_post( $preview_icon ); ?></span>
 										</div>
 									</td>
+								</tr>
 								</tr>
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Position', 'fsweb-ai-automated-contact' ); ?></th>
@@ -770,28 +622,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 										<label><input type="radio" name="<?php echo esc_attr( $option ); ?>[position]" value="right" <?php checked( 'right', $settings['position'] ); ?>> <?php esc_html_e( 'Right', 'fsweb-ai-automated-contact' ); ?></label>
 										&nbsp;&nbsp;
 										<label><input type="radio" name="<?php echo esc_attr( $option ); ?>[position]" value="left" <?php checked( 'left', $settings['position'] ); ?>> <?php esc_html_e( 'Left', 'fsweb-ai-automated-contact' ); ?></label>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row"><?php esc_html_e( 'Auto open', 'fsweb-ai-automated-contact' ); ?></th>
-									<td>
-										<label>
-											<input type="checkbox" name="<?php echo esc_attr( $option ); ?>[auto_open]" value="yes" <?php checked( 'yes', $settings['auto_open'] ); ?>>
-											<?php esc_html_e( 'Open the chat automatically for new visitors', 'fsweb-ai-automated-contact' ); ?>
-										</label>
-										<p class="fsweb-aic-field">
-											<label for="fsweb-aic-auto-delay"><?php esc_html_e( 'Delay (seconds)', 'fsweb-ai-automated-contact' ); ?></label>
-											<input type="number" min="0" max="120" step="1" class="small-text" id="fsweb-aic-auto-delay"
-												name="<?php echo esc_attr( $option ); ?>[auto_open_delay]" value="<?php echo esc_attr( (string) $settings['auto_open_delay'] ); ?>">
-										</p>
-										<p class="description"><?php esc_html_e( 'Opens once per visit, after the delay, and only if the customer has not opened it yet.', 'fsweb-ai-automated-contact' ); ?></p>
-									</td>
-								</tr>
-								<tr>
-									<th scope="row"><label for="fsweb-aic-custom-css"><?php esc_html_e( 'Custom CSS', 'fsweb-ai-automated-contact' ); ?></label></th>
-									<td>
-										<textarea class="large-text code" rows="6" id="fsweb-aic-custom-css" name="<?php echo esc_attr( $option ); ?>[custom_css]" placeholder=".fsweb-aic-widget .fsweb-aic-panel { border-radius: 22px; }"><?php echo esc_textarea( $settings['custom_css'] ); ?></textarea>
-										<p class="description"><?php esc_html_e( 'Optional: extra styles for the widget, applied after the plugin CSS.', 'fsweb-ai-automated-contact' ); ?></p>
 									</td>
 								</tr>
 							</table>
@@ -811,152 +641,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	}
 
 	/**
-	 * Render the license management page.
-	 *
-	 * The UI lives here; activation/deactivation calls go to the FSWEB
-	 * license API through the license client.
-	 *
-	 * @since    1.0.0
-	 * @return void
-	 */
-	public function render_license_page() {
-		$license_key     = $this->license->get_key();
-		$license_status  = $this->license->get_status();
-		$license_expires = $this->license->get_expires();
-
-		// Always sync with the license server on page load so the status
-		// reflects reality — another site may have activated/deactivated
-		// the same license key since the last local check.
-		if ( ! empty( $license_key ) ) {
-			$synced = $this->license->sync();
-
-			if ( $synced ) {
-				$license_status  = $synced['status'];
-				$license_expires = $synced['expires'];
-			}
-		}
-
-		$is_active      = ( 'active' === $license_status );
-
-		// The UI prints this date as-is, so it leaves here already formatted
-		// in UTC — never as the raw ISO instant the API answers with.
-		$license_expires_display = $this->license->format_expires( $license_expires );
-
-		$has_expiration  = ( $is_active && '' !== $license_expires_display );
-		$expires_row_css = $has_expiration ? '' : 'display:none;';
-		$settings_url    = admin_url( 'admin.php?page=fsweb-ai-automated-contact' );
-		$tutorial_url    = admin_url( 'admin.php?page=fsweb-ai-automated-contact-tutorial' );
-		?>
-		<div class="wrap fsweb-aic-wrap fsweb-aic-license-wrap">
-			<hr class="wp-header-end">
-
-			<div class="fsweb-aic-hero fsweb-aic-hero--split">
-				<div>
-					<h1><?php esc_html_e( 'AI Contact — License', 'fsweb-ai-automated-contact' ); ?></h1>
-					<p><?php esc_html_e( 'Enter your key to receive automatic updates and support.', 'fsweb-ai-automated-contact' ); ?></p>
-				</div>
-				<div class="fsweb-aic-hero__actions">
-					<a class="button" href="<?php echo esc_url( $tutorial_url ); ?>">
-						<span class="dashicons dashicons-editor-help"></span>
-						<?php esc_html_e( 'Tutorial', 'fsweb-ai-automated-contact' ); ?>
-					</a>
-					<a class="button" href="<?php echo esc_url( $settings_url ); ?>">
-						<span class="dashicons dashicons-admin-settings"></span>
-						<?php esc_html_e( 'Go to settings', 'fsweb-ai-automated-contact' ); ?>
-					</a>
-				</div>
-			</div>
-
-			<div class="fsweb-aic-card">
-				<div class="fsweb-aic-card__header">
-					<h2>
-						<span class="dashicons dashicons-awards"></span>
-						<?php esc_html_e( 'License', 'fsweb-ai-automated-contact' ); ?>
-					</h2>
-				</div>
-				<div class="fsweb-aic-card__body">
-					<div class="fsweb-aic-grid">
-						<div class="fsweb-aic-field fsweb-aic-field--full">
-							<label for="fsweb-aic-license-key"><?php esc_html_e( 'License key', 'fsweb-ai-automated-contact' ); ?></label>
-							<input type="text" id="fsweb-aic-license-key" name="fsweb_aic_license_key" class="regular-text"
-								value="<?php echo esc_attr( $license_key ); ?>"
-								placeholder="<?php esc_attr_e( 'e.g. A7B9C2D4-E6F8G3H5-J7K9M2N4-P6Q8R3S5', 'fsweb-ai-automated-contact' ); ?>"
-								<?php echo $is_active ? 'readonly' : ''; ?>>
-							<p class="description"><?php esc_html_e( 'The key is bound to this domain and unlocks automatic updates and the virtual assistant.', 'fsweb-ai-automated-contact' ); ?></p>
-						</div>
-
-						<div class="fsweb-aic-field">
-							<label><?php esc_html_e( 'Status', 'fsweb-ai-automated-contact' ); ?></label>
-							<span id="fsweb-aic-license-status" class="fsweb-aic-status fsweb-aic-status--<?php echo esc_attr( $license_status ); ?>">
-								<?php
-								switch ( $license_status ) {
-									case 'active':
-										esc_html_e( 'Active', 'fsweb-ai-automated-contact' );
-										break;
-									case 'expired':
-										esc_html_e( 'Expired', 'fsweb-ai-automated-contact' );
-										break;
-									case 'invalid':
-										esc_html_e( 'Invalid', 'fsweb-ai-automated-contact' );
-										break;
-									case 'pending':
-										esc_html_e( 'Pending', 'fsweb-ai-automated-contact' );
-										break;
-									default:
-										esc_html_e( 'Inactive', 'fsweb-ai-automated-contact' );
-										break;
-								}
-								?>
-							</span>
-						</div>
-
-						<div class="fsweb-aic-field" id="fsweb-aic-expires-row" style="<?php echo esc_attr( $expires_row_css ); ?>">
-							<label><?php esc_html_e( 'Expires on', 'fsweb-ai-automated-contact' ); ?></label>
-							<span class="fsweb-aic-license-value" id="fsweb-aic-license-expires"><?php echo '' !== $license_expires_display ? esc_html( $license_expires_display ) : esc_html__( 'Lifetime', 'fsweb-ai-automated-contact' ); ?></span>
-						</div>
-					</div>
-
-					<div class="fsweb-aic-license-actions">
-						<button type="button" id="fsweb-aic-activate-license" class="button button-primary" style="<?php echo $is_active ? 'display:none;' : ''; ?>">
-							<span class="dashicons dashicons-yes-alt"></span>
-							<?php esc_html_e( 'Activate', 'fsweb-ai-automated-contact' ); ?>
-						</button>
-						<button type="button" id="fsweb-aic-deactivate-license" class="button button-secondary" style="<?php echo $is_active ? '' : 'display:none;'; ?>">
-							<span class="dashicons dashicons-dismiss"></span>
-							<?php esc_html_e( 'Deactivate', 'fsweb-ai-automated-contact' ); ?>
-						</button>
-					</div>
-
-					<div id="fsweb-aic-license-message" class="notice" style="display:none;"></div>
-				</div>
-			</div>
-
-			<div class="fsweb-aic-card">
-				<div class="fsweb-aic-card__header">
-					<h2>
-						<span class="dashicons dashicons-lightbulb"></span>
-						<?php esc_html_e( 'How it works', 'fsweb-ai-automated-contact' ); ?>
-					</h2>
-				</div>
-				<div class="fsweb-aic-card__body">
-					<ul class="fsweb-aic-list fsweb-aic-list--icons">
-						<li><span class="dashicons dashicons-clipboard"></span><?php esc_html_e( 'Paste the key you received after the purchase and click Activate.', 'fsweb-ai-automated-contact' ); ?></li>
-						<li><span class="dashicons dashicons-lock"></span><?php esc_html_e( 'The key is bound to this domain and unlocks automatic updates and the virtual assistant.', 'fsweb-ai-automated-contact' ); ?></li>
-						<li><span class="dashicons dashicons-update"></span><?php esc_html_e( 'The status is synced with the license server whenever you open this screen.', 'fsweb-ai-automated-contact' ); ?></li>
-						<li><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Use Deactivate to release the key and activate it on another site.', 'fsweb-ai-automated-contact' ); ?></li>
-					</ul>
-
-					<div class="fsweb-aic-hint">
-						<span class="dashicons dashicons-info-outline"></span>
-						<span><?php esc_html_e( 'While the license is active the assistant keeps running and updates arrive straight from the dashboard.', 'fsweb-ai-automated-contact' ); ?></span>
-					</div>
-				</div>
-			</div>
-		</div>
-		<?php
-	}
-
-	/**
 	 * Render the tutorial page.
 	 *
 	 * @since 1.0.0
@@ -964,7 +648,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	 */
 	public function render_tutorial_page() {
 		$settings_url = admin_url( 'admin.php?page=fsweb-ai-automated-contact' );
-		$license_url  = admin_url( 'admin.php?page=fsweb-ai-automated-contact-license' );
+		$pro_url      = FSWEB_AI_AUTOMATED_CONTACT_PRO_URL;
 		?>
 		<div class="wrap fsweb-aic-wrap">
 			<hr class="wp-header-end">
@@ -978,9 +662,9 @@ class Fsweb_Ai_Automated_Contact_Admin {
 						<span class="dashicons dashicons-admin-settings"></span>
 						<?php esc_html_e( 'Go to settings', 'fsweb-ai-automated-contact' ); ?>
 					</a>
-					<a class="button" href="<?php echo esc_url( $license_url ); ?>">
-						<span class="dashicons dashicons-awards"></span>
-						<?php esc_html_e( 'License', 'fsweb-ai-automated-contact' ); ?>
+					<a class="button" href="<?php echo esc_url( $pro_url ); ?>">
+						<span class="dashicons dashicons-star-filled"></span>
+						<?php esc_html_e( 'Go PRO', 'fsweb-ai-automated-contact' ); ?>
 					</a>
 				</div>
 			</div>
@@ -997,7 +681,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 						<li class="fsweb-aic-step">
 							<div class="fsweb-aic-step__content">
 								<h3><?php esc_html_e( 'Pick the AI', 'fsweb-ai-automated-contact' ); ?></h3>
-								<p><?php esc_html_e( 'Pick OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq or an OpenAI-compatible endpoint. Paste the API key of the chosen provider.', 'fsweb-ai-automated-contact' ); ?></p>
+								<p><?php esc_html_e( 'Pick OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq or an OpenAI-compatible endpoint. Paste the API key of the chosen provider. Keys stay in this site and are never exposed to visitors.', 'fsweb-ai-automated-contact' ); ?></p>
 							</div>
 						</li>
 						<li class="fsweb-aic-step">
@@ -1021,7 +705,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 						<li class="fsweb-aic-step">
 							<div class="fsweb-aic-step__content">
 								<h3><?php esc_html_e( 'Style the widget', 'fsweb-ai-automated-contact' ); ?></h3>
-								<p><?php esc_html_e( 'Choose the icon, the colours and whether the chat opens by itself. You can also fine-tune it with custom CSS.', 'fsweb-ai-automated-contact' ); ?></p>
+								<p><?php esc_html_e( 'Choose the icon, the colours and the side of the screen where the launcher sits.', 'fsweb-ai-automated-contact' ); ?></p>
 							</div>
 						</li>
 						<li class="fsweb-aic-step">
@@ -1078,42 +762,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 		}
 	}
 
-	/**
-	 * AJAX handler — activate a license key.
-	 *
-	 * @since    1.0.0
-	 * @return void
-	 */
-	public function ajax_activate_license() {
-		$this->guard_ajax();
-
-		$license_key = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
-		$result      = $this->license->activate( $license_key );
-
-		// The screen writes this value straight into the "Expires on" field,
-		// so it must leave here already formatted, never as a raw ISO string.
-		$result['expires'] = $this->license->format_expires( $result['expires'] );
-
-		if ( $result['success'] ) {
-			wp_send_json_success( $result );
-		}
-
-		wp_send_json_error( $result );
-	}
-
-	/**
-	 * AJAX handler — deactivate the stored license key.
-	 *
-	 * @since    1.0.0
-	 * @return void
-	 */
-	public function ajax_deactivate_license() {
-		$this->guard_ajax();
-
-		wp_send_json_success( $this->license->deactivate() );
-	}
-
-	/**
+			/**
 	 * Build the endpoint to test, preferring the values currently on screen.
 	 *
 	 * The test button works on unsaved input, so the merchant can try a key
@@ -1123,6 +772,8 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	 * @return array<string,string>|WP_Error
 	 */
 	private function endpoint_from_request() {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce verified in guard_ajax().
+		// phpcs:disable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- API keys are opaque and trimmed only.
 		$provider_id = isset( $_POST['provider'] ) ? sanitize_key( wp_unslash( $_POST['provider'] ) ) : '';
 		$config      = Fsweb_Ai_Automated_Contact_Settings::provider( $provider_id );
 
@@ -1155,16 +806,15 @@ class Fsweb_Ai_Automated_Contact_Admin {
 
 		$base_url = $config['base_url'];
 
-		if ( 'custom' === $provider_id ) {
-			$base_url = isset( $_POST['base_url'] ) ? esc_url_raw( trim( (string) wp_unslash( $_POST['base_url'] ) ) ) : '';
-		}
-
 		if ( ! $base_url ) {
 			return new WP_Error(
 				'fsweb_aic_missing_base_url',
-				__( 'Provide the base URL of the OpenAI-compatible endpoint.', 'fsweb-ai-automated-contact' )
+				__( 'This provider has no API endpoint configured.', 'fsweb-ai-automated-contact' )
 			);
 		}
+
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
+		// phpcs:enable WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		return array(
 			'provider' => $provider_id,

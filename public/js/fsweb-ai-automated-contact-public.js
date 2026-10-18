@@ -498,7 +498,7 @@
 		}
 	} );
 
-	// Auto open once per visit, when the merchant enabled it.
+	// Auto open once per visit. Only the PRO add-on enables it.
 	function maybeAutoOpen() {
 		if ( ! config.auto_open || greeted ) {
 			return;
@@ -528,6 +528,7 @@
 	}
 
 	history = readHistory();
+	maybeAutoOpen();
 	widget.hidden = false;
 	renderExisting();
 
@@ -540,6 +541,5 @@
 	if ( shouldReopen() ) {
 		openPanel();
 	} else {
-		maybeAutoOpen();
 	}
 } )();

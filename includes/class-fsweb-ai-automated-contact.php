@@ -17,8 +17,8 @@
  * The core plugin class.
  *
  * Wires internationalization, admin hooks, REST routes and the public chat
- * widget. The license is the single gate: when it is not active only the
- * license/onboarding screens are loaded.
+ * widget. The free version has no license gate: the basic feature set is
+ * always available. The PRO add-on extends it through the plugin's filters.
  *
  * @since      1.0.0
  * @package    Fsweb_Ai_Automated_Contact
@@ -56,15 +56,6 @@ class Fsweb_Ai_Automated_Contact {
 	protected $version;
 
 	/**
-	 * License client.
-	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      Fsweb_Ai_Automated_Contact_License
-	 */
-	protected $license;
-
-	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
@@ -85,10 +76,7 @@ class Fsweb_Ai_Automated_Contact {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_rest_hooks();
-
-		if ( fsweb_ai_automated_contact_license_is_active() ) {
-			$this->define_public_hooks();
-		}
+		$this->define_public_hooks();
 	}
 
 	/**
@@ -115,11 +103,6 @@ class Fsweb_Ai_Automated_Contact {
 		 * Settings schema and AI provider catalogue.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-settings.php';
-
-		/**
-		 * License client.
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-license.php';
 
 		/**
 		 * Provider-agnostic chat client.
@@ -152,8 +135,7 @@ class Fsweb_Ai_Automated_Contact {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-fsweb-ai-automated-contact-public.php';
 
-		$this->loader  = new Fsweb_Ai_Automated_Contact_Loader();
-		$this->license = new Fsweb_Ai_Automated_Contact_License();
+		$this->loader = new Fsweb_Ai_Automated_Contact_Loader();
 	}
 
 	/**
@@ -179,21 +161,14 @@ class Fsweb_Ai_Automated_Contact {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Fsweb_Ai_Automated_Contact_Admin( $this->get_plugin_name(), $this->get_version(), $this->license );
+		$plugin_admin = new Fsweb_Ai_Automated_Contact_Admin( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_admin_menu' );
+		$this->loader->add_action( 'admin_notices', $plugin_admin, 'maybe_woocommerce_notice' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_settings' );
-
-		// Onboarding redirect (first activation + inactive license).
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'maybe_redirect_to_onboarding' );
-		$this->loader->add_filter( 'admin_body_class', $plugin_admin, 'admin_body_class' );
-
-		// License management AJAX handlers.
-		$this->loader->add_action( 'wp_ajax_fsweb_aic_activate_license', $plugin_admin, 'ajax_activate_license' );
-		$this->loader->add_action( 'wp_ajax_fsweb_aic_deactivate_license', $plugin_admin, 'ajax_deactivate_license' );
 
 		// Provider connectivity test.
 		$this->loader->add_action( 'wp_ajax_fsweb_aic_test_provider', $plugin_admin, 'ajax_test_provider' );

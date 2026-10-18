@@ -23,13 +23,20 @@ $fsweb_aic_position = ( 'left' === $settings['position'] ) ? 'fsweb-aic-widget--
 $fsweb_aic_initial  = function_exists( 'mb_substr' ) ? mb_substr( $settings['agent_name'], 0, 1 ) : substr( $settings['agent_name'], 0, 1 );
 $fsweb_aic_avatar   = Fsweb_Ai_Automated_Contact_Public::avatar_markup( $settings );
 
-if ( 'custom' === $settings['avatar_type'] && ! empty( $settings['avatar_image'] ) ) {
-	$fsweb_aic_launcher_icon = '<img src="' . esc_url( $settings['avatar_image'] ) . '" alt="" loading="lazy">';
-} elseif ( 'initials' === $settings['avatar_type'] ) {
+if ( 'initials' === $settings['avatar_type'] ) {
 	$fsweb_aic_launcher_icon = '<span class="fsweb-aic-initial">' . esc_html( $fsweb_aic_initial ) . '</span>';
 } else {
 	$fsweb_aic_launcher_icon = Fsweb_Ai_Automated_Contact_Public::icon_svg( $settings['avatar_type'] );
 }
+
+/**
+ * Filter the icon shown on the floating launcher.
+ *
+ * @since 1.0.0
+ * @param string $fsweb_aic_launcher_icon Launcher icon HTML.
+ * @param array  $settings                Current settings.
+ */
+$fsweb_aic_launcher_icon = (string) apply_filters( 'fsweb_aic_launcher_icon', $fsweb_aic_launcher_icon, $settings );
 ?>
 <div class="fsweb-aic-widget <?php echo esc_attr( $fsweb_aic_position ); ?>" id="fsweb-aic-widget" hidden>
 	<button type="button" class="fsweb-aic-launcher" id="fsweb-aic-launcher" aria-expanded="false" aria-controls="fsweb-aic-panel">

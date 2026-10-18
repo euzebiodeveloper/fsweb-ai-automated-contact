@@ -409,6 +409,53 @@
 	padding: 2px;
 }
 
+/* PRO-only rows: visible, inert, and linked to the product page */
+.fsweb-aic-pro-tag {
+	display: inline-block;
+	margin-left: 6px;
+	padding: 1px 7px;
+	border-radius: 999px;
+	background: #d63638;
+	color: #fff;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.4px;
+	line-height: 1.7;
+	vertical-align: middle;
+}
+
+.fsweb-aic-pro-lock {
+	position: relative;
+	display: inline-block;
+	max-width: 100%;
+}
+
+.fsweb-aic-pro-lock > input,
+.fsweb-aic-pro-lock > textarea,
+.fsweb-aic-pro-lock > select,
+.fsweb-aic-pro-lock > .fsweb-aic-colors__pro {
+	opacity: 0.5;
+	filter: grayscale(0.45);
+	pointer-events: none;
+}
+
+.fsweb-aic-pro-lock__link {
+	position: absolute;
+	inset: 0;
+	border-radius: 6px;
+	text-decoration: none;
+}
+
+.fsweb-aic-pro-lock__link:focus-visible {
+	outline: 2px solid #d63638;
+	outline-offset: 2px;
+}
+
+.fsweb-aic-colors__pro {
+	position: relative;
+	display: contents;
+}
+
 /* Live preview of the widget */
 .fsweb-aic-preview {
 	position: relative;
@@ -471,13 +518,26 @@
 }
 
 .fsweb-aic-preview__ball {
-	display: block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	width: 44px;
 	height: 44px;
 	margin: 14px 0 0 auto;
 	border-radius: 50%;
 	background: var(--fsweb-aic-brand);
+	color: #fff;
 	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.fsweb-aic-preview__ball svg {
+	width: 22px;
+	height: 22px;
+}
+
+.fsweb-aic-preview__avatar svg {
+	width: 16px;
+	height: 16px;
 }
 
 /* ------------------------------------------------------------------ */

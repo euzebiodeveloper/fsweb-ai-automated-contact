@@ -20,22 +20,11 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 $fsweb_aic_options = array(
 	'fsweb_aic_settings',
-	'fsweb_aic_license_key',
-	'fsweb_aic_license_status',
-	'fsweb_aic_license_expires',
-	'fsweb_aic_onboarding_dismissed',
-	'fsweb_updates_fsweb-ai-automated-contact',
-	'fsweb_updates_fsweb-ai-automated-contact_readme',
-	'fsweb_updates_fsweb-ai-automated-contact_error',
-	'fsweb_updates_fsweb-ai-automated-contact_server_error',
 );
 
 foreach ( $fsweb_aic_options as $fsweb_aic_option ) {
 	delete_option( $fsweb_aic_option );
 }
-
-// Clear update-checker cron events.
-wp_clear_scheduled_hook( 'fsweb_check_updates_fsweb-ai-automated-contact' );
 
 // Remove rate-limit transients for the current site.
 global $wpdb;

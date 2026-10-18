@@ -118,21 +118,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 	 */
 	public static function default_context() {
 		return __(
-			"You are the virtual assistant for this store. Your job is to serve customers with politeness, clarity and focus, helping in three areas:\n" .
-			"1. Store questions — delivery times, shipping, payment methods, returns and exchanges, opening hours.\n" .
-			"2. Product search — find what the customer is looking for, show at most 5 options with name and price, and help them compare.\n" .
-			"3. Cart and checkout — confirm the item and quantity before adding to the cart, then share the checkout link.\n" .
-			"\n" .
-			"How to behave:\n" .
-			"- Greet, listen and answer exactly what was asked; do not change the subject.\n" .
-			"- Rely only on this store's information and the available tools; never invent a product, price, deadline or condition.\n" .
-			"- When you do not know something, say you will check and offer the store\'s human support.\n" .
-			"- Never ask for passwords, card details or documents; never ask for sensitive data at all.\n" .
-			"- Do not promise discounts, deadlines or conditions that are not written here.\n" .
-			"- Keep a friendly, professional tone, with no slang and no emoji overload.\n" .
-			"- Short, direct messages, like a WhatsApp conversation.\n" .
-			"\n" .
-			"Edit this text with your store's real information: delivery times and regions, shipping cost or free shipping, accepted payment methods, returns and exchange policy, opening hours and your human support channel.",
+			"You are the virtual assistant for this store. Your job is to serve customers with politeness, clarity and focus, helping in three areas:\n1. Store questions — delivery times, shipping, payment methods, returns and exchanges, opening hours.\n2. Product search — find what the customer is looking for, show at most 5 options with name and price, and help them compare.\n3. Cart and checkout — confirm the item and quantity before adding to the cart, then share the checkout link.\n\nHow to behave:\n- Greet, listen and answer exactly what was asked; do not change the subject.\n- Rely only on this store's information and the available tools; never invent a product, price, deadline or condition.\n- When you do not know something, say you will check and offer the store's human support.\n- Never ask for passwords, card details or documents; never ask for sensitive data at all.\n- Do not promise discounts, deadlines or conditions that are not written here.\n- Keep a friendly, professional tone, with no slang and no emoji overload.\n- Short, direct messages, like a WhatsApp conversation.\n\nEdit this text with your store's real information: delivery times and regions, shipping cost or free shipping, accepted payment methods, returns and exchange policy, opening hours and your human support channel.",
 			'fsweb-ai-automated-contact'
 		);
 	}
@@ -140,38 +126,36 @@ class Fsweb_Ai_Automated_Contact_Settings {
 	/**
 	 * Default settings.
 	 *
+	 * Only the free feature set lives here. The PRO add-on hooks
+	 * `fsweb_aic_settings_defaults` to add its own options.
+	 *
 	 * @since  1.0.0
 	 * @return array<string,mixed>
 	 */
 	public static function defaults() {
-		return array(
-			'enabled'           => 'no',
-			'agent_name'        => __( 'Virtual Assistant', 'fsweb-ai-automated-contact' ),
-			'welcome_message'   => __( 'Hi! I am the store\'s virtual assistant. I can answer questions and help you find a product. How can I help?', 'fsweb-ai-automated-contact' ),
-			'provider'          => 'openai',
-			'model'             => 'gpt-5.4-mini',
-			'temperature'       => 0.3,
-			'max_tokens'        => 800,
-			'context'           => self::default_context(),
-			'woo_enabled'       => 'yes',
-			'product_limit'     => 5,
-			'allow_add_to_cart' => 'yes',
-			'position'          => 'right',
-			'accent_color'      => '#6e8b54',
-			'color_title'       => '#ffffff',
-			'color_icon'        => '#ffffff',
-			'chat_background'   => '#f6f8f5',
-			'bubble_agent'      => '#e9ebee',
-			'chat_text'         => '#16202c',
-			'avatar_type'       => 'chat',
-			'avatar_image'      => '',
-			'auto_open'         => 'no',
-			'auto_open_delay'   => 6,
-			'custom_css'        => '',
-			'privacy_note'      => __( 'Automated AI support. Do not send sensitive data.', 'fsweb-ai-automated-contact' ),
-			'rate_limit'        => 30,
-			'debug_log'         => 'no',
-			'providers'         => array(
+		$defaults = array(
+			'enabled'         => 'no',
+			'agent_name'      => __( 'Virtual Assistant', 'fsweb-ai-automated-contact' ),
+			'welcome_message' => __( 'Hi! I am the store\'s virtual assistant. I can answer questions and help you find a product. How can I help?', 'fsweb-ai-automated-contact' ),
+			'provider'        => 'openai',
+			'model'           => 'gpt-5.4-mini',
+			'temperature'     => 0.3,
+			'max_tokens'      => 800,
+			'context'         => self::default_context(),
+			'woo_enabled'     => 'yes',
+			'product_limit'   => 5,
+			'position'        => 'right',
+			'accent_color'    => '#6e8b54',
+			'color_title'     => '#ffffff',
+			'color_icon'      => '#ffffff',
+			'chat_background' => '#f6f8f5',
+			'bubble_agent'    => '#e9ebee',
+			'chat_text'       => '#16202c',
+			'avatar_type'     => 'chat',
+			'privacy_note'    => __( 'Automated AI support. Do not send sensitive data.', 'fsweb-ai-automated-contact' ),
+			'rate_limit'      => 30,
+			'debug_log'       => 'no',
+			'providers'       => array(
 				'openai'    => array( 'api_key' => '' ),
 				'anthropic' => array( 'api_key' => '' ),
 				'deepseek'  => array( 'api_key' => '' ),
@@ -184,6 +168,14 @@ class Fsweb_Ai_Automated_Contact_Settings {
 				),
 			),
 		);
+
+		/**
+		 * Filter the default settings.
+		 *
+		 * @since 1.0.0
+		 * @param array $defaults Default settings.
+		 */
+		return (array) apply_filters( 'fsweb_aic_settings_defaults', $defaults );
 	}
 
 	/**
@@ -209,7 +201,14 @@ class Fsweb_Ai_Automated_Contact_Settings {
 		}
 		$settings['providers'] = $providers;
 
-		return $settings;
+		/**
+		 * Filter the full settings array after it is merged.
+		 *
+		 * @since 1.0.0
+		 * @param array $settings Merged settings.
+		 * @param array $stored   Raw stored settings.
+		 */
+		return (array) apply_filters( 'fsweb_aic_settings_all', $settings, $stored );
 	}
 
 	/**
@@ -243,13 +242,16 @@ class Fsweb_Ai_Automated_Contact_Settings {
 		$output   = $defaults;
 
 		// Booleans stored as yes/no.
-		foreach ( array( 'enabled', 'woo_enabled', 'allow_add_to_cart' ) as $flag ) {
+		foreach ( array( 'enabled', 'woo_enabled' ) as $flag ) {
 			$output[ $flag ] = ( isset( $input[ $flag ] ) && 'yes' === $input[ $flag ] ) ? 'yes' : 'no';
 		}
 
-		$output['agent_name']      = isset( $input['agent_name'] ) ? sanitize_text_field( $input['agent_name'] ) : $defaults['agent_name'];
-		$output['welcome_message'] = isset( $input['welcome_message'] ) ? sanitize_textarea_field( $input['welcome_message'] ) : $defaults['welcome_message'];
-		$output['privacy_note']    = isset( $input['privacy_note'] ) ? sanitize_textarea_field( $input['privacy_note'] ) : $defaults['privacy_note'];
+		// Identity, welcome text and privacy note are PRO features: the free
+		// edition always keeps the shipped values and the PRO add-on filters
+		// them at runtime through `fsweb_aic_settings_all`.
+		$output['agent_name']      = $defaults['agent_name'];
+		$output['welcome_message'] = $defaults['welcome_message'];
+		$output['privacy_note']    = $defaults['privacy_note'];
 
 		// The context is a free-form prompt: keep line breaks, strip tags.
 		$output['context'] = isset( $input['context'] ) ? wp_kses_post( trim( (string) $input['context'] ) ) : '';
@@ -275,32 +277,26 @@ class Fsweb_Ai_Automated_Contact_Settings {
 		$limit = isset( $input['product_limit'] ) ? absint( $input['product_limit'] ) : (int) $defaults['product_limit'];
 		$output['product_limit'] = max( 1, min( 10, $limit ) );
 
-		$rate_limit = isset( $input['rate_limit'] ) ? absint( $input['rate_limit'] ) : (int) $defaults['rate_limit'];
-		$output['rate_limit'] = max( 1, min( 300, $rate_limit ) );
+		// The free edition keeps a fixed limit; PRO filters this value.
+		$output['rate_limit'] = max( 1, min( 300, (int) apply_filters( 'fsweb_aic_rate_limit', (int) $defaults['rate_limit'] ) ) );
 
 		$output['debug_log'] = ( isset( $input['debug_log'] ) && 'yes' === $input['debug_log'] ) ? 'yes' : 'no';
 
 		$output['position'] = ( isset( $input['position'] ) && 'left' === $input['position'] ) ? 'left' : 'right';
 
-		foreach ( array( 'accent_color', 'color_title', 'color_icon', 'chat_background', 'chat_text', 'bubble_agent' ) as $color_key ) {
-			$color = isset( $input[ $color_key ] ) ? sanitize_hex_color( $input[ $color_key ] ) : '';
-			$output[ $color_key ] = $color ? $color : $defaults[ $color_key ];
+		// Only the primary colour is editable in the free edition.
+		$accent = isset( $input['accent_color'] ) ? sanitize_hex_color( $input['accent_color'] ) : '';
+		$output['accent_color'] = $accent ? $accent : $defaults['accent_color'];
+
+		// The rest of the palette is a PRO feature: keep the shipped values
+		// here and let the add-on filter them at runtime.
+		foreach ( array( 'color_title', 'color_icon', 'chat_background', 'chat_text', 'bubble_agent' ) as $color_key ) {
+			$output[ $color_key ] = $defaults[ $color_key ];
 		}
 
-		$avatar_types        = array( 'initials', 'chat', 'whatsapp', 'telegram', 'robot', 'custom' );
+		$avatar_types        = array( 'initials', 'chat' );
 		$avatar_type         = isset( $input['avatar_type'] ) ? sanitize_key( $input['avatar_type'] ) : $defaults['avatar_type'];
 		$output['avatar_type'] = in_array( $avatar_type, $avatar_types, true ) ? $avatar_type : $defaults['avatar_type'];
-
-		$avatar_image          = isset( $input['avatar_image'] ) ? esc_url_raw( trim( (string) $input['avatar_image'] ) ) : '';
-		$output['avatar_image'] = $avatar_image;
-
-		$output['auto_open']   = ( isset( $input['auto_open'] ) && 'yes' === $input['auto_open'] ) ? 'yes' : 'no';
-
-		$delay = isset( $input['auto_open_delay'] ) ? absint( $input['auto_open_delay'] ) : (int) $defaults['auto_open_delay'];
-		$output['auto_open_delay'] = max( 0, min( 120, $delay ) );
-
-		// Merchant CSS: strip tags so nothing executable survives.
-		$output['custom_css'] = isset( $input['custom_css'] ) ? trim( wp_strip_all_tags( (string) $input['custom_css'] ) ) : '';
 
 		// Provider credentials.
 		$output['providers'] = array();
@@ -323,7 +319,15 @@ class Fsweb_Ai_Automated_Contact_Settings {
 			$output['providers'][ $id ] = $entry;
 		}
 
-		return $output;
+		/**
+		 * Filter the sanitized settings.
+		 *
+		 * @since 1.0.0
+		 * @param array $output   Sanitized settings.
+		 * @param array $input    Raw input.
+		 * @param array $defaults Default settings.
+		 */
+		return (array) apply_filters( 'fsweb_aic_settings_sanitize', $output, $input, $defaults );
 	}
 
 	/**

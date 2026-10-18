@@ -13,6 +13,9 @@ AI-powered virtual assistant for WooCommerce: answers questions, finds products 
 
 == Description ==
 
+> <strong>AI Automated Contact PRO</strong><br />
+> This plugin is the free version. The PRO add-on adds the assistant name, an editable welcome message and privacy notice, a full colour palette, a custom message limit, a custom avatar image, temperature and token controls, auto-open with delay, custom CSS and automatic updates. The free version is complete on its own — the add-on only adds options. [Get the PRO version](https://flowsyncweb.com/produto/ai-automated-contact-pro/)
+
 AI Automated Contact puts an AI virtual assistant on your store. A visitor opens the chat, describes what they are looking for, and the assistant searches the catalogue, shows the products with price and availability, answers questions about delivery, payment and returns, and walks the customer to the cart and the checkout.
 
 You bring the AI: connect your own account with OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq, or any OpenAI-compatible endpoint. There is no shared key, no proxy and no markup — the requests are billed directly by the provider you choose.
@@ -117,6 +120,12 @@ Yes. It replies in the language the customer writes in. For best results, write 
 = Does it modify products or orders? =
 
 No. The assistant can only read the catalogue and add items to the cart. It cannot edit, delete or publish anything, and it cannot see orders, customers or payment data.
+
+= Is there a PRO version? =
+
+Yes. **AI Automated Contact PRO** is a separate add-on that expands the assistant with the name, welcome message, privacy notice, the full colour palette, a custom message limit (1 to 300), an avatar from your media library, temperature and token limits, auto-open with delay, custom CSS and automatic updates. Details and purchase: https://flowsyncweb.com/produto/ai-automated-contact-pro/
+
+It is an add-on, not a locked feature: the free version is complete, has no trial period and never stops working. A license key is entered on the **AI Contact → PRO license** screen, which is why you can buy and activate before installing the add-on.
 
 = What happens when I uninstall the plugin? =
 

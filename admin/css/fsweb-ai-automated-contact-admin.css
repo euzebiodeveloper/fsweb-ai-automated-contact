@@ -86,6 +86,25 @@
 	flex-wrap: wrap;
 }
 
+/* FSWEB mark at the front of the hero. */
+.fsweb-aic-hero__brand {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	min-width: 0;
+}
+
+.fsweb-aic-hero__logo {
+	flex: 0 0 auto;
+	width: 46px;
+	height: 46px;
+	padding: 5px;
+	border-radius: 12px;
+	background: #fff;
+	object-fit: contain;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
 .fsweb-aic-hero__actions {
 	display: flex;
 	align-items: center;

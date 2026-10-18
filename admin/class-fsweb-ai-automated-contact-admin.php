@@ -145,7 +145,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	 * @param    string $hook_suffix Current admin page hook.
 	 */
 	public function enqueue_styles( $hook_suffix ) {
-		if ( ! $this->is_plugin_screen( $hook_suffix ) ) {
+		if ( ! $this->is_plugin_style_screen( $hook_suffix ) ) {
 			return;
 		}
 
@@ -306,6 +306,35 @@ class Fsweb_Ai_Automated_Contact_Admin {
 		return isset( $_GET['page'] ) && 'fsweb-ai-automated-contact-tutorial' === sanitize_key( wp_unslash( $_GET['page'] ) );
 	}
 
+	/**
+	 * Whether the shared admin stylesheet belongs on this screen.
+	 *
+	 * The license screen and the PRO add-on live under the same menu and use
+	 * the same hero, cards and form controls.
+	 *
+	 * @since  1.0.0
+	 * @param  string $hook_suffix Current admin page hook.
+	 * @return bool
+	 */
+	private function is_plugin_style_screen( $hook_suffix ) {
+		return $this->is_plugin_screen( $hook_suffix )
+			|| false !== strpos( (string) $hook_suffix, 'fsweb-ai-automated-contact' );
+	}
+
+	/**
+	 * Print the FSWEB mark shown at the front of every hero header.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	private function hero_logo() {
+		printf(
+			'<img class="fsweb-aic-hero__logo" src="%s" alt="%s" width="46" height="46" decoding="async" />',
+			esc_url( FSWEB_AI_AUTOMATED_CONTACT_URL . 'includes/assets/images/flowsyncweblogo.webp' ),
+			esc_attr__( 'Flow Sync Web', 'fsweb-ai-automated-contact' )
+		);
+	}
+
 	// ------------------------------------------------------------------//
 	//  Settings API
 	// ------------------------------------------------------------------//
@@ -363,9 +392,12 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			<hr class="wp-header-end">
 
 			<div class="fsweb-aic-hero fsweb-aic-hero--split">
-				<div>
-					<h1><?php esc_html_e( 'AI Contact', 'fsweb-ai-automated-contact' ); ?></h1>
-					<p><?php esc_html_e( 'Configure the virtual assistant, pick the AI, write the store context and tune the widget.', 'fsweb-ai-automated-contact' ); ?></p>
+				<div class="fsweb-aic-hero__brand">
+					<?php $this->hero_logo(); ?>
+					<div>
+						<h1><?php esc_html_e( 'AI Contact', 'fsweb-ai-automated-contact' ); ?></h1>
+						<p><?php esc_html_e( 'Configure the virtual assistant, pick the AI, write the store context and tune the widget.', 'fsweb-ai-automated-contact' ); ?></p>
+					</div>
 				</div>
 				<div class="fsweb-aic-hero__actions">
 					<a class="button" href="<?php echo esc_url( $tutorial_url ); ?>">
@@ -800,9 +832,12 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			<hr class="wp-header-end">
 
 			<div class="fsweb-aic-hero fsweb-aic-hero--split">
-				<div>
-					<h1><?php esc_html_e( 'PRO license', 'fsweb-ai-automated-contact' ); ?></h1>
-					<p><?php esc_html_e( 'Activate the key you received with the PRO add-on. The extra fields on the AI Contact screen unlock only with an active license and the add-on running.', 'fsweb-ai-automated-contact' ); ?></p>
+				<div class="fsweb-aic-hero__brand">
+					<?php $this->hero_logo(); ?>
+					<div>
+						<h1><?php esc_html_e( 'PRO license', 'fsweb-ai-automated-contact' ); ?></h1>
+						<p><?php esc_html_e( 'Activate the key you received with the PRO add-on. The extra fields on the AI Contact screen unlock only with an active license and the add-on running.', 'fsweb-ai-automated-contact' ); ?></p>
+					</div>
 				</div>
 				<div class="fsweb-aic-hero__actions">
 					<a class="button" href="<?php echo esc_url( $settings ); ?>">
@@ -961,9 +996,12 @@ class Fsweb_Ai_Automated_Contact_Admin {
 		<div class="wrap fsweb-aic-wrap">
 			<hr class="wp-header-end">
 			<div class="fsweb-aic-hero fsweb-aic-hero--split">
-				<div>
-					<h1><?php esc_html_e( 'AI Contact — Tutorial', 'fsweb-ai-automated-contact' ); ?></h1>
-					<p><?php esc_html_e( 'Your virtual assistant is live in five steps.', 'fsweb-ai-automated-contact' ); ?></p>
+				<div class="fsweb-aic-hero__brand">
+					<?php $this->hero_logo(); ?>
+					<div>
+						<h1><?php esc_html_e( 'AI Contact — Tutorial', 'fsweb-ai-automated-contact' ); ?></h1>
+						<p><?php esc_html_e( 'Your virtual assistant is live in five steps.', 'fsweb-ai-automated-contact' ); ?></p>
+					</div>
 				</div>
 				<div class="fsweb-aic-hero__actions">
 					<a class="button" href="<?php echo esc_url( $settings_url ); ?>">
@@ -1087,9 +1125,12 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			<hr class="wp-header-end">
 
 			<div class="fsweb-aic-hero fsweb-aic-hero--split">
-				<div>
-					<h1><?php esc_html_e( 'Conversations', 'fsweb-ai-automated-contact' ); ?></h1>
-					<p><?php esc_html_e( 'Every conversation handled by the assistant, with token usage and the estimated amount spent. Conversations are stored on this site; delete the ones you no longer need.', 'fsweb-ai-automated-contact' ); ?></p>
+				<div class="fsweb-aic-hero__brand">
+					<?php $this->hero_logo(); ?>
+					<div>
+						<h1><?php esc_html_e( 'Conversations', 'fsweb-ai-automated-contact' ); ?></h1>
+						<p><?php esc_html_e( 'Every conversation handled by the assistant, with token usage and the estimated amount spent. Conversations are stored on this site; delete the ones you no longer need.', 'fsweb-ai-automated-contact' ); ?></p>
+					</div>
 				</div>
 				<div class="fsweb-aic-hero__actions">
 					<a class="button" href="<?php echo esc_url( $settings_url ); ?>">
@@ -1267,9 +1308,12 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			<hr class="wp-header-end">
 
 			<div class="fsweb-aic-hero fsweb-aic-hero--split">
-				<div>
-					<h1><?php esc_html_e( 'Conversation', 'fsweb-ai-automated-contact' ); ?></h1>
-					<p><code><?php echo esc_html( $conversation->conversation_key ); ?></code></p>
+				<div class="fsweb-aic-hero__brand">
+					<?php $this->hero_logo(); ?>
+					<div>
+						<h1><?php esc_html_e( 'Conversation', 'fsweb-ai-automated-contact' ); ?></h1>
+						<p><code><?php echo esc_html( $conversation->conversation_key ); ?></code></p>
+					</div>
 				</div>
 				<div class="fsweb-aic-hero__actions">
 					<a class="button" href="<?php echo esc_url( $list_url ); ?>">

@@ -545,10 +545,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 									</td>
 								</tr>
 								<tr>
-									<th scope="row">
-									<?php esc_html_e( 'Colour', 'fsweb-ai-automated-contact' ); ?>
-									<span class="fsweb-aic-pro-tag"><?php esc_html_e( 'PRO', 'fsweb-ai-automated-contact' ); ?></span>
-								</th>
+									<th scope="row"><?php esc_html_e( 'Colour', 'fsweb-ai-automated-contact' ); ?></th>
 									<td>
 										<div class="fsweb-aic-colors">
 											<label><span><?php esc_html_e( 'Primary', 'fsweb-ai-automated-contact' ); ?></span>

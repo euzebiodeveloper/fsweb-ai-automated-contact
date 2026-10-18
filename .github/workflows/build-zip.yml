@@ -1,0 +1,126 @@
+name: Build Plugin ZIP on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  build-zip:
+    # Só executa quando o PR for mergeado (não apenas fechado)
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create plugin ZIP
+        run: |
+          PLUGIN_SLUG="fsweb-ai-automated-contact"
+          ZIP_NAME="${PLUGIN_SLUG}.zip"
+          BUILD_DIR="/tmp/build/${PLUGIN_SLUG}"
+
+          # Cria a estrutura de diretórios que o WordPress espera:
+          #   fsweb-ai-automated-contact.zip
+          #   └── fsweb-ai-automated-contact/
+          #       ├── fsweb-ai-automated-contact.php
+          #       ├── readme.txt
+          #       └── ...
+          mkdir -p "${BUILD_DIR}"
+
+          # Copia os arquivos para dentro da pasta do plugin
+          rsync -a ./ "${BUILD_DIR}/" \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.gitignore' \
+            --exclude='.gitattributes' \
+            --exclude='.editorconfig' \
+            --exclude='.DS_Store' \
+            --exclude='Thumbs.db' \
+            --exclude='CHANGELOG.md' \
+            --exclude='reasonix.toml' \
+            --exclude='.reasonix/' \
+            --exclude='AGENTS.md' \
+            --exclude='ROADMAP.md' \
+            --exclude='*.zip' \
+            --exclude='node_modules/' \
+            --exclude='.vscode/' \
+            --exclude='.idea/' \
+            --exclude='languages/*.po' \
+            --exclude='languages/*.mo'
+
+          # Gera o ZIP a partir do pai do diretório
+          cd /tmp/build
+          zip -r "${GITHUB_WORKSPACE}/${ZIP_NAME}" "${PLUGIN_SLUG}"
+
+          echo "ZIP criado: ${ZIP_NAME}"
+          echo "ZIP_SIZE=$(stat -c%s ${GITHUB_WORKSPACE}/${ZIP_NAME})" >> $GITHUB_ENV
+          ls -lh "${GITHUB_WORKSPACE}/${ZIP_NAME}"
+
+      - name: Upload ZIP as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: fsweb-ai-automated-contact
+          path: fsweb-ai-automated-contact.zip
+          retention-days: 30
+
+      - name: Extract plugin version
+        id: version
+        run: |
+          VERSION=$(grep -oP 'Version:\s*\K[0-9]+\.[0-9]+\.[0-9]+' fsweb-ai-automated-contact.php | head -1)
+          echo "VERSION=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Versão detectada: ${VERSION}"
+
+      - name: Extract changelog
+        id: changelog
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          if [ -f CHANGELOG.md ]; then
+            CHANGELOG="$(awk -v v="${VERSION}" '
+              index($0, "# " v " ") == 1 { print "###" substr($0, 2); found=1; next }
+              found && index($0, "# ") == 1 { exit }
+              found { print }
+            ' CHANGELOG.md)"
+          else
+            CHANGELOG=""
+          fi
+          if [ -z "${CHANGELOG}" ]; then
+            CHANGELOG="- No changelog entry found for v${VERSION}."
+          fi
+          {
+            echo "CHANGELOG<<EOF"
+            echo "${CHANGELOG}"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create Release
+        if: github.event.pull_request.base.ref == 'main' || github.event.pull_request.base.ref == 'master'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.VERSION }}
+          name: v${{ steps.version.outputs.VERSION }}
+          body: |
+            # 🤖 AI Automated Contact v${{ steps.version.outputs.VERSION }}
+
+            Atendente virtual com IA para WooCommerce: consulta o catálogo, monta o carrinho e leva o cliente ao checkout.
+
+            ## ✨ Features
+
+            - 🤖 **Multi-IA** — OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq e endpoints compatíveis com OpenAI
+            - 🛒 **WooCommerce** — busca de produtos, detalhes, carrinho e link de checkout
+            - 🎨 **Widget próprio** — chat flutuante com aparência configurável
+            - 🔑 **Licença e atualização automática** — updates direto do servidor
+
+            ## 🔖 Changelog
+
+            ${{ steps.changelog.outputs.CHANGELOG }}
+
+            ---
+
+            Build gerado automaticamente a partir do PR #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}
+            **Commit:** ${{ github.event.pull_request.merge_commit_sha }}
+          files: fsweb-ai-automated-contact.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

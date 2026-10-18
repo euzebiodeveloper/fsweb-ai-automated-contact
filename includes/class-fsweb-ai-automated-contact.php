@@ -105,6 +105,11 @@ class Fsweb_Ai_Automated_Contact {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-settings.php';
 
 		/**
+		 * License client for the PRO add-on (the screen lives in this plugin).
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-license.php';
+
+		/**
 		 * Provider-agnostic chat client.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-ai-client.php';
@@ -172,6 +177,9 @@ class Fsweb_Ai_Automated_Contact {
 
 		// Provider connectivity test.
 		$this->loader->add_action( 'wp_ajax_fsweb_aic_test_provider', $plugin_admin, 'ajax_test_provider' );
+
+		// License screen actions (activate, deactivate, recheck).
+		$this->loader->add_action( 'admin_post_fsweb_aic_license', $plugin_admin, 'handle_license_action' );
 	}
 
 	/**

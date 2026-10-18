@@ -156,7 +156,7 @@
 		}
 	} );
 
-	// Live preview of the widget colours and icon.
+	// Live preview of the widget: colours, icon, identity and position.
 	function syncPreview() {
 		var $preview = $( '#fsweb-aic-preview' );
 
@@ -165,25 +165,67 @@
 		}
 
 		var primary = $( '#fsweb-aic-color-primary' ).val() || '#6e8b54';
-		var title = $( '#fsweb-aic-color-title' ).val() || '#ffffff';
-		var background = $( '#fsweb-aic-color-bg' ).val() || '#f6f8fc';
-		var text = $( '#fsweb-aic-color-text' ).val() || '#16202c';
-		var bubble = $( '#fsweb-aic-color-bubble' ).val() || '#ffffff';
+		var title = $( '#fsweb-aic-pro-color-title' ).val() || '#ffffff';
+		var background = $( '#fsweb-aic-pro-color-bg' ).val() || '#f6f8fc';
+		var text = $( '#fsweb-aic-pro-color-text' ).val() || '#16202c';
+		var bubble = $( '#fsweb-aic-pro-color-bubble' ).val() || '#ffffff';
 		var type = $( '#fsweb-aic-avatar' ).val();
+		var name = $.trim( $( '#fsweb-aic-pro-name' ).val() || '' );
+		var welcome = $.trim( $( '#fsweb-aic-pro-welcome' ).val() || '' );
+		var image = $.trim( $( '#fsweb-aic-pro-avatar' ).val() || '' );
 
+		$preview.css( '--fsweb-aic-preview-primary', primary );
 		$preview.find( '.fsweb-aic-preview__header' ).css( { background: primary, color: title } );
 		$preview.find( '.fsweb-aic-preview__body' ).css( 'background', background );
-		$preview.find( '.fsweb-aic-preview__bubble' ).css( { color: text, background: bubble } );
-		$preview.find( '.fsweb-aic-preview__ball' ).css( 'background', primary );
+		$preview.find( '.fsweb-aic-preview__bubble:not(.fsweb-aic-preview__bubble--user)' ).css( { color: text, background: bubble } );
+		$preview.find( '.fsweb-aic-preview__footer' ).css( 'background', bubble );
 
-		var icons = config.avatar_icons || {};
-		var icon = icons[ type ] || icons.chat || '';
+		if ( name ) {
+			$preview.find( '.fsweb-aic-preview__name' ).text( name );
+		}
 
-		$preview.find( '.fsweb-aic-preview__avatar' ).html( icon );
-		$preview.find( '.fsweb-aic-preview__ball' ).html( icon );
+		if ( welcome ) {
+			$( '#fsweb-aic-preview-bubble' ).text( welcome );
+		}
+
+		var $avatar = $preview.find( '.fsweb-aic-preview__avatar' );
+		var $ball = $preview.find( '.fsweb-aic-preview__ball' );
+
+		if ( image ) {
+			$avatar.empty().append( $( '<img>' ).attr( 'src', image ).attr( 'alt', '' ) );
+			$ball.empty().append( $( '<img>' ).attr( 'src', image ).attr( 'alt', '' ) );
+		} else {
+			var icons = config.avatar_icons || {};
+			var icon = icons[ type ] || icons.chat || '';
+			$avatar.html( icon );
+			$ball.html( icon );
+		}
+
+		var position = $( 'input[name$="[position]"]:checked' ).val() || 'right';
+		$( '#fsweb-aic-preview-stage' ).toggleClass( 'is-left', 'left' === position );
 	}
 
-	$( document ).on( 'input change', '#fsweb-aic-avatar, #fsweb-aic-color-primary, #fsweb-aic-color-title, #fsweb-aic-color-bg, #fsweb-aic-color-text, #fsweb-aic-color-bubble', syncPreview );
+	$( document ).on( 'input change', '#fsweb-aic-avatar, #fsweb-aic-color-primary, #fsweb-aic-pro-color-title, #fsweb-aic-pro-color-bg, #fsweb-aic-pro-color-text, #fsweb-aic-pro-color-bubble, #fsweb-aic-pro-name, #fsweb-aic-pro-welcome, #fsweb-aic-pro-avatar, input[name$="[position]"]', syncPreview );
+
+	function closePreview() {
+		$( '#fsweb-aic-preview-modal' ).prop( 'hidden', true );
+		$( 'body' ).removeClass( 'fsweb-aic-preview-is-open' );
+	}
+
+	$( document ).on( 'click', '#fsweb-aic-preview-open', function () {
+		syncPreview();
+		$( '#fsweb-aic-preview-modal' ).prop( 'hidden', false );
+		$( 'body' ).addClass( 'fsweb-aic-preview-is-open' );
+		$( '#fsweb-aic-preview-modal .fsweb-aic-preview-modal__close' ).trigger( 'focus' );
+	} );
+
+	$( document ).on( 'click', '[data-fsweb-aic-close]', closePreview );
+
+	$( document ).on( 'keydown', function ( event ) {
+		if ( 'Escape' === event.key || 27 === event.keyCode ) {
+			closePreview();
+		}
+	} );
 
 	syncPreview();
 } )( jQuery );

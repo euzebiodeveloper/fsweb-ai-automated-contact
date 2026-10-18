@@ -28,7 +28,7 @@ The plugin includes a complete, working feature set:
 
 The assistant never changes, deletes or publishes anything on the site. It only reads the catalogue, adds items to the cart and answers questions.
 
-Advanced options are available in the separate **AI Automated Contact PRO** add-on, installed alongside this plugin: assistant name, privacy notice, full colour palette, custom message limit, custom avatar image, editable welcome message, auto-open with delay, custom CSS, license activation and automatic updates. The free version does not contain premium code; it keeps working on its own.
+The license screen for the add-on lives in this plugin (**AI Contact → PRO license**), so the key can be activated before the add-on is installed. Advanced options are available in the separate **AI Automated Contact PRO** add-on, installed alongside this plugin: assistant name, privacy notice, full colour palette, custom message limit, custom avatar image, editable welcome message, auto-open with delay, custom CSS, license activation and automatic updates. The free version does not contain premium code; it keeps working on its own.
 
 == Installation ==
 

@@ -820,7 +820,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 		$status     = $this->license->get_status();
 		$expires    = $this->license->format_expires();
 		$pro_active = $this->is_pro_active();
-		$pro_url    = FSWEB_AI_AUTOMATED_CONTACT_PRO_URL;
 		$settings   = admin_url( 'admin.php?page=fsweb-ai-automated-contact' );
 		$notice     = get_transient( 'fsweb_aic_license_notice_' . get_current_user_id() );
 
@@ -923,25 +922,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 				</div>
 			</div>
 
-			<?php if ( '' === $key ) : ?>
-			<div class="fsweb-aic-card fsweb-aic-card--pro">
-				<div class="fsweb-aic-card__body">
-					<div class="fsweb-aic-pro-card">
-						<span class="fsweb-aic-pro-card__icon dashicons dashicons-star-filled"></span>
-						<div class="fsweb-aic-pro-card__text">
-							<h2><?php esc_html_e( 'No license yet?', 'fsweb-ai-automated-contact' ); ?></h2>
-							<p><?php esc_html_e( 'The PRO add-on adds the custom message limit, the full colour palette, the assistant identity, the avatar image, auto-open and custom CSS.', 'fsweb-ai-automated-contact' ); ?></p>
-							<p>
-								<a class="button button-primary" href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener noreferrer">
-									<span class="dashicons dashicons-external"></span>
-									<?php esc_html_e( 'See the PRO version', 'fsweb-ai-automated-contact' ); ?>
-								</a>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<?php endif; ?>
 		</div>
 		<?php
 	}

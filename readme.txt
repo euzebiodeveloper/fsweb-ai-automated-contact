@@ -23,12 +23,12 @@ The plugin includes a complete, working feature set:
 * **Product details** including variations, attributes and stock.
 * **Add to cart** after the customer confirms, with the checkout hand-off inside the chat.
 * **Store questions** — delivery, shipping, payment, returns and opening hours, using the context you write.
-* **Appearance** — assistant name, chat icon, colours and widget position.
+* **Appearance** — chat icon, one brand colour and the launcher position.
 * **Rate limiting** — a fixed limit of 30 messages per visitor every 10 minutes.
 
 The assistant never changes, deletes or publishes anything on the site. It only reads the catalogue, adds items to the cart and answers questions.
 
-Advanced options are available in the separate **AI Automated Contact PRO** add-on, installed alongside this plugin: custom message limit, custom avatar image, editable welcome message, auto-open with delay, custom CSS, license activation and automatic updates. The free version does not contain premium code; it keeps working on its own.
+Advanced options are available in the separate **AI Automated Contact PRO** add-on, installed alongside this plugin: assistant name, privacy notice, full colour palette, custom message limit, custom avatar image, editable welcome message, auto-open with delay, custom CSS, license activation and automatic updates. The free version does not contain premium code; it keeps working on its own.
 
 == Installation ==
 
@@ -94,7 +94,7 @@ The plugin itself does not send data to the plugin author.
 * Chat assistant with OpenAI, Anthropic, DeepSeek, xAI, Groq and OpenAI-compatible endpoints.
 * Catalogue search, product details, add to cart and checkout hand-off.
 * Store questions answered from the merchant's context.
-* Appearance: assistant name, icon, colours and position.
+* Appearance: chat icon, one brand colour and launcher position.
 * Fixed rate limit of 30 messages per visitor every 10 minutes.
 
 == Upgrade Notice ==

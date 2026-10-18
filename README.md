@@ -27,12 +27,13 @@ The free edition is fully functional with the basic feature set. Advanced featur
 - 🔎 **Catalogue aware** — searches products in real time, with price, availability, images and variations
 - 🛒 **Builds the cart** — confirms the item with the customer, adds it to the cart and hands over the checkout
 - 💬 **Store questions** — delivery, shipping, payment and returns, answered from the context you write
-- 🎨 **Configurable widget** — name, icon, colours and position
+- 🎨 **Configurable widget** — icon, one brand colour and position
 - 🛡️ **Rate limiting** — 30 messages per visitor every 10 minutes
 - 🔌 **Extensible** — filters for providers, settings and tools, used by the PRO add-on
 
 ### PRO add-on (separate plugin)
 
+- Assistant name, privacy notice and the full colour palette
 - Custom message limit per visitor
 - Custom avatar image and editable welcome message
 - Auto-open with delay and custom CSS
@@ -54,7 +55,7 @@ The assistant also answers store questions (delivery times, shipping, payment me
 2. Paste the API key and choose the model. The list is pre-filled per provider, and you can type any specific model.
 3. Write the **store context**: delivery times, shipping, payment methods, returns and tone of voice. This is what the assistant follows.
 4. Enable the catalogue and the cart so the assistant can search products, list variations and add items.
-5. Style the widget: icon, colours, auto open and custom CSS.
+5. Style the widget: icon, brand colour and position.
 6. Tick **Show the chat on the site** and save. Use the connection test to validate your key first.
 
 ---

@@ -372,32 +372,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 										<p class="description"><?php esc_html_e( 'The entries show up in WooCommerce → Status → Logs, under the source "fsweb-ai-automated-contact". Leave it off on a live store.', 'fsweb-ai-automated-contact' ); ?></p>
 									</td>
 								</tr>
-								<tr class="fsweb-aic-pro-row">
-									<th scope="row">
-										<?php esc_html_e( 'Assistant name', 'fsweb-ai-automated-contact' ); ?>
-										<span class="fsweb-aic-pro-tag"><?php esc_html_e( 'PRO', 'fsweb-ai-automated-contact' ); ?></span>
-									</th>
-									<td>
-										<div class="fsweb-aic-pro-lock">
-											<input type="text" class="regular-text" value="<?php echo esc_attr( $settings['agent_name'] ); ?>" disabled>
-											<a class="fsweb-aic-pro-lock__link" href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text"><?php esc_html_e( 'Available in the PRO version', 'fsweb-ai-automated-contact' ); ?></span></a>
-										</div>
-										<p class="description"><?php esc_html_e( 'Editable in the PRO version.', 'fsweb-ai-automated-contact' ); ?></p>
-									</td>
-								</tr>
-								<tr class="fsweb-aic-pro-row">
-									<th scope="row">
-										<?php esc_html_e( 'Privacy notice', 'fsweb-ai-automated-contact' ); ?>
-										<span class="fsweb-aic-pro-tag"><?php esc_html_e( 'PRO', 'fsweb-ai-automated-contact' ); ?></span>
-									</th>
-									<td>
-										<div class="fsweb-aic-pro-lock">
-											<textarea class="large-text" rows="2" disabled><?php echo esc_textarea( $settings['privacy_note'] ); ?></textarea>
-											<a class="fsweb-aic-pro-lock__link" href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text"><?php esc_html_e( 'Available in the PRO version', 'fsweb-ai-automated-contact' ); ?></span></a>
-										</div>
-										<p class="description"><?php esc_html_e( 'Editable in the PRO version.', 'fsweb-ai-automated-contact' ); ?></p>
-									</td>
-								</tr>
 							</table>
 						</div>
 					</div>
@@ -583,24 +557,16 @@ class Fsweb_Ai_Automated_Contact_Admin {
 									</td>
 								</tr>
 								<tr>
-									<th scope="row"><?php esc_html_e( 'Colour', 'fsweb-ai-automated-contact' ); ?></th>
+									<th scope="row">
+									<?php esc_html_e( 'Colour', 'fsweb-ai-automated-contact' ); ?>
+									<span class="fsweb-aic-pro-tag"><?php esc_html_e( 'PRO', 'fsweb-ai-automated-contact' ); ?></span>
+								</th>
 									<td>
 										<div class="fsweb-aic-colors">
 											<label><span><?php esc_html_e( 'Primary', 'fsweb-ai-automated-contact' ); ?></span>
 												<input type="color" id="fsweb-aic-color-primary" name="<?php echo esc_attr( $option ); ?>[accent_color]" value="<?php echo esc_attr( $settings['accent_color'] ); ?>"></label>
-											<div class="fsweb-aic-pro-lock fsweb-aic-colors__pro">
-												<label><span><?php esc_html_e( 'Title & icon', 'fsweb-ai-automated-contact' ); ?></span>
-													<input type="color" value="<?php echo esc_attr( $settings['color_title'] ); ?>" disabled></label>
-												<label><span><?php esc_html_e( 'Chat background', 'fsweb-ai-automated-contact' ); ?></span>
-													<input type="color" value="<?php echo esc_attr( $settings['chat_background'] ); ?>" disabled></label>
-												<label><span><?php esc_html_e( 'Chat text', 'fsweb-ai-automated-contact' ); ?></span>
-													<input type="color" value="<?php echo esc_attr( $settings['chat_text'] ); ?>" disabled></label>
-												<label><span><?php esc_html_e( 'Assistant bubble', 'fsweb-ai-automated-contact' ); ?></span>
-													<input type="color" value="<?php echo esc_attr( $settings['bubble_agent'] ); ?>" disabled></label>
-												<a class="fsweb-aic-pro-lock__link" href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener noreferrer"><span class="screen-reader-text"><?php esc_html_e( 'Available in the PRO version', 'fsweb-ai-automated-contact' ); ?></span></a>
-											</div>
 										</div>
-										<p class="description"><?php esc_html_e( 'The free edition ships one brand colour. The full palette is part of the PRO add-on.', 'fsweb-ai-automated-contact' ); ?> <span class="fsweb-aic-pro-tag"><?php esc_html_e( 'PRO', 'fsweb-ai-automated-contact' ); ?></span></p>
+										<p class="description"><?php esc_html_e( 'The free edition ships the primary colour. The rest of the palette is part of the PRO add-on.', 'fsweb-ai-automated-contact' ); ?></p>
 										<div class="fsweb-aic-preview" id="fsweb-aic-preview">
 											<div class="fsweb-aic-preview__panel">
 												<div class="fsweb-aic-preview__header">
@@ -615,7 +581,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 										</div>
 									</td>
 								</tr>
-								</tr>
 								<tr>
 									<th scope="row"><?php esc_html_e( 'Position', 'fsweb-ai-automated-contact' ); ?></th>
 									<td>
@@ -625,6 +590,33 @@ class Fsweb_Ai_Automated_Contact_Admin {
 									</td>
 								</tr>
 							</table>
+						</div>
+					</div>
+					<div class="fsweb-aic-card fsweb-aic-card--wide fsweb-aic-card--pro">
+						<div class="fsweb-aic-card__body">
+							<div class="fsweb-aic-pro-card">
+								<span class="fsweb-aic-pro-card__icon dashicons dashicons-star-filled"></span>
+								<div class="fsweb-aic-pro-card__text">
+									<h2>
+										<?php esc_html_e( 'AI Contact PRO', 'fsweb-ai-automated-contact' ); ?>
+										<span class="fsweb-aic-pro-tag"><?php esc_html_e( 'PRO', 'fsweb-ai-automated-contact' ); ?></span>
+									</h2>
+									<p><?php esc_html_e( 'The free edition covers the whole conversation: every AI provider, catalogue search, cart and checkout. When you need more control over the experience, the PRO add-on takes over.', 'fsweb-ai-automated-contact' ); ?></p>
+									<ul class="fsweb-aic-list">
+										<li><?php esc_html_e( 'Assistant name, privacy notice and the full colour palette', 'fsweb-ai-automated-contact' ); ?></li>
+										<li><?php esc_html_e( 'Custom message limit per visitor', 'fsweb-ai-automated-contact' ); ?></li>
+										<li><?php esc_html_e( 'Custom avatar image and editable welcome message', 'fsweb-ai-automated-contact' ); ?></li>
+										<li><?php esc_html_e( 'Auto-open with delay and custom CSS', 'fsweb-ai-automated-contact' ); ?></li>
+										<li><?php esc_html_e( 'License activation and automatic updates', 'fsweb-ai-automated-contact' ); ?></li>
+									</ul>
+									<p>
+										<a class="button button-primary" href="<?php echo esc_url( $pro_url ); ?>" target="_blank" rel="noopener noreferrer">
+											<span class="dashicons dashicons-external"></span>
+											<?php esc_html_e( 'See the PRO version', 'fsweb-ai-automated-contact' ); ?>
+										</a>
+									</p>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

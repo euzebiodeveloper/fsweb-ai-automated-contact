@@ -10,7 +10,7 @@
  * never reach this table.
  *
  * @link       https://flowsyncweb.com
- * @since      1.1.0
+ * @since      1.0.0
  *
  * @package    Fsweb_Ai_Automated_Contact
  * @subpackage Fsweb_Ai_Automated_Contact/includes
@@ -19,7 +19,7 @@
 /**
  * Conversation repository and usage accounting.
  *
- * @since      1.1.0
+ * @since      1.0.0
  * @package    Fsweb_Ai_Automated_Contact
  * @subpackage Fsweb_Ai_Automated_Contact/includes
  */
@@ -48,7 +48,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Conversations table name.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @return string
 	 */
 	public static function table() {
@@ -60,7 +60,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Messages table name.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @return string
 	 */
 	public static function messages_table() {
@@ -72,7 +72,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Create or upgrade the tables.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @return void
 	 */
 	public static function install() {
@@ -133,7 +133,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Install the schema when the plugin was updated without reactivation.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @return void
 	 */
 	public static function maybe_install() {
@@ -148,7 +148,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	 * Keys are generated client-side (UUID) and are only used to group turns.
 	 * They are not authentication: the rate limiter remains the guard rail.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  mixed $key Raw key.
 	 * @return string
 	 */
@@ -165,7 +165,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	 * A salted hash keeps the ability to recognise repeat conversations from
 	 * the same browser without storing the raw IP address or user agent.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @return string
 	 */
 	public static function visitor_hash() {
@@ -178,7 +178,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Find a conversation by its public key.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  string $key Conversation key.
 	 * @return object|null
 	 */
@@ -205,7 +205,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Find a conversation by numeric id.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  int $id Conversation id.
 	 * @return object|null
 	 */
@@ -232,7 +232,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Return the conversation for a key, creating it on the first turn.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  string $key      Conversation key (may be empty).
 	 * @param  string $provider Provider id.
 	 * @param  string $model    Model name.
@@ -288,7 +288,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Store one user/assistant turn and add its usage to the conversation.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  object $conversation Conversation row.
 	 * @param  string $user_message User message.
 	 * @param  string $assistant    Assistant reply.
@@ -400,7 +400,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	 * not filled the prices in yet the cost is zero; the token counts are
 	 * still stored so the amounts can be recalculated later.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  int    $prompt     Prompt tokens.
 	 * @param  int    $completion Completion tokens.
 	 * @param  string $model      Model name.
@@ -420,7 +420,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Whether the conversation reached the configured spend limit.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  object $conversation Conversation row.
 	 * @return bool
 	 */
@@ -437,7 +437,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Messages of one conversation, oldest first.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  int $conversation_id Conversation id.
 	 * @param  int $limit           Maximum rows.
 	 * @return array<int,object>
@@ -469,7 +469,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Paginated conversation list.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  array $args Page and per_page.
 	 * @return array{rows:array<int,object>,total:int,page:int,per_page:int,pages:int}
 	 */
@@ -505,7 +505,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Global totals for the admin preview.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @return array{conversations:int,messages:int,tokens:int,cost:float}
 	 */
 	public static function totals() {
@@ -533,7 +533,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Delete a conversation and its messages.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  int $id Conversation id.
 	 * @return bool
 	 */
@@ -557,7 +557,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Human-readable cost.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  float $amount Amount in USD.
 	 * @return string
 	 */
@@ -572,7 +572,7 @@ class Fsweb_Ai_Automated_Contact_Conversations {
 	/**
 	 * Whether token pricing is configured.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @return bool
 	 */
 	public static function has_pricing() {

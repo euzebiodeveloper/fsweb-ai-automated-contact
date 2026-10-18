@@ -11,7 +11,7 @@
  * Plugin Name:       AI Automated Contact
  * Plugin URI:        https://flowsyncweb.com/ai-automated-contact/
  * Description:       AI-powered virtual assistant for WooCommerce: answers questions, finds products and guides the customer to the cart and checkout.
- * Version:           1.1.0
+ * Version:           1.0.0
  * Requires at least: 6.0
  * Requires PHP:      8.1
  * Author:            Flow Sync Web
@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Currently plugin version.
  */
-define( 'FSWEB_AI_AUTOMATED_CONTACT_VERSION', '1.1.0' );
+define( 'FSWEB_AI_AUTOMATED_CONTACT_VERSION', '1.0.0' );
 
 /**
  * Plugin slug. Used for the settings page and the text domain.

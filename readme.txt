@@ -5,7 +5,7 @@ Tags: woocommerce, chat, ai, virtual assistant, customer support
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.1.0
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -160,11 +160,11 @@ This plugin connects to the AI provider selected by the merchant to generate the
 
 Provider policies: https://openai.com/policies/privacy-policy/ · https://www.anthropic.com/legal/privacy · https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html · https://x.ai/legal/privacy-policy · https://groq.com/privacy-policy/
 
-The plugin itself does not send data to the plugin author, and it does not contact any server other than the provider the merchant selected.
+The plugin itself does not send store data to the plugin author. The only other external contact is the optional PRO license check: when the merchant clicks Activate or Recheck on the license screen, the plugin sends the license key, the site URL and the plugin slug to https://api.flowsyncweb.com/api/license. No chat content, customer data or store data is included in that request, and it never runs on its own.
 
 == Changelog ==
 
-= 1.1.0 =
+= 1.0.0 =
 * New: conversation ledger — stores each conversation and its messages with token counts and estimated cost.
 * New: **Conversations** screen with total messages, tokens and amount spent per conversation, plus a transcript view and delete action.
 * New: **Usage and spending** settings — input/output price per one million tokens and an optional maximum spend per conversation.
@@ -172,7 +172,6 @@ The plugin itself does not send data to the plugin author, and it does not conta
 * Improved: the settings and tutorial now state clearly that the AI provider account, key and bill belong to the merchant; the plugin includes no credits and takes no markup.
 * Improved: readme and in-plugin texts now describe local conversation storage and deletion.
 
-= 1.0.0 =
 * Initial free release.
 * Chat assistant with OpenAI, Anthropic, DeepSeek, xAI, Groq and OpenAI-compatible endpoints.
 * Catalogue search with name, price, availability, image and link.
@@ -184,9 +183,6 @@ The plugin itself does not send data to the plugin author, and it does not conta
 * Fixed rate limit of 30 messages per visitor every 10 minutes.
 
 == Upgrade Notice ==
-
-= 1.1.0 =
-Adds the conversation ledger, per-conversation spending display and an optional spend limit. After updating, open **AI Contact → Settings** and fill the token prices to see the amounts.
 
 = 1.0.0 =
 First release. No action needed, just install and add your API key.

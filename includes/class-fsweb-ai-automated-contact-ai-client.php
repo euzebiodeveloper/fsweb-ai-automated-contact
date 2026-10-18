@@ -459,7 +459,7 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 	 * compatible gateways use the Anthropic names as well, so both shapes are
 	 * accepted for either wire format.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  array  $decoded Decoded response body.
 	 * @param  string $api     Wire format (openai|anthropic).
 	 * @return array{prompt_tokens:int,completion_tokens:int,total_tokens:int}

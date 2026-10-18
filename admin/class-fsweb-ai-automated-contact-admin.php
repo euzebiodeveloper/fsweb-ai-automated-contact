@@ -53,7 +53,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	/**
 	 * Hook suffix of the conversations screen.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @access private
 	 * @var    string
 	 */
@@ -1059,7 +1059,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	/**
 	 * Render the conversation list or a single conversation.
 	 *
-	 * @since 1.1.0
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function render_conversations_page() {
@@ -1231,7 +1231,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	/**
 	 * Render one conversation with its transcript.
 	 *
-	 * @since 1.1.0
+	 * @since 1.0.0
 	 * @param int $conversation_id Conversation id.
 	 * @return void
 	 */
@@ -1352,7 +1352,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	/**
 	 * Local date/time for a UTC database value.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  string $gmt MySQL UTC datetime.
 	 * @return string
 	 */
@@ -1373,7 +1373,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	/**
 	 * Visitor label for a conversation.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  object $conversation Conversation row.
 	 * @return string
 	 */
@@ -1398,7 +1398,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	/**
 	 * Status label for a conversation.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  string $status Stored status.
 	 * @return string
 	 */
@@ -1413,7 +1413,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	/**
 	 * Delete one conversation from the admin screen.
 	 *
-	 * @since 1.1.0
+	 * @since 1.0.0
 	 * @return void
 	 */
 	public function handle_delete_conversation() {

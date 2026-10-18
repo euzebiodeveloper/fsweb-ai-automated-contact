@@ -348,7 +348,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 	 * page. A filter is available for shops that switch models often and want
 	 * a per-model table instead of editing the settings.
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @param  string $model Model name.
 	 * @return array{input:float,output:float,configured:bool}
 	 */
@@ -365,7 +365,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 		/**
 		 * Filter the token prices used to estimate spend.
 		 *
-		 * @since 1.1.0
+		 * @since 1.0.0
 		 * @param array  $pricing Price per 1M tokens in USD.
 		 * @param string $model   Model name.
 		 */
@@ -375,7 +375,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 	/**
 	 * Maximum spend per conversation, in USD (0 means unlimited).
 	 *
-	 * @since  1.1.0
+	 * @since  1.0.0
 	 * @return float
 	 */
 	public static function cost_limit() {

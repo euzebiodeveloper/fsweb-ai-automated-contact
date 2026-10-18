@@ -321,19 +321,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			|| false !== strpos( (string) $hook_suffix, 'fsweb-ai-automated-contact' );
 	}
 
-	/**
-	 * Print the FSWEB mark shown at the front of every hero header.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	private function hero_logo() {
-		printf(
-			'<img class="fsweb-aic-hero__logo" src="%s" alt="%s" width="46" height="46" decoding="async" />',
-			esc_url( FSWEB_AI_AUTOMATED_CONTACT_URL . 'includes/assets/images/flowsyncweblogo.webp' ),
-			esc_attr__( 'Flow Sync Web', 'fsweb-ai-automated-contact' )
-		);
-	}
 
 	// ------------------------------------------------------------------//
 	//  Settings API
@@ -392,13 +379,10 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			<hr class="wp-header-end">
 
 			<div class="fsweb-aic-hero fsweb-aic-hero--split">
-				<div class="fsweb-aic-hero__brand">
-					<?php $this->hero_logo(); ?>
 					<div>
 						<h1><?php esc_html_e( 'AI Contact', 'fsweb-ai-automated-contact' ); ?></h1>
 						<p><?php esc_html_e( 'Configure the virtual assistant, pick the AI, write the store context and tune the widget.', 'fsweb-ai-automated-contact' ); ?></p>
 					</div>
-				</div>
 				<div class="fsweb-aic-hero__actions">
 					<a class="button" href="<?php echo esc_url( $tutorial_url ); ?>">
 						<span class="dashicons dashicons-editor-help"></span>
@@ -831,13 +815,10 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			<hr class="wp-header-end">
 
 			<div class="fsweb-aic-hero fsweb-aic-hero--split">
-				<div class="fsweb-aic-hero__brand">
-					<?php $this->hero_logo(); ?>
 					<div>
 						<h1><?php esc_html_e( 'PRO license', 'fsweb-ai-automated-contact' ); ?></h1>
 						<p><?php esc_html_e( 'Activate the key you received with the PRO add-on. The extra fields on the AI Contact screen unlock only with an active license and the add-on running.', 'fsweb-ai-automated-contact' ); ?></p>
 					</div>
-				</div>
 				<div class="fsweb-aic-hero__actions">
 					<a class="button" href="<?php echo esc_url( $settings ); ?>">
 						<span class="dashicons dashicons-admin-settings"></span>
@@ -976,13 +957,10 @@ class Fsweb_Ai_Automated_Contact_Admin {
 		<div class="wrap fsweb-aic-wrap">
 			<hr class="wp-header-end">
 			<div class="fsweb-aic-hero fsweb-aic-hero--split">
-				<div class="fsweb-aic-hero__brand">
-					<?php $this->hero_logo(); ?>
 					<div>
 						<h1><?php esc_html_e( 'AI Contact — Tutorial', 'fsweb-ai-automated-contact' ); ?></h1>
 						<p><?php esc_html_e( 'Your virtual assistant is live in five steps.', 'fsweb-ai-automated-contact' ); ?></p>
 					</div>
-				</div>
 				<div class="fsweb-aic-hero__actions">
 					<a class="button" href="<?php echo esc_url( $settings_url ); ?>">
 						<span class="dashicons dashicons-admin-settings"></span>
@@ -1105,13 +1083,10 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			<hr class="wp-header-end">
 
 			<div class="fsweb-aic-hero fsweb-aic-hero--split">
-				<div class="fsweb-aic-hero__brand">
-					<?php $this->hero_logo(); ?>
 					<div>
 						<h1><?php esc_html_e( 'Conversations', 'fsweb-ai-automated-contact' ); ?></h1>
 						<p><?php esc_html_e( 'Every conversation handled by the assistant, with token usage and the estimated amount spent. Conversations are stored on this site; delete the ones you no longer need.', 'fsweb-ai-automated-contact' ); ?></p>
 					</div>
-				</div>
 				<div class="fsweb-aic-hero__actions">
 					<a class="button" href="<?php echo esc_url( $settings_url ); ?>">
 						<span class="dashicons dashicons-admin-settings"></span>
@@ -1288,13 +1263,10 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			<hr class="wp-header-end">
 
 			<div class="fsweb-aic-hero fsweb-aic-hero--split">
-				<div class="fsweb-aic-hero__brand">
-					<?php $this->hero_logo(); ?>
 					<div>
 						<h1><?php esc_html_e( 'Conversation', 'fsweb-ai-automated-contact' ); ?></h1>
 						<p><code><?php echo esc_html( $conversation->conversation_key ); ?></code></p>
 					</div>
-				</div>
 				<div class="fsweb-aic-hero__actions">
 					<a class="button" href="<?php echo esc_url( $list_url ); ?>">
 						<span class="dashicons dashicons-arrow-left-alt2"></span>

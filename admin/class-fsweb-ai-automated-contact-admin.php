@@ -870,15 +870,20 @@ class Fsweb_Ai_Automated_Contact_Admin {
 						</div>
 
 						<div class="fsweb-aic-license-actions">
-							<button type="submit" class="button button-primary" name="license_action" value="activate">
-								<span class="dashicons dashicons-yes-alt"></span>
-								<?php esc_html_e( 'Activate license', 'fsweb-ai-automated-contact' ); ?>
-							</button>
+							<?php if ( ! $active ) : ?>
+								<button type="submit" class="button button-primary" name="license_action" value="activate">
+									<span class="dashicons dashicons-yes-alt"></span>
+									<?php esc_html_e( 'Activate license', 'fsweb-ai-automated-contact' ); ?>
+								</button>
+							<?php endif; ?>
 
 							<?php if ( '' !== $key ) : ?>
 								<button type="submit" class="button" name="license_action" value="check">
 									<?php esc_html_e( 'Recheck status', 'fsweb-ai-automated-contact' ); ?>
 								</button>
+							<?php endif; ?>
+
+							<?php if ( $active || '' !== $key ) : ?>
 								<button type="submit" class="button" name="license_action" value="deactivate">
 									<?php esc_html_e( 'Deactivate', 'fsweb-ai-automated-contact' ); ?>
 								</button>

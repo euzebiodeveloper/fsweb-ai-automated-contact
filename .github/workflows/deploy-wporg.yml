@@ -1,13 +1,8 @@
 name: Deploy to WordPress.org
 
-# Roda depois que o workflow de build termina (o release é criado com o
-# GITHUB_TOKEN, e releases criados por ele não disparam o evento `release`).
+# Manual apenas: Actions > Deploy to WordPress.org > Run workflow, na main.
+# Nao dispara em merge de PR, release publicado ou workflow concluido.
 on:
-  workflow_run:
-    workflows: ["Build Plugin ZIP on PR Merge"]
-    types: [completed]
-  release:
-    types: [published]
   workflow_dispatch:
 
 concurrency:
@@ -19,10 +14,8 @@ permissions:
 
 jobs:
   deploy:
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      github.event_name == 'release' ||
-      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    # So a main publica no diretorio; dispatch em outra branch e ignorado.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     env:
@@ -54,6 +47,9 @@ jobs:
             echo "::error::Configure os secrets SVN_USERNAME e SVN_PASSWORD em Settings > Secrets and variables > Actions."
             exit 1
           fi
+
+      - name: Install Subversion
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq subversion
 
       - name: Checkout WordPress.org SVN
         run: |

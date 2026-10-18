@@ -108,6 +108,11 @@ class Fsweb_Ai_Automated_Contact {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-ai-client.php';
 
 		/**
+		 * Conversation storage, token accounting and spend limits.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-conversations.php';
+
+		/**
 		 * WooCommerce tool set (read-only + add to cart).
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-woo-tools.php';
@@ -159,6 +164,13 @@ class Fsweb_Ai_Automated_Contact {
 
 		// License screen actions (activate, deactivate, recheck).
 		$this->loader->add_action( 'admin_post_fsweb_aic_license', $plugin_admin, 'handle_license_action' );
+
+		// Conversation screen: delete one stored conversation.
+		$this->loader->add_action( 'admin_post_fsweb_aic_delete_conversation', $plugin_admin, 'handle_delete_conversation' );
+
+		// The tables are created on activation; this covers updates made
+		// without deactivating the plugin and multisite installs.
+		$this->loader->add_action( 'plugins_loaded', 'Fsweb_Ai_Automated_Contact_Conversations', 'maybe_install' );
 	}
 
 	/**

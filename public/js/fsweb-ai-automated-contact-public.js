@@ -18,6 +18,7 @@
 	}
 
 	var STORAGE_KEY = 'fswebAicHistory';
+	var CONVERSATION_KEY = 'fswebAicConversation';
 	var MAX_HISTORY = 16;
 
 	var widget = document.getElementById( 'fsweb-aic-widget' );
@@ -36,6 +37,7 @@
 	}
 
 	var history = [];
+	var conversationId = readConversationId();
 	var busy = false;
 	var greeted = false;
 	var lastProductsKey = '';
@@ -56,6 +58,43 @@
 		} catch ( error ) {
 			// Storage unavailable (private mode): the thread stays in memory.
 		}
+	}
+
+	function newConversationId() {
+		try {
+			if ( window.crypto && window.crypto.randomUUID ) {
+				return window.crypto.randomUUID();
+			}
+		} catch ( error ) {
+			// Fall through to the timestamp based id.
+		}
+
+		return 'c-' + Date.now().toString( 36 ) + '-' + Math.random().toString( 36 ).slice( 2, 10 );
+	}
+
+	function writeConversationId( id ) {
+		try {
+			window.sessionStorage.setItem( CONVERSATION_KEY, id );
+		} catch ( error ) {
+			// Storage unavailable: the id stays in memory for this page.
+		}
+	}
+
+	function readConversationId() {
+		try {
+			var stored = window.sessionStorage.getItem( CONVERSATION_KEY );
+
+			if ( stored ) {
+				return stored;
+			}
+		} catch ( error ) {
+			// Storage unavailable.
+		}
+
+		var id = newConversationId();
+		writeConversationId( id );
+
+		return id;
 	}
 
 	function text( key, fallback ) {
@@ -403,7 +442,8 @@
 			},
 			body: JSON.stringify( {
 				message: message,
-				history: previous
+				history: previous,
+				conversation_id: conversationId
 			} )
 		} )
 			.then( function ( response ) {
@@ -424,6 +464,10 @@
 				}
 
 				var reply = payload.reply || '';
+				if ( payload.conversation_id && payload.conversation_id !== conversationId ) {
+					conversationId = payload.conversation_id;
+					writeConversationId( conversationId );
+				}
 				addRow( 'agent', reply );
 				pushHistory( 'assistant', reply, payload.products, { checkout: !! payload.show_checkout } );
 				addProducts( payload.products );
@@ -459,6 +503,8 @@
 		resetButton.addEventListener( 'click', function () {
 			history = [];
 			lastProductsKey = '';
+			conversationId = newConversationId();
+			writeConversationId( conversationId );
 			writeHistory();
 			messages.textContent = '';
 			greeted = false;

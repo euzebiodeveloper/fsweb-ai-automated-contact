@@ -3,9 +3,8 @@
 /**
  * Fired when the plugin is uninstalled.
  *
- * Removes every option the plugin created, the rate-limit transients and the
- * update-checker cron. Chat conversations are never persisted server-side, so
- * there is no visitor data to delete.
+ * Removes every option the plugin created, the rate-limit transients, the
+ * update-checker cron and the conversation tables.
  *
  * @link       https://flowsyncweb.com
  * @since      1.0.0
@@ -20,6 +19,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 $fsweb_aic_options = array(
 	'fsweb_aic_settings',
+	'fsweb_aic_db_version',
 );
 
 foreach ( $fsweb_aic_options as $fsweb_aic_option ) {
@@ -48,3 +48,13 @@ $wpdb->query(
 		$fsweb_aic_like_timeout
 	)
 );
+
+// Conversation data is personal: drop the tables completely on uninstall.
+$fsweb_aic_messages_table      = $wpdb->prefix . 'fsweb_aic_messages';
+$fsweb_aic_conversations_table = $wpdb->prefix . 'fsweb_aic_conversations';
+
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+$wpdb->query( "DROP TABLE IF EXISTS {$fsweb_aic_messages_table}" );
+
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+$wpdb->query( "DROP TABLE IF EXISTS {$fsweb_aic_conversations_table}" );

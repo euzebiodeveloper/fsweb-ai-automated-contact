@@ -31,6 +31,10 @@ class Fsweb_Ai_Automated_Contact_Activator {
 	 */
 	public static function activate() {
 
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-conversations.php';
+
+		Fsweb_Ai_Automated_Contact_Conversations::install();
+
 	}
 
 }

@@ -67,11 +67,12 @@ class Fsweb_Ai_Automated_Contact_Chat {
 	 * Handle one user message and return the agent reply.
 	 *
 	 * @since  1.0.0
-	 * @param  string $message  User message (raw).
-	 * @param  array  $history  Neutral history from the client.
+	 * @param  string $message          User message (raw).
+	 * @param  array  $history          Neutral history from the client.
+	 * @param  string $conversation_key Stable key grouping the turns.
 	 * @return array|\WP_Error  { reply, products, cart, checkout_url }
 	 */
-	public function respond( $message, array $history = array() ) {
+	public function respond( $message, array $history = array(), $conversation_key = '' ) {
 		$message = $this->sanitize_message( $message );
 
 		if ( '' === $message ) {
@@ -90,6 +91,21 @@ class Fsweb_Ai_Automated_Contact_Chat {
 			);
 		}
 
+		$endpoint     = Fsweb_Ai_Automated_Contact_Settings::active_endpoint();
+		$conversation = Fsweb_Ai_Automated_Contact_Conversations::get_or_create(
+			$conversation_key,
+			$endpoint['provider'],
+			$endpoint['model']
+		);
+
+		if ( $conversation && Fsweb_Ai_Automated_Contact_Conversations::is_over_limit( $conversation ) ) {
+			return new WP_Error(
+				'fsweb_aic_conversation_limit',
+				__( 'This conversation reached the support limit. Please start a new conversation or contact our team.', 'fsweb-ai-automated-contact' ),
+				array( 'status' => 429 )
+			);
+		}
+
 		$definitions = $this->tools->definitions();
 		$messages    = $this->normalize_history( $history );
 		$messages[]  = array(
@@ -102,6 +118,11 @@ class Fsweb_Ai_Automated_Contact_Chat {
 		$show_checkout = false;
 		$reply       = '';
 		$rounds      = 0;
+		$usage       = array(
+			'prompt_tokens'     => 0,
+			'completion_tokens' => 0,
+			'total_tokens'      => 0,
+		);
 
 		while ( $rounds < self::MAX_TOOL_ROUNDS ) {
 			$rounds++;
@@ -110,6 +131,12 @@ class Fsweb_Ai_Automated_Contact_Chat {
 
 			if ( is_wp_error( $completion ) ) {
 				return $completion;
+			}
+
+			if ( isset( $completion['usage'] ) && is_array( $completion['usage'] ) ) {
+				$usage['prompt_tokens']     += isset( $completion['usage']['prompt_tokens'] ) ? max( 0, (int) $completion['usage']['prompt_tokens'] ) : 0;
+				$usage['completion_tokens'] += isset( $completion['usage']['completion_tokens'] ) ? max( 0, (int) $completion['usage']['completion_tokens'] ) : 0;
+				$usage['total_tokens']      += isset( $completion['usage']['total_tokens'] ) ? max( 0, (int) $completion['usage']['total_tokens'] ) : 0;
 			}
 
 			if ( ! empty( $completion['content'] ) ) {
@@ -155,13 +182,29 @@ class Fsweb_Ai_Automated_Contact_Chat {
 			$reply = __( 'Sorry, I could not answer right now. Could you rephrase the question?', 'fsweb-ai-automated-contact' );
 		}
 
+		$cost          = Fsweb_Ai_Automated_Contact_Conversations::calculate_cost(
+			$usage['prompt_tokens'],
+			$usage['completion_tokens'],
+			$endpoint['model']
+		);
+		$limit_reached = false;
+
+		if ( $conversation ) {
+			Fsweb_Ai_Automated_Contact_Conversations::record_turn( $conversation, $message, $reply, $usage, $cost );
+
+			$limit = Fsweb_Ai_Automated_Contact_Settings::cost_limit();
+			$limit_reached = ( $limit > 0 && ( (float) $conversation->cost + $cost ) >= $limit );
+		}
+
 		return array(
-			'reply'        => $reply,
-			'products'     => $this->unique_products( $products ),
-			'cart'         => $cart,
-			'checkout_url' => function_exists( 'wc_get_checkout_url' ) ? wc_get_checkout_url() : '',
-			'cart_url'      => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '',
-			'show_checkout' => $show_checkout,
+			'reply'          => $reply,
+			'products'       => $this->unique_products( $products ),
+			'cart'           => $cart,
+			'checkout_url'   => function_exists( 'wc_get_checkout_url' ) ? wc_get_checkout_url() : '',
+			'cart_url'       => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '',
+			'show_checkout'  => $show_checkout,
+			'conversation_id' => $conversation ? $conversation->conversation_key : Fsweb_Ai_Automated_Contact_Conversations::sanitize_key( $conversation_key ),
+			'limit_reached'  => $limit_reached,
 		);
 	}
 

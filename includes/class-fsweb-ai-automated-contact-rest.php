@@ -85,6 +85,12 @@ class Fsweb_Ai_Automated_Contact_Rest {
 						'type'     => 'array',
 						'default'  => array(),
 					),
+					'conversation_id' => array(
+						'required'          => false,
+						'type'              => 'string',
+						'default'           => '',
+						'sanitize_callback' => 'sanitize_text_field',
+					),
 				),
 			)
 		);
@@ -197,8 +203,9 @@ class Fsweb_Ai_Automated_Contact_Rest {
 
 		$message = (string) $request->get_param( 'message' );
 		$history = (array) $request->get_param( 'history' );
+		$conversation_id = (string) $request->get_param( 'conversation_id' );
 
-		$result = $this->chat->respond( $message, $history );
+		$result = $this->chat->respond( $message, $history, $conversation_id );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;

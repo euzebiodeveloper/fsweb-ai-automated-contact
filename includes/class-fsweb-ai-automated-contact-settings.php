@@ -154,6 +154,9 @@ class Fsweb_Ai_Automated_Contact_Settings {
 			'avatar_type'     => 'chat',
 			'privacy_note'    => __( 'Automated AI support. Do not send sensitive data.', 'fsweb-ai-automated-contact' ),
 			'rate_limit'      => 30,
+			'price_input'     => 0,
+			'price_output'    => 0,
+			'conversation_cost_limit' => 0,
 			'debug_log'       => 'no',
 			'providers'       => array(
 				'openai'    => array( 'api_key' => '' ),
@@ -281,6 +284,15 @@ class Fsweb_Ai_Automated_Contact_Settings {
 
 		$output['debug_log'] = ( isset( $input['debug_log'] ) && 'yes' === $input['debug_log'] ) ? 'yes' : 'no';
 
+		// Token prices are typed by the merchant because each provider bills
+		// separately and changes its table without notice. Values are USD per
+		// one million tokens, matching how providers publish their prices.
+		$output['price_input']  = isset( $input['price_input'] ) ? max( 0, min( 1000, round( (float) $input['price_input'], 6 ) ) ) : (float) $defaults['price_input'];
+		$output['price_output'] = isset( $input['price_output'] ) ? max( 0, min( 1000, round( (float) $input['price_output'], 6 ) ) ) : (float) $defaults['price_output'];
+
+		$cost_limit = isset( $input['conversation_cost_limit'] ) ? (float) $input['conversation_cost_limit'] : (float) $defaults['conversation_cost_limit'];
+		$output['conversation_cost_limit'] = max( 0, min( 10000, round( $cost_limit, 2 ) ) );
+
 		$output['position'] = ( isset( $input['position'] ) && 'left' === $input['position'] ) ? 'left' : 'right';
 
 		// Only the primary colour is editable in the free edition.
@@ -327,6 +339,47 @@ class Fsweb_Ai_Automated_Contact_Settings {
 		 * @param array $defaults Default settings.
 		 */
 		return (array) apply_filters( 'fsweb_aic_settings_sanitize', $output, $input, $defaults );
+	}
+
+	/**
+	 * Price per one million tokens for the selected model.
+	 *
+	 * The merchant supplies these numbers from the provider's own pricing
+	 * page. A filter is available for shops that switch models often and want
+	 * a per-model table instead of editing the settings.
+	 *
+	 * @since  1.1.0
+	 * @param  string $model Model name.
+	 * @return array{input:float,output:float,configured:bool}
+	 */
+	public static function pricing( $model = '' ) {
+		$input  = max( 0, (float) self::get( 'price_input', 0 ) );
+		$output = max( 0, (float) self::get( 'price_output', 0 ) );
+
+		$pricing = array(
+			'input'      => $input,
+			'output'     => $output,
+			'configured' => ( $input > 0 || $output > 0 ),
+		);
+
+		/**
+		 * Filter the token prices used to estimate spend.
+		 *
+		 * @since 1.1.0
+		 * @param array  $pricing Price per 1M tokens in USD.
+		 * @param string $model   Model name.
+		 */
+		return (array) apply_filters( 'fsweb_aic_model_pricing', $pricing, (string) $model );
+	}
+
+	/**
+	 * Maximum spend per conversation, in USD (0 means unlimited).
+	 *
+	 * @since  1.1.0
+	 * @return float
+	 */
+	public static function cost_limit() {
+		return max( 0, (float) self::get( 'conversation_cost_limit', 0 ) );
 	}
 
 	/**

@@ -134,6 +134,7 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 		return array(
 			'content'    => isset( $message['content'] ) ? (string) $message['content'] : '',
 			'tool_calls' => $this->parse_openai_tool_calls( $message ),
+			'usage'      => $this->normalize_usage( $decoded, 'openai' ),
 		);
 	}
 
@@ -202,6 +203,7 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 		return array(
 			'content'    => $content,
 			'tool_calls' => $tool_calls,
+			'usage'      => $this->normalize_usage( $decoded, 'anthropic' ),
 		);
 	}
 
@@ -447,6 +449,39 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 		}
 
 		return $out;
+	}
+
+	/**
+	 * Normalize the provider usage block into token counts.
+	 *
+	 * OpenAI-compatible APIs report `prompt_tokens` / `completion_tokens`,
+	 * while Anthropic reports `input_tokens` / `output_tokens`. Some
+	 * compatible gateways use the Anthropic names as well, so both shapes are
+	 * accepted for either wire format.
+	 *
+	 * @since  1.0.0
+	 * @param  array  $decoded Decoded response body.
+	 * @param  string $api     Wire format (openai|anthropic).
+	 * @return array{prompt_tokens:int,completion_tokens:int,total_tokens:int}
+	 */
+	private function normalize_usage( array $decoded, $api ) {
+		$usage = isset( $decoded['usage'] ) && is_array( $decoded['usage'] ) ? $decoded['usage'] : array();
+
+		if ( 'anthropic' === $api ) {
+			$prompt     = (int) ( $usage['input_tokens'] ?? 0 );
+			$completion = (int) ( $usage['output_tokens'] ?? 0 );
+		} else {
+			$prompt     = (int) ( $usage['prompt_tokens'] ?? ( $usage['input_tokens'] ?? 0 ) );
+			$completion = (int) ( $usage['completion_tokens'] ?? ( $usage['output_tokens'] ?? 0 ) );
+		}
+
+		$total = (int) ( $usage['total_tokens'] ?? ( $prompt + $completion ) );
+
+		return array(
+			'prompt_tokens'     => max( 0, $prompt ),
+			'completion_tokens' => max( 0, $completion ),
+			'total_tokens'      => max( 0, $total ),
+		);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**
- * Admin behaviour for AI Contact: license actions and provider test.
+ * Admin behaviour for AI Contact: provider test and live widget preview.
  *
  * @package Fsweb_Ai_Automated_Contact
  */
@@ -11,14 +11,6 @@
 
 	if ( ! config ) {
 		return;
-	}
-
-	function message( $target, type, text ) {
-		$target
-			.removeClass( 'notice-success notice-error notice-warning' )
-			.addClass( 'notice-' + type )
-			.text( text )
-			.show();
 	}
 
 	function post( action, data ) {
@@ -34,128 +26,6 @@
 		);
 	}
 
-	function statusLabel( status ) {
-		var map = {
-			active: config.i18n.status_active,
-			expired: config.i18n.status_expired,
-			invalid: config.i18n.status_invalid,
-			pending: config.i18n.status_pending
-		};
-
-		return map[ status ] || config.i18n.status_inactive;
-	}
-
-	// The license API works with ISO 8601 instants. The admin formats the
-	// expiration in UTC before printing it, so a well-behaved payload already
-	// carries "dd/mm/yyyy"; this guard keeps a raw ISO value from ever
-	// reaching the screen, formatting it in UTC instead of shifting it to
-	// the previous day west of Greenwich.
-	function formatExpires( value ) {
-		if ( ! value ) {
-			return '';
-		}
-
-		var iso = /^(\d{4})-(\d{2})-(\d{2})T\d{2}:\d{2}:\d{2}/.exec( value );
-
-		if ( iso ) {
-			return iso[ 3 ] + '/' + iso[ 2 ] + '/' + iso[ 1 ];
-		}
-
-		return value;
-	}
-
-	function applyLicenseStatus( status, expires ) {
-		var $status = $( '#fsweb-aic-license-status' );
-		$status
-			.attr( 'class', 'fsweb-aic-status fsweb-aic-status--' + status )
-			.text( statusLabel( status ) );
-
-		if ( 'active' === status ) {
-			$( '#fsweb-aic-license-key' ).prop( 'readonly', true );
-			$( '#fsweb-aic-activate-license' ).hide();
-			$( '#fsweb-aic-deactivate-license' ).show();
-		} else {
-			$( '#fsweb-aic-license-key' ).prop( 'readonly', false );
-			$( '#fsweb-aic-activate-license' ).show();
-			$( '#fsweb-aic-deactivate-license' ).hide();
-		}
-
-		if ( expires ) {
-			$( '#fsweb-aic-license-expires' ).text( formatExpires( expires ) );
-			$( '#fsweb-aic-expires-row' ).show();
-		} else {
-			$( '#fsweb-aic-expires-row' ).hide();
-		}
-	}
-
-	$( document ).on( 'click', '#fsweb-aic-activate-license, #fsweb-aic-onboarding-activate', function () {
-		var onboarding = 'fsweb-aic-onboarding-activate' === this.id;
-		var $button = $( this );
-		var $message = onboarding ? $( '#fsweb-aic-onboarding-message' ) : $( '#fsweb-aic-license-message' );
-		var key = onboarding ? $( '#fsweb-aic-onboarding-license-key' ).val() : $( '#fsweb-aic-license-key' ).val();
-
-		if ( ! key ) {
-			message( $message, 'error', config.i18n.empty_key );
-			return;
-		}
-
-		$button.prop( 'disabled', true ).text( config.i18n.activating );
-
-		post( 'fsweb_aic_activate_license', { license_key: key } )
-			.done( function ( response ) {
-				var payload = response && response.data ? response.data : {};
-
-				if ( response && response.success ) {
-					message( $message, 'success', payload.message || '' );
-					applyLicenseStatus( payload.status || 'active', payload.expires || '' );
-
-					if ( onboarding ) {
-						$( '#fsweb-aic-onboarding-license' ).hide();
-						$( '#fsweb-aic-onboarding-done' ).show();
-						$( '#fsweb-aic-onboarding-message' ).hide();
-					}
-				} else {
-					message( $message, 'error', ( payload && payload.message ) || config.i18n.network_error );
-					applyLicenseStatus( ( payload && payload.status ) || 'invalid', '' );
-				}
-			} )
-			.fail( function () {
-				message( $message, 'error', config.i18n.network_error );
-			} )
-			.always( function () {
-				$button.prop( 'disabled', false ).text( config.i18n.activate );
-			} );
-	} );
-
-	$( document ).on( 'click', '#fsweb-aic-deactivate-license', function () {
-		if ( ! window.confirm( config.i18n.confirm_deactivate ) ) {
-			return;
-		}
-
-		var $button = $( this );
-		var $message = $( '#fsweb-aic-license-message' );
-
-		$button.prop( 'disabled', true ).text( config.i18n.deactivating );
-
-		post( 'fsweb_aic_deactivate_license', { license_key: $( '#fsweb-aic-license-key' ).val() } )
-			.done( function ( response ) {
-				var payload = response && response.data ? response.data : {};
-
-				if ( response && response.success ) {
-					message( $message, 'success', payload.message || '' );
-					applyLicenseStatus( payload.status || 'pending', '' );
-				} else {
-					message( $message, 'error', ( payload && payload.message ) || config.i18n.network_error );
-				}
-			} )
-			.fail( function () {
-				message( $message, 'error', config.i18n.network_error );
-			} )
-			.always( function () {
-				$button.prop( 'disabled', false ).text( config.i18n.deactivate );
-			} );
-	} );
-
 	$( document ).on( 'click', '#fsweb-aic-test-provider', function () {
 		var $button = $( this );
 		var $spinner = $( '#fsweb-aic-test-spinner' );
@@ -169,8 +39,7 @@
 		post( 'fsweb_aic_test_provider', {
 			provider: provider,
 			model: $( '#fsweb-aic-model' ).val(),
-			api_key: $( '#fsweb-aic-key-' + provider ).val(),
-			base_url: $( '#fsweb-aic-base-url' ).val()
+			api_key: $( '#fsweb-aic-key-' + provider ).val()
 		} )
 			.done( function ( response ) {
 				var payload = response && response.data ? response.data : {};
@@ -200,11 +69,6 @@
 
 		var provider = $( '#fsweb-aic-provider' ).val() || '';
 		var model = $.trim( $( '#fsweb-aic-model' ).val() );
-		var customModel = $.trim( $( '#fsweb-aic-custom-model' ).val() );
-
-		if ( 'custom' === provider && customModel ) {
-			model = customModel;
-		}
 
 		$target.text(
 			config.i18n
@@ -213,9 +77,8 @@
 		);
 	}
 
-	// Only the credentials of the selected provider are shown, so it is
-	// clear that one AI is used at a time. The model list is rebuilt for
-	// the chosen provider, with a free-text fallback for new models.
+	// The model list is rebuilt for the chosen provider, with a free-text
+	// fallback so a model released after this version still works.
 	function syncProvider( provider ) {
 		$( '.fsweb-aic-credentials' ).each( function () {
 			var $group = $( this );
@@ -292,7 +155,8 @@
 			$( '#fsweb-aic-context' ).val( config.default_context );
 		}
 	} );
-	// Avatar picker + live preview of the widget.
+
+	// Live preview of the widget: colours, icon, identity and position.
 	function syncPreview() {
 		var $preview = $( '#fsweb-aic-preview' );
 
@@ -301,66 +165,75 @@
 		}
 
 		var primary = $( '#fsweb-aic-color-primary' ).val() || '#6e8b54';
-		var title = $( '#fsweb-aic-color-title' ).val() || '#ffffff';
-		var background = $( '#fsweb-aic-color-bg' ).val() || '#f6f8fc';
-		var text = $( '#fsweb-aic-color-text' ).val() || '#16202c';
-		var bubble = $( '#fsweb-aic-color-bubble' ).val() || '#ffffff';
+		var title = $( '#fsweb-aic-pro-color-title' ).val() || '#ffffff';
+		var background = $( '#fsweb-aic-pro-color-bg' ).val() || '#f6f8fc';
+		var text = $( '#fsweb-aic-pro-color-text' ).val() || '#16202c';
+		var bubble = $( '#fsweb-aic-pro-color-bubble' ).val() || '#ffffff';
 		var type = $( '#fsweb-aic-avatar' ).val();
-		var image = $.trim( $( '#fsweb-aic-avatar-image' ).val() );
+		var name = $.trim( $( '#fsweb-aic-pro-name' ).val() || '' );
+		var welcome = $.trim( $( '#fsweb-aic-pro-welcome' ).val() || '' );
+		var image = $.trim( $( '#fsweb-aic-pro-avatar' ).val() || '' );
 
+		$preview.css( '--fsweb-aic-preview-primary', primary );
 		$preview.find( '.fsweb-aic-preview__header' ).css( { background: primary, color: title } );
 		$preview.find( '.fsweb-aic-preview__body' ).css( 'background', background );
-		$preview.find( '.fsweb-aic-preview__bubble' ).css( { color: text, background: bubble } );
-		$preview.find( '.fsweb-aic-preview__ball' ).css( 'background', primary );
+		$preview.find( '.fsweb-aic-preview__bubble:not(.fsweb-aic-preview__bubble--user)' ).css( { color: text, background: bubble } );
+		$preview.find( '.fsweb-aic-preview__footer' ).css( 'background', bubble );
+
+		if ( name ) {
+			$preview.find( '.fsweb-aic-preview__name' ).text( name );
+		}
+
+		if ( welcome ) {
+			$( '#fsweb-aic-preview-bubble' ).text( welcome );
+		}
 
 		var $avatar = $preview.find( '.fsweb-aic-preview__avatar' );
+		var $ball = $preview.find( '.fsweb-aic-preview__ball' );
 
-		if ( 'custom' === type && image ) {
-			$avatar.html( $( '<img>' ).attr( 'src', image ).attr( 'alt', '' ) );
+		if ( image ) {
+			$avatar.empty().append( $( '<img>' ).attr( 'src', image ).attr( 'alt', '' ) );
+			$ball.empty().append( $( '<img>' ).attr( 'src', image ).attr( 'alt', '' ) );
 		} else {
-			$avatar.text( 'A' );
+			var icons = config.avatar_icons || {};
+			var icon = icons[ type ] || icons.chat || '';
+			$avatar.html( icon );
+			$ball.html( icon );
 		}
+
+		var position = $( 'input[name$="[position]"]:checked' ).val() || 'right';
+		$( '#fsweb-aic-preview-stage' ).toggleClass( 'is-left', 'left' === position );
 	}
 
-	$( document ).on( 'change', '#fsweb-aic-avatar', function () {
-		$( '#fsweb-aic-avatar-custom' ).prop( 'hidden', 'custom' !== $( this ).val() );
+	$( document ).on( 'input change', '#fsweb-aic-avatar, #fsweb-aic-color-primary, #fsweb-aic-pro-color-title, #fsweb-aic-pro-color-bg, #fsweb-aic-pro-color-text, #fsweb-aic-pro-color-bubble, #fsweb-aic-pro-name, #fsweb-aic-pro-welcome, #fsweb-aic-pro-avatar, input[name$="[position]"]', syncPreview );
+
+	function closePreview() {
+		$( '#fsweb-aic-preview-modal' ).prop( 'hidden', true );
+		$( 'body' ).removeClass( 'fsweb-aic-preview-is-open' );
+	}
+
+	$( document ).on( 'click', '#fsweb-aic-preview-open', function () {
 		syncPreview();
+		$( '#fsweb-aic-preview-modal' ).prop( 'hidden', false );
+		$( 'body' ).addClass( 'fsweb-aic-preview-is-open' );
+		$( '#fsweb-aic-preview-modal .fsweb-aic-preview-modal__close' ).trigger( 'focus' );
 	} );
 
-	var avatarFrame = null;
+	$( document ).on( 'click', '[data-fsweb-aic-close]', closePreview );
 
-	$( document ).on( 'click', '#fsweb-aic-avatar-pick', function ( event ) {
-		event.preventDefault();
+	$( document ).on( 'click', '.fsweb-aic-delete-conversation', function ( event ) {
+		var message = $( this ).data( 'confirm' );
 
-		if ( ! window.wp || ! window.wp.media ) {
-			return;
+		if ( message && ! window.confirm( message ) ) {
+			event.preventDefault();
 		}
+	} );
 
-		if ( ! avatarFrame ) {
-			avatarFrame = window.wp.media( {
-				title: config.i18n.choose_image || 'Choose image',
-				button: { text: config.i18n.use_image || 'Use this image' },
-				library: { type: 'image' },
-				multiple: false
-			} );
-
-			avatarFrame.on( 'select', function () {
-				var attachment = avatarFrame.state().get( 'selection' ).first().toJSON();
-				$( '#fsweb-aic-avatar-image' ).val( attachment.url );
-				syncPreview();
-			} );
+	$( document ).on( 'keydown', function ( event ) {
+		if ( 'Escape' === event.key || 27 === event.keyCode ) {
+			closePreview();
 		}
-
-		avatarFrame.open();
 	} );
-
-	$( document ).on( 'click', '#fsweb-aic-avatar-clear', function ( event ) {
-		event.preventDefault();
-		$( '#fsweb-aic-avatar-image' ).val( '' );
-		syncPreview();
-	} );
-
-	$( document ).on( 'input change', '#fsweb-aic-avatar-image, #fsweb-aic-color-primary, #fsweb-aic-color-title, #fsweb-aic-color-bg, #fsweb-aic-color-text, #fsweb-aic-color-bubble', syncPreview );
 
 	syncPreview();
 } )( jQuery );

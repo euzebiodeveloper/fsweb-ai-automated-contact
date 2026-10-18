@@ -1,0 +1,130 @@
+name: Deploy to WordPress.org
+
+# Roda depois que o workflow de build termina (o release é criado com o
+# GITHUB_TOKEN, e releases criados por ele não disparam o evento `release`).
+on:
+  workflow_run:
+    workflows: ["Build Plugin ZIP on PR Merge"]
+    types: [completed]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: wporg-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'release' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+
+    env:
+      SLUG: fsweb-ai-automated-contact
+      SVN_URL: https://plugins.svn.wordpress.org/fsweb-ai-automated-contact
+      SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+      SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read plugin version
+        id: version
+        run: |
+          set -euo pipefail
+          VERSION=$(grep -oP 'Version:\s*\K[0-9]+\.[0-9]+\.[0-9]+' "${SLUG}.php" | head -1)
+          if [ -z "${VERSION}" ]; then
+            echo "::error::Nao foi possivel ler a versao em ${SLUG}.php."
+            exit 1
+          fi
+          echo "VERSION=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Versao: ${VERSION}"
+
+      - name: Check SVN credentials
+        run: |
+          set -euo pipefail
+          if [ -z "${SVN_USERNAME}" ] || [ -z "${SVN_PASSWORD}" ]; then
+            echo "::error::Configure os secrets SVN_USERNAME e SVN_PASSWORD em Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+      - name: Checkout WordPress.org SVN
+        run: |
+          set -euo pipefail
+          svn checkout "${SVN_URL}" svn --depth=immediates
+          svn update svn/trunk --set-depth=infinity
+          if svn ls "${SVN_URL}/assets" >/dev/null 2>&1; then
+            svn update svn/assets --set-depth=infinity
+          fi
+
+      - name: Sync plugin files into trunk
+        run: |
+          set -euo pipefail
+          rsync -a --delete ./ svn/trunk/ \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='.gitignore' \
+            --exclude='.gitattributes' \
+            --exclude='.editorconfig' \
+            --exclude='.DS_Store' \
+            --exclude='Thumbs.db' \
+            --exclude='CHANGELOG.md' \
+            --exclude='README.md' \
+            --exclude='AGENTS.md' \
+            --exclude='ROADMAP.md' \
+            --exclude='*.zip' \
+            --exclude='node_modules/' \
+            --exclude='.vscode/' \
+            --exclude='.idea/' \
+            --exclude='languages/*.po' \
+            --exclude='languages/*.mo'
+
+      - name: Stage new and deleted files
+        run: |
+          set -euo pipefail
+          cd svn
+          svn status trunk | awk '$1 == "!" { sub(/^![[:space:]]+/, ""); print }' | while IFS= read -r path; do
+            if [ -n "${path}" ]; then
+              svn delete "${path}"
+            fi
+          done
+          svn add --force trunk --no-ignore
+          echo "--- svn status ---"
+          svn status trunk
+
+      - name: Commit trunk
+        run: |
+          set -euo pipefail
+          cd svn
+          if [ -z "$(svn status trunk)" ]; then
+            echo "Nada novo no trunk; commit ignorado."
+            exit 0
+          fi
+          svn commit trunk \
+            -m "Deploy ${SLUG} v${{ steps.version.outputs.VERSION }}" \
+            --username "${SVN_USERNAME}" \
+            --password "${SVN_PASSWORD}" \
+            --non-interactive \
+            --no-auth-cache
+
+      - name: Tag the version
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          if svn ls "${SVN_URL}/tags/${VERSION}" >/dev/null 2>&1; then
+            echo "A tag ${VERSION} ja existe; nada a fazer."
+            exit 0
+          fi
+          svn copy "${SVN_URL}/trunk" "${SVN_URL}/tags/${VERSION}" \
+            -m "Tag ${SLUG} v${VERSION}" \
+            --username "${SVN_USERNAME}" \
+            --password "${SVN_PASSWORD}" \
+            --non-interactive \
+            --no-auth-cache

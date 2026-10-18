@@ -118,9 +118,6 @@
 
 .fsweb-aic-wrap .fsweb-aic-hero .button .dashicons,
 .fsweb-aic-wrap .fsweb-aic-hero .button .dashicons:before {
-	width: 18px;
-	height: 18px;
-	font-size: 18px;
 	color: #fff;
 	-webkit-text-fill-color: #fff;
 }
@@ -255,6 +252,19 @@
 	font-weight: 600;
 	letter-spacing: 0.02em;
 	text-transform: uppercase;
+}
+
+.fsweb-aic-stat-value {
+	display: block;
+	color: #1d2327;
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 1.25;
+}
+
+.fsweb-aic-stat-card .description {
+	display: block;
+	margin-top: 4px;
 }
 
 @media (max-width: 960px) {
@@ -409,6 +419,73 @@
 	padding: 2px;
 }
 
+/* PRO-only rows: visible, inert, and linked to the product page */
+.fsweb-aic-pro-tag {
+	display: inline-block;
+	margin-left: 6px;
+	padding: 1px 7px;
+	border-radius: 999px;
+	background: #d63638;
+	color: #fff;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.4px;
+	line-height: 1.7;
+	vertical-align: middle;
+}
+
+/* PRO invitation card */
+.fsweb-aic-card--pro {
+	border: 1px solid rgba(214, 54, 56, 0.35);
+	background:
+		radial-gradient(120% 140% at 100% 0%, rgba(214, 54, 56, 0.10) 0%, rgba(214, 54, 56, 0) 55%),
+		linear-gradient(135deg, #ffffff 0%, #fff7f7 100%);
+	box-shadow: 0 12px 30px rgba(214, 54, 56, 0.08);
+}
+
+.fsweb-aic-pro-card {
+	display: flex;
+	align-items: flex-start;
+	gap: 20px;
+}
+
+.fsweb-aic-pro-card__icon {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 54px;
+	height: 54px;
+	border-radius: 15px;
+	background: #d63638;
+	color: #fff;
+	font-size: 26px;
+	line-height: 1;
+	box-shadow: 0 8px 18px rgba(214, 54, 56, 0.25);
+}
+
+.fsweb-aic-pro-card__text {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.fsweb-aic-pro-card__text h2 {
+	margin: 0 0 6px;
+	font-size: 19px;
+	line-height: 1.3;
+	color: var(--fsweb-aic-heading);
+}
+
+.fsweb-aic-pro-card__text > p {
+	margin: 0 0 10px;
+	max-width: 720px;
+	color: #50575e;
+}
+
+.fsweb-aic-pro-card__text .fsweb-aic-list {
+	margin: 0 0 14px;
+}
+
 /* Live preview of the widget */
 .fsweb-aic-preview {
 	position: relative;
@@ -471,13 +548,26 @@
 }
 
 .fsweb-aic-preview__ball {
-	display: block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	width: 44px;
 	height: 44px;
 	margin: 14px 0 0 auto;
 	border-radius: 50%;
 	background: var(--fsweb-aic-brand);
+	color: #fff;
 	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.fsweb-aic-preview__ball svg {
+	width: 22px;
+	height: 22px;
+}
+
+.fsweb-aic-preview__avatar svg {
+	width: 16px;
+	height: 16px;
 }
 
 /* ------------------------------------------------------------------ */
@@ -609,16 +699,24 @@
 	box-shadow: none;
 }
 
-.fsweb-aic-wrap .button > .dashicons,
-.fsweb-aic-wrap .button > .dashicons:before {
-	width: 18px;
-	height: 18px;
-	font-size: 18px;
-	line-height: 1;
+.fsweb-aic-wrap .button > .dashicons {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 auto;
+	width: 17px;
+	height: 17px;
+	margin: 0;
+	font-size: 17px;
+	line-height: 17px;
+	vertical-align: middle;
+	text-decoration: none;
 }
 
-.fsweb-aic-wrap .button > .dashicons {
-	flex-shrink: 0;
+.fsweb-aic-wrap .button > .dashicons:before {
+	font-size: 17px;
+	line-height: 17px;
+	text-decoration: none;
 }
 
 .fsweb-aic-wrap .form-table td label {
@@ -791,9 +889,10 @@
 
 .fsweb-aic-license-actions .button .dashicons,
 .fsweb-aic-license-actions .button .dashicons:before {
-	width: 18px;
-	height: 18px;
-	font-size: 18px;
+	width: 17px;
+	height: 17px;
+	font-size: 17px;
+	line-height: 17px;
 }
 
 .fsweb-aic-license-actions .spinner {
@@ -1003,10 +1102,10 @@ body.fsweb-aic-onboarding-page #wpbody {
 
 .fsweb-aic-onboarding .button .dashicons,
 .fsweb-aic-onboarding .button .dashicons:before {
-	width: 18px;
-	height: 18px;
-	font-size: 18px;
-	line-height: 1;
+	width: 17px;
+	height: 17px;
+	font-size: 17px;
+	line-height: 17px;
 	flex-shrink: 0;
 }
 
@@ -1083,4 +1182,209 @@ body.fsweb-aic-onboarding-page #wpbody {
 		width: 100%;
 		justify-content: center;
 	}
+}
+
+/* Context card: button on its own line, helper text underneath. */
+.fsweb-aic-context-actions {
+	margin: 14px 0 4px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Fixed preview button + final widget preview modal
+/* ------------------------------------------------------------------ */
+.fsweb-aic-wrap--has-preview {
+	padding-bottom: 84px;
+}
+
+.fsweb-aic-preview-bar {
+	position: fixed;
+	right: 32px;
+	bottom: 22px;
+	z-index: 9990;
+}
+
+.fsweb-aic-preview-bar .button {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	min-height: 42px;
+	padding: 0 22px;
+	border-radius: 999px;
+	font-size: 14px;
+	font-weight: 600;
+	box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.fsweb-aic-preview-modal[hidden] {
+	display: none !important;
+}
+
+.fsweb-aic-preview-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+}
+
+.fsweb-aic-preview-modal__backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba(16, 24, 40, 0.6);
+}
+
+.fsweb-aic-preview-modal__dialog {
+	position: relative;
+	width: 100%;
+	max-width: 450px;
+	max-height: calc(100vh - 48px);
+	overflow: auto;
+	padding: 18px 20px 20px;
+	border-radius: 14px;
+	background: #fff;
+	box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
+
+.fsweb-aic-preview-modal__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 12px;
+}
+
+.fsweb-aic-preview-modal__head h2 {
+	margin: 0;
+	color: var(--fsweb-aic-heading);
+	font-size: 16px;
+	line-height: 1.3;
+}
+
+.fsweb-aic-preview-modal__close,
+.fsweb-aic-preview-modal__close:link,
+.fsweb-aic-preview-modal__close:hover,
+.fsweb-aic-preview-modal__close:focus,
+.fsweb-aic-preview-modal__close:active {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: transparent;
+	box-shadow: none;
+	color: #50575e;
+	text-decoration: none !important;
+}
+
+.fsweb-aic-preview-modal__close .dashicons,
+.fsweb-aic-preview-modal__close .dashicons:before {
+	width: 20px;
+	height: 20px;
+	font-size: 20px;
+	line-height: 20px;
+	text-decoration: none !important;
+}
+
+.fsweb-aic-preview-modal__close:hover,
+.fsweb-aic-preview-modal__close:focus {
+	background: #f0f0f1;
+	color: #1d2327;
+}
+
+.fsweb-aic-preview-stage {
+	display: flex;
+	justify-content: center;
+	padding: 22px 14px 14px;
+	border: 1px solid #f0f0f1;
+	border-radius: 12px;
+	background: linear-gradient(180deg, #f6f8fc 0%, #eef1f6 100%);
+}
+
+.fsweb-aic-preview-stage .fsweb-aic-preview {
+	max-width: 330px;
+	width: 100%;
+	padding: 0;
+	border: 0;
+	background: transparent;
+}
+
+.fsweb-aic-preview-stage.is-left .fsweb-aic-preview__ball {
+	margin: 14px auto 0 0;
+}
+
+.fsweb-aic-preview__bubble {
+	display: block;
+	width: fit-content;
+	max-width: 86%;
+	margin-bottom: 8px;
+	line-height: 1.45;
+}
+
+.fsweb-aic-preview__bubble--user {
+	margin-left: auto;
+	border-bottom-left-radius: 12px;
+	border-bottom-right-radius: 4px;
+	background: var(--fsweb-aic-preview-primary, #6e8b54);
+	color: #fff;
+}
+
+.fsweb-aic-preview__footer {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 12px;
+	border-top: 1px solid rgba(0, 0, 0, 0.08);
+	background: #fff;
+}
+
+.fsweb-aic-preview__input {
+	flex: 1 1 auto;
+	padding: 7px 11px;
+	border-radius: 999px;
+	background: rgba(0, 0, 0, 0.04);
+	color: #646970;
+	font-size: 12px;
+}
+
+.fsweb-aic-preview__send {
+	color: #646970;
+	font-size: 18px;
+}
+
+.fsweb-aic-preview__avatar img,
+.fsweb-aic-preview__ball img {
+	width: 100%;
+	height: 100%;
+	border-radius: inherit;
+	object-fit: cover;
+}
+
+body.fsweb-aic-preview-is-open {
+	overflow: hidden;
+}
+
+/* Conversations transcript table */
+.fsweb-aic-transcript__col-when {
+	width: 150px;
+}
+
+.fsweb-aic-transcript__col-role {
+	width: 100px;
+}
+
+.fsweb-aic-transcript__col-tokens {
+	width: 90px;
+}
+
+.fsweb-aic-transcript__col-cost {
+	width: 110px;
+}
+
+.fsweb-aic-transcript td {
+	vertical-align: top;
 }

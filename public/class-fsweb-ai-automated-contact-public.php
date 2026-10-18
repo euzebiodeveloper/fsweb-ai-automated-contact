@@ -107,19 +107,24 @@ class Fsweb_Ai_Automated_Contact_Public {
 	public static function avatar_markup( array $settings ) {
 		$type = $settings['avatar_type'];
 
-		if ( 'custom' === $type && ! empty( $settings['avatar_image'] ) ) {
-			return '<img src="' . esc_url( $settings['avatar_image'] ) . '" alt="" loading="lazy">';
-		}
-
 		if ( 'initials' === $type ) {
 			$letter = function_exists( 'mb_substr' )
 				? mb_substr( $settings['agent_name'], 0, 1 )
 				: substr( $settings['agent_name'], 0, 1 );
 
-			return '<span class="fsweb-aic-initial">' . esc_html( $letter ) . '</span>';
+			$markup = '<span class="fsweb-aic-initial">' . esc_html( $letter ) . '</span>';
+		} else {
+			$markup = self::icon_svg( $type );
 		}
 
-		return self::icon_svg( $type );
+		/**
+		 * Filter the avatar markup shown in the chat header.
+		 *
+		 * @since 1.0.0
+		 * @param string $markup   Avatar HTML.
+		 * @param array  $settings Current settings.
+		 */
+		return (string) apply_filters( 'fsweb_aic_avatar_markup', $markup, $settings );
 	}
 
 	/**
@@ -188,11 +193,17 @@ class Fsweb_Ai_Automated_Contact_Public {
 			esc_html( $settings['bubble_agent'] )
 		);
 
-		wp_add_inline_style( $this->plugin_name, $css );
+		/**
+		 * Filter the inline CSS printed with the widget.
+		 *
+		 * @since 1.0.0
+		 * @param string $css      Inline CSS.
+		 * @param array  $settings Current settings.
+		 */
+		$css = (string) apply_filters( 'fsweb_aic_inline_css', $css, $settings );
 
-		// Merchant CSS runs last so it can override anything above.
-		if ( ! empty( $settings['custom_css'] ) ) {
-			wp_add_inline_style( $this->plugin_name, wp_strip_all_tags( (string) $settings['custom_css'] ) );
+		if ( '' !== $css ) {
+			wp_add_inline_style( $this->plugin_name, $css );
 		}
 	}
 
@@ -219,10 +230,7 @@ class Fsweb_Ai_Automated_Contact_Public {
 
 		$settings = $this->settings;
 
-		wp_localize_script(
-			$this->plugin_name,
-			'FSWEB_Aic_Widget',
-			array(
+		$data = array(
 				'rest_url'     => esc_url_raw( rest_url( Fsweb_Ai_Automated_Contact_Rest::NAMESPACE_V1 ) ),
 				'nonce'        => wp_create_nonce( 'wp_rest' ),
 				'agent_name'   => $settings['agent_name'],
@@ -230,9 +238,6 @@ class Fsweb_Ai_Automated_Contact_Public {
 				'privacy'      => $settings['privacy_note'],
 				'position'     => $settings['position'],
 				'avatar_type'  => $settings['avatar_type'],
-				'avatar_image' => $settings['avatar_image'],
-				'auto_open'    => ( 'yes' === $settings['auto_open'] ),
-				'auto_open_delay' => (int) $settings['auto_open_delay'],
 				'cart_url'     => function_exists( 'wc_get_cart_url' ) ? wc_get_cart_url() : '',
 				'checkout_url' => function_exists( 'wc_get_checkout_url' ) ? wc_get_checkout_url() : '',
 				'i18n'         => array(
@@ -244,14 +249,25 @@ class Fsweb_Ai_Automated_Contact_Public {
 					'typing'       => __( 'typing…', 'fsweb-ai-automated-contact' ),
 					'error'        => __( 'I could not answer right now. Please try again in a moment.', 'fsweb-ai-automated-contact' ),
 					'add_to_cart'  => __( 'Add to cart', 'fsweb-ai-automated-contact' ),
+					/* translators: %s: product id. */
 					'add_request'  => __( 'Please add product id %s to my cart', 'fsweb-ai-automated-contact' ),
 					'go_checkout'  => __( 'Checkout', 'fsweb-ai-automated-contact' ),
 					'view_product' => __( 'View product', 'fsweb-ai-automated-contact' ),
 					'cart_updated' => __( 'Cart updated', 'fsweb-ai-automated-contact' ),
 					'out_of_stock' => __( 'Out of stock', 'fsweb-ai-automated-contact' ),
-				),
-			)
+			),
 		);
+
+		/**
+		 * Filter the data handed to the widget script.
+		 *
+		 * @since 1.0.0
+		 * @param array $data     Script data.
+		 * @param array $settings Current settings.
+		 */
+		$data = (array) apply_filters( 'fsweb_aic_script_data', $data, $settings );
+
+		wp_localize_script( $this->plugin_name, 'FSWEB_Aic_Widget', $data );
 	}
 
 	/**

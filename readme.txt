@@ -4,124 +4,195 @@ Donate link: https://flowsyncweb.com/
 Tags: woocommerce, chat, ai, virtual assistant, customer support
 Requires at least: 6.0
 Tested up to: 7.1
-Requires PHP: 8.2
-Stable tag: 1.0.6
+Requires PHP: 8.1
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-AI-powered virtual assistant for WooCommerce: it answers questions, finds products, builds the cart and takes the customer to checkout.
+AI-powered virtual assistant for WooCommerce: answers questions, finds products and guides the customer to the cart and checkout.
 
 == Description ==
 
-AI Automated Contact puts an AI virtual assistant on your WooCommerce store. The customer opens the chat, describes what they are looking for (for example, "bluetooth headphone"), and the assistant searches the catalogue, shows the products with price and availability, confirms the item and adds it to the cart, then sends the customer straight to checkout.
+> <strong>AI Automated Contact PRO</strong><br />
+> This plugin is the free version. The PRO add-on adds the assistant name, an editable welcome message and privacy notice, a full colour palette, a custom message limit, a custom avatar image, temperature and token controls, auto-open with delay, custom CSS and automatic updates. The free version is complete on its own — the add-on only adds options. [Get the PRO version](https://flowsyncweb.com/produto/ai-automated-contact-pro/)
 
-Beyond selling, the assistant answers questions about the store — delivery times, shipping, payment methods, returns — using the context you write yourself in the settings.
+AI Automated Contact puts an AI virtual assistant on your store. A visitor opens the chat, describes what they are looking for, and the assistant searches the catalogue, shows the products with price and availability, answers questions about delivery, payment and returns, and walks the customer to the cart and the checkout.
 
-**Main features**
+You bring the AI: connect your own account with OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq, or any OpenAI-compatible endpoint. There is no shared key, no proxy and no markup — the requests are billed directly by the provider you choose.
 
-* Multiple AI providers: OpenAI (ChatGPT), Anthropic (Claude), DeepSeek, xAI (Grok) and Groq.
-* Model list pre-filled per provider, with a free field for any specific model.
-* Any OpenAI-compatible endpoint (base URL + key + model) through the "Other" provider.
-* Editable store context — you write it, the assistant follows it.
-* WooCommerce integration: product search, details, attributes, variations, cart and checkout.
-* Safe by design: the assistant only reads the catalogue and works with the visitor's own cart.
-* Floating chat widget with configurable colour, position, assistant name and welcome message.
-* API keys stay on the server — they are never exposed to the visitor's browser.
-* Per-visitor message limit against abuse.
-* License with per-domain activation and automatic updates.
+= How it works =
+
+1. The visitor clicks the chat button in the corner of the site.
+2. They type what they need, in their own words.
+3. The assistant searches the catalogue and answers with real products, prices, stock and links.
+4. When the customer decides, the assistant adds the item to the cart and offers the checkout link inside the conversation.
+
+= What the assistant can do =
+
+* **Search the catalogue** by name, category, attribute or intent, and return products with price, availability, image and link.
+* **Show product details**, including variations, attributes and stock.
+* **Add to cart** after the customer confirms, and hand off to the checkout inside the chat.
+* **Answer store questions** — delivery, shipping, payment, returns and opening hours — using the context you write in the settings.
+* **Stay inside the limits** — a fixed rate limit of 30 messages per visitor every 10 minutes protects your API budget.
+
+= What it never does =
+
+The assistant only reads. It does not create, edit, delete or publish posts, pages, products or orders. It does not read orders, customers, passwords or payment data. It does not change prices or stock, and it never completes a purchase by itself — the customer always confirms in the chat, and the checkout happens on the WooCommerce pages.
+
+Conversations are stored on this site so the merchant can review token usage and estimated cost. The **Conversations** screen shows each conversation with its messages, total tokens and total spent, and lets the merchant delete any conversation. The plugin also offers an optional maximum spend per conversation: when the estimated cost reaches it, the assistant stops answering in that conversation.
+
+= Setting it up =
+
+The whole setup happens on one screen, **AI Contact** in the admin menu, and takes about five minutes: choose the provider, paste your API key, pick a model, write the store context, adjust the widget, and turn it on. Step by step instructions are in the Installation section below, and the **Tutorial** screen inside the plugin walks through the same steps with screenshots.
+
+= Free and PRO =
+
+This free version is complete and does not expire. It has no trial period, no license requirement and no disabled buttons: every feature listed above works on its own, forever.
+
+Extra options are provided by the separate **AI Automated Contact PRO** add-on, installed alongside this plugin: assistant name, editable welcome message, editable privacy notice, a full colour palette, a custom message limit, a custom avatar image, temperature and token limits, auto-open with delay, custom CSS, and automatic updates.
+
+The license screen lives in this plugin (**AI Contact → PRO license**), so a key can be activated before the add-on is installed. No premium code is bundled here — the free version keeps working if the add-on is never installed or is deactivated.
+
+= Requirements =
+
+* WordPress 6.0 or newer, PHP 8.1 or newer.
+* WooCommerce for the catalogue and cart features. Without WooCommerce the chat still answers store questions, but the product tools are unavailable.
+* An API key from the AI provider of your choice.
 
 == Installation ==
 
-1. Upload the `fsweb-ai-automated-contact` folder to `/wp-content/plugins/` (or install the ZIP through **Plugins → Add New → Upload Plugin**).
-2. Activate the plugin through the **Plugins** menu in WordPress.
-3. Enter your license key on the welcome screen.
-4. Go to **AI Contact**, pick the provider, paste the API key, choose the model and write your store context.
-5. Tick **Show the chat on the site** and save.
+1. Install the plugin: search for **AI Automated Contact** in **Plugins → Add New**, or upload the ZIP through **Plugins → Add New → Upload Plugin**.
+2. Activate the plugin through the **Plugins** menu.
+3. Open **AI Contact** in the admin menu.
+4. Under **Artificial Intelligence**, choose your **provider** — OpenAI, Anthropic, DeepSeek, xAI, Groq or a custom OpenAI-compatible endpoint.
+5. Paste the **API key** for that provider. Each provider keeps its own key, so you can switch between them without retyping anything. Use the **Test now** button to check the connection.
+6. Pick a **model** from the list, or type a specific model name. For a custom endpoint, fill in the **Base URL** and the default model as well.
+7. Under **Store context**, write how your store works: delivery times, shipping regions and costs, payment methods, returns, opening hours and the tone of voice you want. This is what the assistant uses to answer questions — the more specific, the better the answers.
+8. Under **Appearance**, choose the chat icon, the brand colour and the launcher position (left or right). Use **Preview** to see the final widget before publishing.
+9. Tick **Show the chat on the site** and click **Save Changes**.
+
+The widget appears on the storefront immediately. To stop showing it without losing the configuration, untick the same box and save.
+
+You need an API key from the provider, obtained directly from your account with them. Usage is billed by that provider according to your own plan.
 
 == Frequently Asked Questions ==
 
-= How does the assistant work with the catalogue? =
+= Do I need an API key? =
 
-It looks up products, prices and availability in real time, confirms with the customer and then adds the item to the cart. There are no tools for creating, editing or deleting content.
+Yes. The plugin does not include AI credits: it connects to the provider you choose using your own key. The key is stored in your site's database, is used only server-side and is never sent to the visitor's browser.
 
-= Do I need WooCommerce? =
+= How much does it cost to run? =
 
-WooCommerce is required for product search and the cart. Without it the assistant still handles general questions, but without catalogue access.
+Only what your provider charges for the tokens used. The plugin does not add a markup, sell credits or share a key — the account and the bill are yours. The built-in rate limit of 30 messages per visitor every 10 minutes caps accidental spending. In **Settings → Usage and spending** you can enter the provider's price per one million tokens, see the total spent per conversation and set a maximum spend per conversation. The amounts are estimates based on the prices you enter; the provider's invoice is the source of truth.
 
-= Where are my API keys stored? =
+= Which providers are supported? =
 
-In your WordPress database (`wp_options`). They are never sent to the browser: the widget only talks to the plugin's own REST endpoints.
+OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq, and any endpoint that speaks the OpenAI chat completions API. You can keep keys for all of them and switch providers at any time without losing the configuration.
 
-= Is the conversation stored on the server? =
+= Is WooCommerce required? =
 
-No. The history stays in the visitor's browser `sessionStorage` and is sent with each message only to give the model context.
+WooCommerce is required for catalogue search, product details, add to cart and the checkout hand-off. Without WooCommerce the chat still answers store questions from the context you write, but the product tools are not available. The plugin does not break or block anything when WooCommerce is missing.
 
-= Can I use products with options (colour, size)? =
+= Where are the conversations stored? =
 
-Yes. For variable products the assistant lists the available options, asks which one the customer wants and only then adds the chosen variation to the cart.
+On this site, in two dedicated database tables: one row per conversation with token counts and estimated cost, and one row per message. Provider API keys are stored in the WordPress options table and never leave the server. Any conversation can be deleted from **AI Contact → Conversations**. Uninstalling the plugin drops both tables.
+
+= How is the amount spent calculated? =
+
+The plugin reads the token usage returned by the provider and multiplies it by the input and output prices you enter in **Settings → Usage and spending** (US$ per one million tokens). Prices change, so copy the current values from your provider account. If you leave the prices at zero, the token counts are still stored but the spent column remains zero.
+
+= Does the free version stop working after a while? =
+
+No. The free version has no trial, no expiry date and no license requirement. The only limit is the fixed message rate limit of 30 messages per visitor every 10 minutes, which protects your API budget.
+
+= Can I change the assistant name, the welcome message or the colours? =
+
+The free version ships with a fixed assistant name, a fixed welcome message and one brand colour, plus the launcher position. Assistant name, welcome message, privacy notice, the full colour palette, a custom avatar and a custom message limit are part of the separate PRO add-on.
+
+= Can I change the message limit? =
+
+In the free version the limit is fixed at 30 messages per visitor every 10 minutes. The PRO add-on lets you set it from 1 to 300.
+
+= Will it work with my theme? =
+
+Yes. The widget is rendered by the plugin with its own styles and does not depend on the theme. It sits above the page content and collapses to a single button on mobile.
+
+= Does the assistant speak other languages? =
+
+Yes. It replies in the language the customer writes in. For best results, write the store context in the same language your customers use, and pick a model that handles that language well.
+
+= Does it modify products or orders? =
+
+No. The assistant can only read the catalogue and add items to the cart. It cannot edit, delete or publish anything, and it cannot see orders, customers or payment data.
+
+= Is there a PRO version? =
+
+Yes. **AI Automated Contact PRO** is a separate add-on that expands the assistant with the name, welcome message, privacy notice, the full colour palette, a custom message limit (1 to 300), an avatar from your media library, temperature and token limits, auto-open with delay, custom CSS and automatic updates. Details and purchase: https://flowsyncweb.com/produto/ai-automated-contact-pro/
+
+It is an add-on, not a locked feature: the free version is complete, has no trial period and never stops working. A license key is entered on the **AI Contact → PRO license** screen, which is why you can buy and activate before installing the add-on.
+
+= What happens when I uninstall the plugin? =
+
+Deactivating keeps your settings and the stored conversations. Uninstalling removes the plugin options, including the stored API keys, and drops the conversation and message tables.
 
 == Screenshots ==
 
-1. The floating chat button on the storefront.
-2. The chat window — greeting, customer message, typing indicator and message field.
+1. The chat widget on the storefront, with product results inside the conversation.
+2. The settings screen: provider, model and API key.
+3. The store context and appearance options, with the live Preview button.
+4. The Preview modal showing the final widget before publishing.
+
+== External services ==
+
+This plugin connects to the AI provider selected by the merchant to generate the assistant's replies. Depending on the provider chosen, requests go to one of:
+
+* OpenAI — https://api.openai.com/v1
+* Anthropic — https://api.anthropic.com/v1
+* DeepSeek — https://api.deepseek.com/v1
+* xAI — https://api.x.ai/v1
+* Groq — https://api.groq.com/openai/v1
+* A custom OpenAI-compatible endpoint typed by the merchant
+
+**What is sent:** the customer's chat message, the recent conversation history, the store context written by the merchant, and the catalogue data returned by the product search tools.
+**What is not sent:** the site's database, WordPress users, orders, passwords or payment data.
+**When:** only when a visitor sends a message to the chat and the widget is enabled.
+**Authentication:** the merchant's own API key for the chosen provider, stored in the WordPress options table.
+
+Provider policies: https://openai.com/policies/privacy-policy/ · https://www.anthropic.com/legal/privacy · https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html · https://x.ai/legal/privacy-policy · https://groq.com/privacy-policy/
+
+The plugin itself does not send store data to the plugin author. The only other external contact is the optional PRO license check: when the merchant clicks Activate or Recheck on the license screen, the plugin sends the license key, the site URL and the plugin slug to https://api.flowsyncweb.com/api/license. No chat content, customer data or store data is included in that request, and it never runs on its own.
 
 == Changelog ==
 
-= 1.0.6 =
-* Fix: An invalid or expired license is now reported as such — the admin notice no longer shows the generic "Update server is temporarily unreachable" warning; a 401/403 rejection from the update server now reads "the license credential is invalid or expired".
-* Fix: The stored license error is no longer wiped on every page load, so a rejected credential is actually shown; it is cleared only when the key changes or after a successful check.
-
-= 1.0.5 =
-* Fix: The license status synced on page load now follows `domain_authorized` instead of the license `status`, so deactivating on this domain keeps the local status as pending and the screen no longer flips back to active on every reload.
-* Fix: An expired or invalid license keeps the verdict the API sends, and a transport failure still leaves the stored state untouched.
-* Fix: Deactivation now clears every cached copy of the license state (site options and the update checker cache).
-
-= 1.0.4 =
-* Fix: The license key placeholder now shows the real key format — 32 characters in four groups of eight on an alphabet without 0/O/1/I/L — instead of the retired FSWEB-XXXX-XXXX-XXXX example.
-* Fix: The license expiration is rendered as a date in UTC, so the raw ISO instant never reaches the screen and the date no longer slips a day on installs west of Greenwich; the value is identical on the first render and after activation or refresh.
-
-= 1.0.3 =
-* Fix: License activation and deactivation no longer depend on another FSWEB plugin's constants — each plugin now resolves the license API URL from its own constant, so an outdated sibling plugin can no longer point this one at the retired endpoint.
-
-= 1.0.2 =
-* License activation, validation and deactivation now talk to the FSWEB license API on `api.flowsyncweb.com`; the legacy License Manager for WooCommerce bridge is gone.
-* The response body is the source of truth again: a business rejection is shown as it comes from the API, and a transport failure keeps the current license state and shows a neutral notice.
-
-= 1.0.1 =
-* Settings, tutorial, onboarding and license screens standardised with hero, quick actions, cards, pills and icon buttons.
-* Complete pt_BR translation of the standardised screens; the source is now 100% English, including the labels the JS rewrites.
-* English documentation: README.md with badges, features and requirements, readme with screenshots, plugin banner and icon.
-* Fix: the readme parser accepts lowercase `readme.txt` and the "View details" popup shows every section again.
-* Fix: the onboarding license block got the id the JS uses to close it, and the manual license-check action was removed from the license screen.
-
 = 1.0.0 =
-* Initial release.
-* AI virtual assistant with multiple providers (OpenAI, Anthropic, DeepSeek, xAI and Groq).
-* Per-provider model catalogue with a free field for any other model.
-* Editable store context, with a ready-made service prompt.
-* WooCommerce integration: product search, details, variations, cart and checkout.
-* Configurable public chat widget: icon, colours, auto open and custom CSS.
-* Per-domain license with onboarding and automatic updates.
+* New: conversation ledger — stores each conversation and its messages with token counts and estimated cost.
+* New: **Conversations** screen with total messages, tokens and amount spent per conversation, plus a transcript view and delete action.
+* New: **Usage and spending** settings — input/output price per one million tokens and an optional maximum spend per conversation.
+* New: the assistant stops answering in a conversation when its estimated cost reaches the configured limit.
+* Improved: the settings and tutorial now state clearly that the AI provider account, key and bill belong to the merchant; the plugin includes no credits and takes no markup.
+* Improved: readme and in-plugin texts now describe local conversation storage and deletion.
+
+* Initial free release.
+* Chat assistant with OpenAI, Anthropic, DeepSeek, xAI, Groq and OpenAI-compatible endpoints.
+* Catalogue search with name, price, availability, image and link.
+* Product details including variations, attributes and stock.
+* Add to cart after customer confirmation, with the checkout hand-off inside the chat.
+* Store questions answered from the merchant's own context.
+* Appearance: chat icon, one brand colour and launcher position.
+* Live preview of the widget before publishing.
+* Fixed rate limit of 30 messages per visitor every 10 minutes.
 
 == Upgrade Notice ==
 
-= 1.0.6 =
-License notice fix: a rejected credential now shows as invalid/expired instead of the misleading "update server unreachable" warning.
-
-= 1.0.5 =
-License fix: deactivating on this domain no longer shows the license as active again after a reload.
-
-= 1.0.4 =
-License screen fixes: the key placeholder matches the real key format, and the expiration date no longer shows the raw ISO value or shifts a day.
-
-= 1.0.3 =
-License fix: activation and deactivation now resolve the license API URL from the plugin's own constant, so an outdated sibling plugin can no longer break license calls with its shared constant.
-
-= 1.0.2 =
-License fixed against the new license API.
-
-= 1.0.1 =
-Standardised admin screens, complete pt_BR translation and readme fixes.
-
 = 1.0.0 =
-First public release.
+First release. No action needed, just install and add your API key.
+
+== Other Notes ==
+
+= Source code =
+
+This plugin is free software, licensed under GPLv2 or later. The full source code is public at https://github.com/euzebiodeveloper/fsweb-ai-automated-contact — the same code that is submitted to the WordPress.org directory, with no build step and no minified files.
+
+= Credits =
+
+Developed by Flowsyncweb (https://flowsyncweb.com/). The plugin bundles no third-party libraries; it uses the WordPress HTTP API to reach the AI providers.

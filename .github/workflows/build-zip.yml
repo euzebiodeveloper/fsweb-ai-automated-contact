@@ -47,7 +47,9 @@ jobs:
             --exclude='*.zip' \
             --exclude='node_modules/' \
             --exclude='.vscode/' \
-            --exclude='.idea/'
+            --exclude='.idea/' \
+            --exclude='languages/*.po' \
+            --exclude='languages/*.mo'
 
           # Gera o ZIP a partir do pai do diretório
           cd /tmp/build

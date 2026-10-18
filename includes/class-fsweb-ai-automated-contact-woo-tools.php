@@ -130,32 +130,39 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 			),
 		);
 
-		if ( 'yes' === $settings['allow_add_to_cart'] ) {
-			$tools[] = array(
-				'name'        => 'add_to_cart',
-				'description' => 'Add a product to the customer cart. Use it ONLY after the customer confirms the item. For products with options, pass the chosen variation_id — if the product has options and no variation_id is given, the tool answers with the available variations so you can ask the customer.',
-				'parameters'  => array(
-					'type'       => 'object',
-					'properties' => array(
-						'product_id'   => array(
-							'type'        => 'integer',
-							'description' => 'Product id to add.',
-						),
-						'variation_id' => array(
-							'type'        => 'integer',
-							'description' => 'Variation id, when the product has options.',
-						),
-						'quantity'     => array(
-							'type'        => 'integer',
-							'description' => 'Quantity (1 to 10). Defaults to 1.',
-						),
+		$tools[] = array(
+			'name'        => 'add_to_cart',
+			'description' => 'Add a product to the customer cart. Use it ONLY after the customer confirms the item. For products with options, pass the chosen variation_id — if the product has options and no variation_id is given, the tool answers with the available variations so you can ask the customer.',
+			'parameters'  => array(
+				'type'       => 'object',
+				'properties' => array(
+					'product_id'   => array(
+						'type'        => 'integer',
+						'description' => 'Product id to add.',
 					),
-					'required'   => array( 'product_id' ),
+					'variation_id' => array(
+						'type'        => 'integer',
+						'description' => 'Variation id, when the product has options.',
+					),
+					'quantity'     => array(
+						'type'        => 'integer',
+						'description' => 'Quantity (1 to 10). Defaults to 1.',
+					),
 				),
-			);
-		}
+				'required'   => array( 'product_id' ),
+			),
+		);
 
-		return $tools;
+		/**
+		 * Filter the tool set exposed to the AI.
+		 *
+		 * The PRO add-on hooks this filter to add the cart and checkout tools.
+		 *
+		 * @since 1.0.0
+		 * @param array $tools    Tool definitions.
+		 * @param array $settings Current settings.
+		 */
+		return (array) apply_filters( 'fsweb_aic_woo_tools', $tools, $settings );
 	}
 
 	/**
@@ -168,6 +175,22 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 	 */
 	public function execute( $name, $args ) {
 		$args = is_array( $args ) ? $args : array();
+
+		/**
+		 * Short-circuit a tool call.
+		 *
+		 * The PRO add-on hooks this filter to handle its own tools.
+		 *
+		 * @since 1.0.0
+		 * @param array|null $result Tool result, or null to continue.
+		 * @param string     $name   Tool name.
+		 * @param array      $args   Tool arguments.
+		 */
+		$result = apply_filters( 'fsweb_aic_woo_tool_result', null, $name, $args );
+
+		if ( null !== $result ) {
+			return $result;
+		}
 
 		switch ( $name ) {
 			case 'search_products':
@@ -212,6 +235,7 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 			'ignore_sticky_posts' => true,
 			'no_found_rows'       => true,
 			// Never offer something the customer cannot buy.
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Stock filter keeps the assistant from offering an unavailable product; the query stays limited to published products.
 			'meta_query'          => array(
 				array(
 					'key'   => '_stock_status',
@@ -238,6 +262,7 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 			}
 
 			if ( $term_object ) {
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- catalogue filter, bounded by one term.
 				$query_args['tax_query'] = array(
 					array(
 						'taxonomy' => 'product_cat',
@@ -364,22 +389,55 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		return $data;
 	}
 
-	/**
-	 * Add a product (or a chosen variation) to the customer cart.
+		/**
+	 * Checkout payload: only used when the customer is finished shopping.
 	 *
 	 * @since  1.0.0
-	 * @param  array $args Tool arguments.
 	 * @return array<string,mixed>
 	 */
+	private function checkout_payload() {
+		$cart = $this->cart_payload();
+
+		return array(
+			'message'       => __( 'Ready to finish the purchase.', 'fsweb-ai-automated-contact' ),
+			'checkout_url'  => $cart['checkout_url'],
+			'show_checkout' => true,
+			'count'         => $cart['count'],
+			'total'         => $cart['total'],
+		);
+	}
+
+	/**
+	 * General store information.
+	 *
+	 * @since  1.0.0
+	 * @return array<string,mixed>
+	 */
+	private function store_info() {
+		$data = array(
+			'store'    => get_bloginfo( 'name' ),
+			'url'      => home_url( '/' ),
+			'currency' => function_exists( 'get_woocommerce_currency' ) ? get_woocommerce_currency() : '',
+			'language' => get_bloginfo( 'language' ),
+			'contact'  => sanitize_email( get_option( 'admin_email' ) ),
+		);
+
+		if ( function_exists( 'WC' ) && WC()->payment_gateways() ) {
+			$methods = array();
+
+			foreach ( WC()->payment_gateways()->get_available_payment_gateways() as $gateway ) {
+				$methods[] = wp_strip_all_tags( $gateway->get_title() );
+			}
+
+			$data['payments'] = array_values( array_unique( $methods ) );
+		}
+
+		return $data;
+	}
+
+
 	private function add_to_cart( array $args ) {
 		$settings = Fsweb_Ai_Automated_Contact_Settings::all();
-
-		if ( 'yes' !== $settings['allow_add_to_cart'] ) {
-			return array(
-				'error'   => 'cart_disabled',
-				'message' => __( 'Adding to the cart is disabled in this store.', 'fsweb-ai-automated-contact' ),
-			);
-		}
 
 		$product_id   = isset( $args['product_id'] ) ? absint( $args['product_id'] ) : 0;
 		$variation_id = isset( $args['variation_id'] ) ? absint( $args['variation_id'] ) : 0;
@@ -512,52 +570,6 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 		}
 
 		return $cart;
-	}
-
-	/**
-	 * Checkout payload: only used when the customer is finished shopping.
-	 *
-	 * @since  1.0.0
-	 * @return array<string,mixed>
-	 */
-	private function checkout_payload() {
-		$cart = $this->cart_payload();
-
-		return array(
-			'message'       => __( 'Ready to finish the purchase.', 'fsweb-ai-automated-contact' ),
-			'checkout_url'  => $cart['checkout_url'],
-			'show_checkout' => true,
-			'count'         => $cart['count'],
-			'total'         => $cart['total'],
-		);
-	}
-
-	/**
-	 * General store information.
-	 *
-	 * @since  1.0.0
-	 * @return array<string,mixed>
-	 */
-	private function store_info() {
-		$data = array(
-			'store'    => get_bloginfo( 'name' ),
-			'url'      => home_url( '/' ),
-			'currency' => function_exists( 'get_woocommerce_currency' ) ? get_woocommerce_currency() : '',
-			'language' => get_bloginfo( 'language' ),
-			'contact'  => sanitize_email( get_option( 'admin_email' ) ),
-		);
-
-		if ( function_exists( 'WC' ) && WC()->payment_gateways() ) {
-			$methods = array();
-
-			foreach ( WC()->payment_gateways()->get_available_payment_gateways() as $gateway ) {
-				$methods[] = wp_strip_all_tags( $gateway->get_title() );
-			}
-
-			$data['payments'] = array_values( array_unique( $methods ) );
-		}
-
-		return $data;
 	}
 
 	/**

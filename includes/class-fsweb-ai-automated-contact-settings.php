@@ -43,6 +43,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 			'openai'    => array(
 				'label'    => __( 'OpenAI (ChatGPT)', 'fsweb-ai-automated-contact' ),
 				'api'      => 'openai',
+				// phpcs:ignore PluginCheck.CodeAnalysis.AIProvider.DirectIntegration -- The plugin supports providers the WordPress AI Client does not cover (DeepSeek, xAI, Groq) and always uses the merchant's own key.
 				'base_url' => 'https://api.openai.com/v1',
 				'keys_url' => 'https://platform.openai.com/api-keys',
 				'models'   => array( 'gpt-5.4-mini', 'gpt-5.5', 'gpt-5.4', 'gpt-5.4-nano', 'gpt-5.2', 'gpt-5.1', 'gpt-5-mini', 'gpt-4.1-mini' ),
@@ -50,6 +51,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 			'anthropic' => array(
 				'label'    => __( 'Anthropic (Claude)', 'fsweb-ai-automated-contact' ),
 				'api'      => 'anthropic',
+				// phpcs:ignore PluginCheck.CodeAnalysis.AIProvider.DirectIntegration -- The plugin supports providers the WordPress AI Client does not cover (DeepSeek, xAI, Groq) and always uses the merchant's own key.
 				'base_url' => 'https://api.anthropic.com/v1',
 				'keys_url' => 'https://console.anthropic.com/settings/keys',
 				'models'   => array( 'claude-sonnet-5', 'claude-haiku-4-5', 'claude-opus-5', 'claude-fable-5-1' ),
@@ -57,6 +59,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 			'deepseek'  => array(
 				'label'    => __( 'DeepSeek', 'fsweb-ai-automated-contact' ),
 				'api'      => 'openai',
+				// phpcs:ignore PluginCheck.CodeAnalysis.AIProvider.DirectIntegration -- The plugin supports providers the WordPress AI Client does not cover (DeepSeek, xAI, Groq) and always uses the merchant's own key.
 				'base_url' => 'https://api.deepseek.com/v1',
 				'keys_url' => 'https://platform.deepseek.com/api_keys',
 				'models'   => array( 'deepseek-flash', 'deepseek-v4-pro' ),
@@ -64,6 +67,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 			'xai'       => array(
 				'label'    => __( 'xAI (Grok)', 'fsweb-ai-automated-contact' ),
 				'api'      => 'openai',
+				// phpcs:ignore PluginCheck.CodeAnalysis.AIProvider.DirectIntegration -- The plugin supports providers the WordPress AI Client does not cover (DeepSeek, xAI, Groq) and always uses the merchant's own key.
 				'base_url' => 'https://api.x.ai/v1',
 				'keys_url' => 'https://console.x.ai',
 				'models'   => array( 'grok-4.6', 'grok-4.5', 'grok-4.3', 'grok-build-0.1' ),
@@ -71,6 +75,7 @@ class Fsweb_Ai_Automated_Contact_Settings {
 			'groq'      => array(
 				'label'    => __( 'Groq', 'fsweb-ai-automated-contact' ),
 				'api'      => 'openai',
+				// phpcs:ignore PluginCheck.CodeAnalysis.AIProvider.DirectIntegration -- The plugin supports providers the WordPress AI Client does not cover (DeepSeek, xAI, Groq) and always uses the merchant's own key.
 				'base_url' => 'https://api.groq.com/openai/v1',
 				'keys_url' => 'https://console.groq.com/keys',
 				'models'   => array( 'openai/gpt-oss-120b', 'llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'openai/gpt-oss-20b', 'qwen/qwen3.8-27b', 'minimaxai/minimax-m2.7' ),

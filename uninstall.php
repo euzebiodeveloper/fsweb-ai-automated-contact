@@ -53,8 +53,8 @@ $wpdb->query(
 $fsweb_aic_messages_table      = $wpdb->prefix . 'fsweb_aic_messages';
 $fsweb_aic_conversations_table = $wpdb->prefix . 'fsweb_aic_conversations';
 
-// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Dropping the plugin's own tables on uninstall; the table name comes from $wpdb->prefix.
 $wpdb->query( "DROP TABLE IF EXISTS {$fsweb_aic_messages_table}" );
 
-// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Dropping the plugin's own tables on uninstall; the table name comes from $wpdb->prefix.
 $wpdb->query( "DROP TABLE IF EXISTS {$fsweb_aic_conversations_table}" );

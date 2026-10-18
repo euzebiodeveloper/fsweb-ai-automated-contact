@@ -235,6 +235,7 @@ class Fsweb_Ai_Automated_Contact_Woo_Tools {
 			'ignore_sticky_posts' => true,
 			'no_found_rows'       => true,
 			// Never offer something the customer cannot buy.
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Stock filter keeps the assistant from offering an unavailable product; the query stays limited to published products.
 			'meta_query'          => array(
 				array(
 					'key'   => '_stock_status',

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-18T18:42:26+00:00\n"
+"POT-Creation-Date: 2026-10-18T18:45:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: fsweb-ai-automated-contact\n"
@@ -87,8 +87,8 @@ msgid "AI Contact — Conversations"
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:290
-#: admin/class-fsweb-ai-automated-contact-admin.php:1117
-#: admin/class-fsweb-ai-automated-contact-admin.php:1134
+#: admin/class-fsweb-ai-automated-contact-admin.php:1105
+#: admin/class-fsweb-ai-automated-contact-admin.php:1122
 msgid "Conversations"
 msgstr ""
 
@@ -111,7 +111,7 @@ msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:405
 #: admin/class-fsweb-ai-automated-contact-admin.php:445
-#: admin/class-fsweb-ai-automated-contact-admin.php:1363
+#: admin/class-fsweb-ai-automated-contact-admin.php:1351
 msgid "Assistant"
 msgstr ""
 
@@ -430,8 +430,8 @@ msgid "Activate the key you received with the PRO add-on. The extra fields on th
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:834
-#: admin/class-fsweb-ai-automated-contact-admin.php:997
-#: admin/class-fsweb-ai-automated-contact-admin.php:1054
+#: admin/class-fsweb-ai-automated-contact-admin.php:985
+#: admin/class-fsweb-ai-automated-contact-admin.php:1042
 msgid "Go to settings"
 msgstr ""
 
@@ -448,7 +448,7 @@ msgid "Paste the key exactly as you received it. Activation binds it to this dom
 msgstr ""
 
 #: admin/class-fsweb-ai-automated-contact-admin.php:867
-#: admin/class-fsweb-ai-automated-contact-admin.php:1175
+#: admin/class-fsweb-ai-automated-contact-admin.php:1163
 msgid "Status"
 msgstr ""
 
@@ -464,312 +464,304 @@ msgstr ""
 msgid "Recheck status"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:897
+#: admin/class-fsweb-ai-automated-contact-admin.php:894
 msgid "Deactivate this license? The PRO fields stay locked until you activate the key again."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:898
+#: admin/class-fsweb-ai-automated-contact-admin.php:895
 msgid "Deactivate"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:904
-msgid "Remove the stored key from this site? You can paste it again later."
-msgstr ""
-
-#: admin/class-fsweb-ai-automated-contact-admin.php:905
-msgid "Remove key"
-msgstr ""
-
-#: admin/class-fsweb-ai-automated-contact-admin.php:917
+#: admin/class-fsweb-ai-automated-contact-admin.php:907
 msgid "How it works"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:922
+#: admin/class-fsweb-ai-automated-contact-admin.php:912
 msgid "Paste the key you received with the PRO add-on and click Activate."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:923
+#: admin/class-fsweb-ai-automated-contact-admin.php:913
 msgid "The key is bound to this domain and unlocks the extra options on the AI Contact screen."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:924
+#: admin/class-fsweb-ai-automated-contact-admin.php:914
 msgid "The status is checked on the license server every time you open this screen."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:925
+#: admin/class-fsweb-ai-automated-contact-admin.php:915
 msgid "Use Deactivate to release the key and activate it on another site."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:930
+#: admin/class-fsweb-ai-automated-contact-admin.php:920
 msgid "The free plugin keeps working without a key. While the license is active, the PRO fields appear on the AI Contact screen."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:946
+#: admin/class-fsweb-ai-automated-contact-admin.php:936
 msgid "You are not allowed to manage the license."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:991
+#: admin/class-fsweb-ai-automated-contact-admin.php:979
 msgid "AI Contact — Tutorial"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:992
+#: admin/class-fsweb-ai-automated-contact-admin.php:980
 msgid "Your virtual assistant is live in five steps."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1001
+#: admin/class-fsweb-ai-automated-contact-admin.php:989
 msgid "Go PRO"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1010
+#: admin/class-fsweb-ai-automated-contact-admin.php:998
 msgid "Step by step"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1017
+#: admin/class-fsweb-ai-automated-contact-admin.php:1005
 msgid "Pick the AI"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1018
+#: admin/class-fsweb-ai-automated-contact-admin.php:1006
 msgid "Pick OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq or an OpenAI-compatible endpoint. The provider account is yours: create it, generate the API key and pay the provider directly — the plugin does not include AI credits or share a key. The key stays on this site and is never exposed to visitors."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1023
+#: admin/class-fsweb-ai-automated-contact-admin.php:1011
 msgid "Pick the model"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1024
+#: admin/class-fsweb-ai-automated-contact-admin.php:1012
 msgid "The list is pre-filled per provider. You can type any specific model, including recent releases."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1029
+#: admin/class-fsweb-ai-automated-contact-admin.php:1017
 msgid "Write the store context"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1030
+#: admin/class-fsweb-ai-automated-contact-admin.php:1018
 msgid "The more context, the better the service: delivery times, shipping, payment, returns, tone of voice and the details the AI must not invent."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1035
+#: admin/class-fsweb-ai-automated-contact-admin.php:1023
 msgid "Enable WooCommerce in the chat"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1036
+#: admin/class-fsweb-ai-automated-contact-admin.php:1024
 msgid "With catalogue access enabled, the AI searches products, shows price and availability, adds to the cart (after confirmation) and sends the customer to checkout."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1041
+#: admin/class-fsweb-ai-automated-contact-admin.php:1029
 msgid "Style the widget"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1042
+#: admin/class-fsweb-ai-automated-contact-admin.php:1030
 msgid "Choose the icon, the colours and the side of the screen where the launcher sits."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1047
+#: admin/class-fsweb-ai-automated-contact-admin.php:1035
 msgid "Test and enable the widget"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1048
+#: admin/class-fsweb-ai-automated-contact-admin.php:1036
 msgid "Use the connection test, save the settings and tick \"Show the chat on the site\". Open the store as a visitor to check the experience."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1063
+#: admin/class-fsweb-ai-automated-contact-admin.php:1051
 msgid "What the assistant does for your store"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1068
+#: admin/class-fsweb-ai-automated-contact-admin.php:1056
 msgid "Checks the catalogue in real time: name, price, availability, variations and product link."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1069
+#: admin/class-fsweb-ai-automated-contact-admin.php:1057
 msgid "Confirms with the customer before putting any item in the cart."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1070
+#: admin/class-fsweb-ai-automated-contact-admin.php:1058
 msgid "Answers questions about shipping, payment, deadlines and returns using the context you wrote."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1071
+#: admin/class-fsweb-ai-automated-contact-admin.php:1059
 msgid "Speaks the customer's language and keeps the tone of voice you defined."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1072
+#: admin/class-fsweb-ai-automated-contact-admin.php:1060
 msgid "Sends the customer to checkout as soon as the cart is ready."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1073
+#: admin/class-fsweb-ai-automated-contact-admin.php:1061
 msgid "Conversations are stored on this site with messages, token counts and the estimated cost, so you can review spending and delete them at any time."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1118
+#: admin/class-fsweb-ai-automated-contact-admin.php:1106
 msgid "Every conversation handled by the assistant, with token usage and the estimated amount spent. Conversations are stored on this site; delete the ones you no longer need."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1123
+#: admin/class-fsweb-ai-automated-contact-admin.php:1111
 msgid "Settings"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1129
+#: admin/class-fsweb-ai-automated-contact-admin.php:1117
 msgid "Conversation deleted."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1138
-#: admin/class-fsweb-ai-automated-contact-admin.php:1172
+#: admin/class-fsweb-ai-automated-contact-admin.php:1126
+#: admin/class-fsweb-ai-automated-contact-admin.php:1160
 msgid "Messages"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1142
-#: admin/class-fsweb-ai-automated-contact-admin.php:1173
-#: admin/class-fsweb-ai-automated-contact-admin.php:1317
-#: admin/class-fsweb-ai-automated-contact-admin.php:1352
+#: admin/class-fsweb-ai-automated-contact-admin.php:1130
+#: admin/class-fsweb-ai-automated-contact-admin.php:1161
+#: admin/class-fsweb-ai-automated-contact-admin.php:1305
+#: admin/class-fsweb-ai-automated-contact-admin.php:1340
 msgid "Tokens"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1146
+#: admin/class-fsweb-ai-automated-contact-admin.php:1134
 msgid "Total spent"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1153
+#: admin/class-fsweb-ai-automated-contact-admin.php:1141
 msgid "Token prices are not filled in, so the spent column shows zero. Open Settings → Usage and spending and enter the input and output price per one million tokens from your provider."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1161
+#: admin/class-fsweb-ai-automated-contact-admin.php:1149
 msgid "Stored conversations"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1168
+#: admin/class-fsweb-ai-automated-contact-admin.php:1156
 msgid "Last activity"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1169
-#: admin/class-fsweb-ai-automated-contact-admin.php:1272
-#: admin/class-fsweb-ai-automated-contact-admin.php:1297
+#: admin/class-fsweb-ai-automated-contact-admin.php:1157
+#: admin/class-fsweb-ai-automated-contact-admin.php:1260
+#: admin/class-fsweb-ai-automated-contact-admin.php:1285
 msgid "Conversation"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1170
-#: admin/class-fsweb-ai-automated-contact-admin.php:1326
-#: admin/class-fsweb-ai-automated-contact-admin.php:1363
+#: admin/class-fsweb-ai-automated-contact-admin.php:1158
+#: admin/class-fsweb-ai-automated-contact-admin.php:1314
+#: admin/class-fsweb-ai-automated-contact-admin.php:1351
 msgid "Visitor"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1171
-#: admin/class-fsweb-ai-automated-contact-admin.php:1313
+#: admin/class-fsweb-ai-automated-contact-admin.php:1159
+#: admin/class-fsweb-ai-automated-contact-admin.php:1301
 msgid "Provider / model"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1174
-#: admin/class-fsweb-ai-automated-contact-admin.php:1322
+#: admin/class-fsweb-ai-automated-contact-admin.php:1162
+#: admin/class-fsweb-ai-automated-contact-admin.php:1310
 msgid "Spent"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1176
+#: admin/class-fsweb-ai-automated-contact-admin.php:1164
 msgid "Actions"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1182
+#: admin/class-fsweb-ai-automated-contact-admin.php:1170
 msgid "No conversation stored yet. They appear here as soon as a visitor talks to the assistant."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1222
+#: admin/class-fsweb-ai-automated-contact-admin.php:1210
 msgid "View"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1223
-#: admin/class-fsweb-ai-automated-contact-admin.php:1305
+#: admin/class-fsweb-ai-automated-contact-admin.php:1211
+#: admin/class-fsweb-ai-automated-contact-admin.php:1293
 msgid "Delete this conversation and all of its messages?"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1223
-#: admin/class-fsweb-ai-automated-contact-admin.php:1306
+#: admin/class-fsweb-ai-automated-contact-admin.php:1211
+#: admin/class-fsweb-ai-automated-contact-admin.php:1294
 msgid "Delete"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1273
+#: admin/class-fsweb-ai-automated-contact-admin.php:1261
 msgid "Conversation not found."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1274
+#: admin/class-fsweb-ai-automated-contact-admin.php:1262
 msgid "Back to conversations"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1303
+#: admin/class-fsweb-ai-automated-contact-admin.php:1291
 msgid "Back"
 msgstr ""
 
 #. translators: 1: prompt tokens, 2: completion tokens.
-#: admin/class-fsweb-ai-automated-contact-admin.php:1319
+#: admin/class-fsweb-ai-automated-contact-admin.php:1307
 #, php-format
 msgid "%1$s in / %2$s out"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1334
+#: admin/class-fsweb-ai-automated-contact-admin.php:1322
 msgid "Token prices are not filled in, so the spent value is zero. Enter the provider prices in Settings → Usage and spending."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1342
+#: admin/class-fsweb-ai-automated-contact-admin.php:1330
 msgid "Transcript"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1349
+#: admin/class-fsweb-ai-automated-contact-admin.php:1337
 msgid "When"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1350
+#: admin/class-fsweb-ai-automated-contact-admin.php:1338
 msgid "Role"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1351
+#: admin/class-fsweb-ai-automated-contact-admin.php:1339
 msgid "Message"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1353
+#: admin/class-fsweb-ai-automated-contact-admin.php:1341
 msgid "Cost"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1358
+#: admin/class-fsweb-ai-automated-contact-admin.php:1346
 msgid "No message stored for this conversation."
 msgstr ""
 
 #. translators: %d: user id.
-#: admin/class-fsweb-ai-automated-contact-admin.php:1416
+#: admin/class-fsweb-ai-automated-contact-admin.php:1404
 #, php-format
 msgid "User #%d"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1421
+#: admin/class-fsweb-ai-automated-contact-admin.php:1409
 msgid "Guest"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1433
+#: admin/class-fsweb-ai-automated-contact-admin.php:1421
 msgid "Limit reached"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1436
+#: admin/class-fsweb-ai-automated-contact-admin.php:1424
 msgid "Open"
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1447
+#: admin/class-fsweb-ai-automated-contact-admin.php:1435
 msgid "You are not allowed to delete conversations."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1482
+#: admin/class-fsweb-ai-automated-contact-admin.php:1470
 msgid "Permission denied."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1504
+#: admin/class-fsweb-ai-automated-contact-admin.php:1492
 msgid "Select an AI provider first."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1520
+#: admin/class-fsweb-ai-automated-contact-admin.php:1508
 msgid "Paste the API key of the selected provider to run the test."
 msgstr ""
 
-#: admin/class-fsweb-ai-automated-contact-admin.php:1533
+#: admin/class-fsweb-ai-automated-contact-admin.php:1521
 msgid "This provider has no API endpoint configured."
 msgstr ""
 
 #. translators: 1: provider id, 2: model name, 3: answer from the model.
-#: admin/class-fsweb-ai-automated-contact-admin.php:1588
+#: admin/class-fsweb-ai-automated-contact-admin.php:1576
 #, php-format
 msgid "Success with %1$s / %2$s. Model answered: %3$s"
 msgstr ""
@@ -912,43 +904,39 @@ msgstr ""
 msgid "Invalid license key."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:266
+#: includes/class-fsweb-ai-automated-contact-license.php:268
 msgid "License deactivated."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:288
-msgid "License key removed."
-msgstr ""
-
-#: includes/class-fsweb-ai-automated-contact-license.php:307
+#: includes/class-fsweb-ai-automated-contact-license.php:287
 msgid "No license saved. Enter a key first."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:326
+#: includes/class-fsweb-ai-automated-contact-license.php:306
 msgid "The license server could not be reached right now."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:334
+#: includes/class-fsweb-ai-automated-contact-license.php:314
 msgid "The license server did not answer correctly right now."
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:368
+#: includes/class-fsweb-ai-automated-contact-license.php:348
 msgid "License active"
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:370
+#: includes/class-fsweb-ai-automated-contact-license.php:350
 msgid "License expired"
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:372
+#: includes/class-fsweb-ai-automated-contact-license.php:352
 msgid "Invalid key"
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:374
+#: includes/class-fsweb-ai-automated-contact-license.php:354
 msgid "License pending"
 msgstr ""
 
-#: includes/class-fsweb-ai-automated-contact-license.php:376
+#: includes/class-fsweb-ai-automated-contact-license.php:356
 msgid "License inactive"
 msgstr ""
 

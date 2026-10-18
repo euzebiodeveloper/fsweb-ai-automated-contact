@@ -30,6 +30,10 @@ The assistant never changes, deletes or publishes anything on the site. It only 
 
 The license screen for the add-on lives in this plugin (**AI Contact → PRO license**), so the key can be activated before the add-on is installed. Advanced options are available in the separate **AI Automated Contact PRO** add-on, installed alongside this plugin: assistant name, privacy notice, full colour palette, custom message limit, custom avatar image, editable welcome message, auto-open with delay, custom CSS, license activation and automatic updates. The free version does not contain premium code; it keeps working on its own.
 
+== Source code ==
+
+This plugin is free software, licensed under GPLv2 or later. The full source code is public at https://github.com/euzebiodeveloper/fsweb-ai-automated-contact — the same code that is submitted to the WordPress.org directory.
+
 == Installation ==
 
 1. Upload the `fsweb-ai-automated-contact` folder to `/wp-content/plugins/`, or install the ZIP through **Plugins → Add New → Upload Plugin**.

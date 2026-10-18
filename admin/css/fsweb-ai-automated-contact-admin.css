@@ -1388,3 +1388,71 @@ body.fsweb-aic-preview-is-open {
 .fsweb-aic-transcript td {
 	vertical-align: top;
 }
+
+/* Rótulo e valor da licença, no mesmo formato dos outros plugins FSWEB. */
+.fsweb-aic-field__label {
+	display: block;
+	color: var(--fsweb-aic-heading);
+	font-weight: 600;
+	font-size: 13.5px;
+}
+
+.fsweb-aic-field__value {
+	padding: 3px 0;
+	color: var(--fsweb-aic-body);
+	font-size: 14px;
+	line-height: 1.4;
+}
+
+/* "Como funciona": lista com ícones e dica final. */
+.fsweb-aic-list--icons {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.fsweb-aic-list--icons li {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	margin-bottom: 12px;
+}
+
+.fsweb-aic-list--icons li:last-child {
+	margin-bottom: 0;
+}
+
+.fsweb-aic-list--icons .dashicons {
+	flex-shrink: 0;
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+	line-height: 18px;
+	color: var(--fsweb-aic-brand);
+}
+
+.fsweb-aic-hint {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	margin: 16px 0 0;
+	padding: 12px 14px;
+	border-radius: var(--fsweb-aic-radius-sm);
+	background: var(--fsweb-aic-soft);
+	color: var(--fsweb-aic-body);
+	font-size: 13px;
+	line-height: 1.55;
+}
+
+.fsweb-aic-hint .dashicons {
+	flex-shrink: 0;
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+	line-height: 18px;
+	color: var(--fsweb-aic-muted);
+}
+
+.fsweb-aic-hint p {
+	margin: 0;
+}

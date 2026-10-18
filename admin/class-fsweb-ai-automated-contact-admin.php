@@ -800,24 +800,25 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			return;
 		}
 
-		$key        = $this->license->get_key();
-		$status     = $this->license->get_status();
-		$expires    = $this->license->format_expires();
-		$settings   = admin_url( 'admin.php?page=fsweb-ai-automated-contact' );
-		$notice     = get_transient( 'fsweb_aic_license_notice_' . get_current_user_id() );
+		$key      = $this->license->get_key();
+		$status   = $this->license->get_status();
+		$expires  = $this->license->format_expires();
+		$active   = ( 'active' === $status );
+		$settings = admin_url( 'admin.php?page=fsweb-ai-automated-contact' );
+		$notice   = get_transient( 'fsweb_aic_license_notice_' . get_current_user_id() );
 
 		if ( false !== $notice ) {
 			delete_transient( 'fsweb_aic_license_notice_' . get_current_user_id() );
 		}
 		?>
-		<div class="wrap fsweb-aic-wrap">
+		<div class="wrap fsweb-aic-wrap fsweb-aic-license-wrap">
 			<hr class="wp-header-end">
 
 			<div class="fsweb-aic-hero fsweb-aic-hero--split">
-					<div>
-						<h1><?php esc_html_e( 'PRO license', 'fsweb-ai-automated-contact' ); ?></h1>
-						<p><?php esc_html_e( 'Activate the key you received with the PRO add-on. The extra fields on the AI Contact screen unlock only with an active license and the add-on running.', 'fsweb-ai-automated-contact' ); ?></p>
-					</div>
+				<div>
+					<h1><?php esc_html_e( 'PRO license', 'fsweb-ai-automated-contact' ); ?></h1>
+					<p><?php esc_html_e( 'Activate the key you received with the PRO add-on. The extra fields on the AI Contact screen unlock only with an active license and the add-on running.', 'fsweb-ai-automated-contact' ); ?></p>
+				</div>
 				<div class="fsweb-aic-hero__actions">
 					<a class="button" href="<?php echo esc_url( $settings ); ?>">
 						<span class="dashicons dashicons-admin-settings"></span>
@@ -835,44 +836,40 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			<div class="fsweb-aic-card">
 				<div class="fsweb-aic-card__header">
 					<h2>
-						<span class="dashicons dashicons-admin-network"></span>
+						<span class="dashicons dashicons-awards"></span>
 						<?php esc_html_e( 'License', 'fsweb-ai-automated-contact' ); ?>
 					</h2>
 				</div>
 				<div class="fsweb-aic-card__body">
-					<p>
-						<span class="fsweb-aic-pill <?php echo 'active' === $status ? 'is-on' : 'is-off'; ?>">
-							<?php echo esc_html( $this->license->status_message( $status ) ); ?>
-						</span>
-					</p>
-
-					<table class="form-table" role="presentation">
-						<?php if ( '' !== $expires ) : ?>
-						<tr>
-							<th scope="row"><?php esc_html_e( 'Expires on', 'fsweb-ai-automated-contact' ); ?></th>
-							<td><?php echo esc_html( $expires ); ?></td>
-						</tr>
-						<?php endif; ?>
-					</table>
-
 					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 						<input type="hidden" name="action" value="fsweb_aic_license">
 						<?php wp_nonce_field( 'fsweb_aic_license' ); ?>
 
-						<table class="form-table" role="presentation">
-							<tr>
-								<th scope="row">
-									<label for="fsweb-aic-license-key"><?php esc_html_e( 'License key', 'fsweb-ai-automated-contact' ); ?></label>
-								</th>
-								<td>
-									<input type="text" class="regular-text" id="fsweb-aic-license-key" name="license_key"
-										value="<?php echo esc_attr( $key ); ?>" autocomplete="off" spellcheck="false">
-									<p class="description"><?php esc_html_e( 'Paste the key exactly as you received it. Activation binds it to this domain.', 'fsweb-ai-automated-contact' ); ?></p>
-								</td>
-							</tr>
-						</table>
+						<div class="fsweb-aic-grid">
+							<div class="fsweb-aic-field fsweb-aic-field--full">
+								<label for="fsweb-aic-license-key"><?php esc_html_e( 'License key', 'fsweb-ai-automated-contact' ); ?></label>
+								<input type="text" class="regular-text" id="fsweb-aic-license-key" name="license_key"
+									value="<?php echo esc_attr( $key ); ?>" autocomplete="off" spellcheck="false"
+									<?php echo $active ? 'readonly' : ''; ?>>
+								<p class="description"><?php esc_html_e( 'Paste the key exactly as you received it. Activation binds it to this domain.', 'fsweb-ai-automated-contact' ); ?></p>
+							</div>
 
-						<p class="submit">
+							<div class="fsweb-aic-field">
+								<span class="fsweb-aic-field__label"><?php esc_html_e( 'Status', 'fsweb-ai-automated-contact' ); ?></span>
+								<span class="fsweb-aic-pill <?php echo $active ? 'is-on' : 'is-off'; ?>">
+									<?php echo esc_html( $this->license->status_message( $status ) ); ?>
+								</span>
+							</div>
+
+							<?php if ( '' !== $expires ) : ?>
+							<div class="fsweb-aic-field">
+								<span class="fsweb-aic-field__label"><?php esc_html_e( 'Expires on', 'fsweb-ai-automated-contact' ); ?></span>
+								<span class="fsweb-aic-field__value"><?php echo esc_html( $expires ); ?></span>
+							</div>
+							<?php endif; ?>
+						</div>
+
+						<div class="fsweb-aic-license-actions">
 							<button type="submit" class="button button-primary" name="license_action" value="activate">
 								<span class="dashicons dashicons-yes-alt"></span>
 								<?php esc_html_e( 'Activate license', 'fsweb-ai-automated-contact' ); ?>
@@ -886,11 +883,32 @@ class Fsweb_Ai_Automated_Contact_Admin {
 									<?php esc_html_e( 'Deactivate', 'fsweb-ai-automated-contact' ); ?>
 								</button>
 							<?php endif; ?>
-						</p>
+						</div>
 					</form>
 				</div>
 			</div>
 
+			<div class="fsweb-aic-card">
+				<div class="fsweb-aic-card__header">
+					<h2>
+						<span class="dashicons dashicons-lightbulb"></span>
+						<?php esc_html_e( 'How it works', 'fsweb-ai-automated-contact' ); ?>
+					</h2>
+				</div>
+				<div class="fsweb-aic-card__body">
+					<ul class="fsweb-aic-list fsweb-aic-list--icons">
+						<li><span class="dashicons dashicons-clipboard"></span><?php esc_html_e( 'Paste the key you received with the PRO add-on and click Activate.', 'fsweb-ai-automated-contact' ); ?></li>
+						<li><span class="dashicons dashicons-lock"></span><?php esc_html_e( 'The key is bound to this domain and unlocks the extra options on the AI Contact screen.', 'fsweb-ai-automated-contact' ); ?></li>
+						<li><span class="dashicons dashicons-update"></span><?php esc_html_e( 'The status is checked on the license server every time you open this screen.', 'fsweb-ai-automated-contact' ); ?></li>
+						<li><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Use Deactivate to release the key and activate it on another site.', 'fsweb-ai-automated-contact' ); ?></li>
+					</ul>
+
+					<div class="fsweb-aic-hint">
+						<span class="dashicons dashicons-info-outline"></span>
+						<p><?php esc_html_e( 'The free plugin keeps working without a key. While the license is active, the PRO fields appear on the AI Contact screen.', 'fsweb-ai-automated-contact' ); ?></p>
+					</div>
+				</div>
+			</div>
 		</div>
 		<?php
 	}

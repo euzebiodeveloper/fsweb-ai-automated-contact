@@ -128,7 +128,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 		printf(
 			'<div class="notice notice-warning"><p>%s</p></div>',
 			esc_html__(
-				'AI Automated Contact: WooCommerce is not active. The assistant still answers store questions, but product search, product details, cart and checkout are unavailable until WooCommerce is activated.',
+				'FSWEB AI Automated Contact: WooCommerce is not active. The assistant still answers store questions, but product search, product details, cart and checkout are unavailable until WooCommerce is activated.',
 				'fsweb-ai-automated-contact'
 			)
 		);

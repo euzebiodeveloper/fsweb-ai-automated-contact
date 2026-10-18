@@ -1,4 +1,4 @@
-# 🤖 AI Automated Contact
+# 🤖 FSWEB AI Automated Contact
 
 [![WordPress](https://img.shields.io/badge/wordpress-6.0%2B-blue?style=flat-square)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/php-8.1%2B-purple?style=flat-square)](https://www.php.net/)
@@ -17,7 +17,7 @@
 
 AI-powered virtual assistant for WooCommerce: it answers questions and finds products in the catalogue.
 
-The free edition is fully functional with the basic feature set. Advanced features live in the separate **AI Automated Contact PRO** add-on.
+The free edition is fully functional with the basic feature set. Advanced features live in the separate **FSWEB AI Automated Contact PRO** add-on.
 
 ---
 
@@ -44,7 +44,7 @@ The free edition is fully functional with the basic feature set. Advanced featur
 
 ## 📝 Description
 
-**AI Automated Contact** puts an AI assistant on your WooCommerce store. The customer opens the chat, describes what they are looking for, and the assistant searches the catalogue, presents the options, confirms the choice and adds it to the cart — sending the customer straight to checkout.
+**FSWEB AI Automated Contact** puts an AI assistant on your WooCommerce store. The customer opens the chat, describes what they are looking for, and the assistant searches the catalogue, presents the options, confirms the choice and adds it to the cart — sending the customer straight to checkout.
 
 The assistant also answers store questions (delivery times, shipping, payment methods, returns) using the context you write in the settings. API keys never leave the server: the widget only talks to the plugin's own REST endpoints.
 
@@ -110,4 +110,4 @@ The plugin stores each conversation locally with its messages, token counts and 
 
 ---
 
-## 📢 Give your customers an assistant that actually sells, with AI Automated Contact
+## 📢 Give your customers an assistant that actually sells, with FSWEB AI Automated Contact

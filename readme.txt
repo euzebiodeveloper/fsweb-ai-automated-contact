@@ -1,4 +1,4 @@
-=== AI Automated Contact ===
+=== FSWEB AI Automated Contact ===
 Contributors: flowsyncweb
 Donate link: https://flowsyncweb.com/
 Tags: woocommerce, chat, ai, virtual assistant, customer support
@@ -13,10 +13,10 @@ AI-powered virtual assistant for WooCommerce: answers questions, finds products 
 
 == Description ==
 
-> <strong>AI Automated Contact PRO</strong><br />
+> <strong>FSWEB AI Automated Contact PRO</strong><br />
 > This plugin is the free version. The PRO add-on adds the assistant name, an editable welcome message and privacy notice, a full colour palette, a custom message limit, a custom avatar image, temperature and token controls, auto-open with delay, custom CSS and automatic updates. The free version is complete on its own — the add-on only adds options. [Get the PRO version](https://flowsyncweb.com/produto/ai-automated-contact-pro/)
 
-AI Automated Contact puts an AI virtual assistant on your store. A visitor opens the chat, describes what they are looking for, and the assistant searches the catalogue, shows the products with price and availability, answers questions about delivery, payment and returns, and walks the customer to the cart and the checkout.
+FSWEB AI Automated Contact puts an AI virtual assistant on your store. A visitor opens the chat, describes what they are looking for, and the assistant searches the catalogue, shows the products with price and availability, answers questions about delivery, payment and returns, and walks the customer to the cart and the checkout.
 
 You bring the AI: connect your own account with OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq, or any OpenAI-compatible endpoint. There is no shared key, no proxy and no markup — the requests are billed directly by the provider you choose.
 
@@ -49,7 +49,7 @@ The whole setup happens on one screen, **AI Contact** in the admin menu, and tak
 
 This free version is complete and does not expire. It has no trial period, no license requirement and no disabled buttons: every feature listed above works on its own, forever.
 
-Extra options are provided by the separate **AI Automated Contact PRO** add-on, installed alongside this plugin: assistant name, editable welcome message, editable privacy notice, a full colour palette, a custom message limit, a custom avatar image, temperature and token limits, auto-open with delay, custom CSS, and automatic updates.
+Extra options are provided by the separate **FSWEB AI Automated Contact PRO** add-on, installed alongside this plugin: assistant name, editable welcome message, editable privacy notice, a full colour palette, a custom message limit, a custom avatar image, temperature and token limits, auto-open with delay, custom CSS, and automatic updates.
 
 The license screen lives in this plugin (**AI Contact → PRO license**), so a key can be activated before the add-on is installed. No premium code is bundled here — the free version keeps working if the add-on is never installed or is deactivated.
 
@@ -61,7 +61,7 @@ The license screen lives in this plugin (**AI Contact → PRO license**), so a k
 
 == Installation ==
 
-1. Install the plugin: search for **AI Automated Contact** in **Plugins → Add New**, or upload the ZIP through **Plugins → Add New → Upload Plugin**.
+1. Install the plugin: search for **FSWEB AI Automated Contact** in **Plugins → Add New**, or upload the ZIP through **Plugins → Add New → Upload Plugin**.
 2. Activate the plugin through the **Plugins** menu.
 3. Open **AI Contact** in the admin menu.
 4. Under **Artificial Intelligence**, choose your **provider** — OpenAI, Anthropic, DeepSeek, xAI, Groq or a custom OpenAI-compatible endpoint.
@@ -127,7 +127,7 @@ No. The assistant can only read the catalogue and add items to the cart. It cann
 
 = Is there a PRO version? =
 
-Yes. **AI Automated Contact PRO** is a separate add-on that expands the assistant with the name, welcome message, privacy notice, the full colour palette, a custom message limit (1 to 300), an avatar from your media library, temperature and token limits, auto-open with delay, custom CSS and automatic updates. Details and purchase: https://flowsyncweb.com/produto/ai-automated-contact-pro/
+Yes. **FSWEB AI Automated Contact PRO** is a separate add-on that expands the assistant with the name, welcome message, privacy notice, the full colour palette, a custom message limit (1 to 300), an avatar from your media library, temperature and token limits, auto-open with delay, custom CSS and automatic updates. Details and purchase: https://flowsyncweb.com/produto/ai-automated-contact-pro/
 
 It is an add-on, not a locked feature: the free version is complete, has no trial period and never stops working. A license key is entered on the **AI Contact → PRO license** screen, which is why you can buy and activate before installing the add-on.
 

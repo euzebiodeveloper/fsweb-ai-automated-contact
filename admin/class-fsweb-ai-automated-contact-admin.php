@@ -803,7 +803,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 		$key        = $this->license->get_key();
 		$status     = $this->license->get_status();
 		$expires    = $this->license->format_expires();
-		$pro_active = $this->is_pro_active();
 		$settings   = admin_url( 'admin.php?page=fsweb-ai-automated-contact' );
 		$notice     = get_transient( 'fsweb_aic_license_notice_' . get_current_user_id() );
 
@@ -854,17 +853,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 							<td><?php echo esc_html( $expires ); ?></td>
 						</tr>
 						<?php endif; ?>
-						<tr>
-							<th scope="row"><?php esc_html_e( 'PRO add-on', 'fsweb-ai-automated-contact' ); ?></th>
-							<td>
-								<?php if ( $pro_active ) : ?>
-									<span class="fsweb-aic-pill is-on"><?php esc_html_e( 'Active', 'fsweb-ai-automated-contact' ); ?></span>
-								<?php else : ?>
-									<span class="fsweb-aic-pill is-off"><?php esc_html_e( 'Not installed', 'fsweb-ai-automated-contact' ); ?></span>
-									<p class="description"><?php esc_html_e( 'The key is saved here, but the extra features only appear after installing and activating the PRO add-on.', 'fsweb-ai-automated-contact' ); ?></p>
-								<?php endif; ?>
-							</td>
-						</tr>
 					</table>
 
 					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">

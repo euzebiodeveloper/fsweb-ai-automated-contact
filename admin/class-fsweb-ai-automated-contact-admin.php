@@ -60,6 +60,14 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	private $conversations_page_hook = '';
 
 	/**
+	 * Hook suffix of the PRO license screen.
+	 *
+	 * @since 1.0.0
+	 * @var   string
+	 */
+	private $license_page_hook = '';
+
+	/**
 	 * License client shared with the PRO add-on.
 	 *
 	 * @since    1.0.0
@@ -252,6 +260,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	private function is_plugin_screen( $hook_suffix ) {
 		return ( $this->settings_page_hook === $hook_suffix )
 			|| ( $this->conversations_page_hook === $hook_suffix )
+			|| ( $this->license_page_hook === $hook_suffix )
 			|| $this->is_tutorial_page();
 	}
 
@@ -284,7 +293,7 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			array( $this, 'render_conversations_page' )
 		);
 
-		add_submenu_page(
+		$this->license_page_hook = add_submenu_page(
 			'fsweb-ai-automated-contact',
 			__( 'AI Contact — PRO license', 'fsweb-ai-automated-contact' ),
 			__( 'PRO license', 'fsweb-ai-automated-contact' ),
@@ -884,7 +893,8 @@ class Fsweb_Ai_Automated_Contact_Admin {
 							<?php endif; ?>
 
 							<?php if ( $active || '' !== $key ) : ?>
-								<button type="submit" class="button" name="license_action" value="deactivate">
+								<button type="submit" class="button fsweb-aic-button--danger" name="license_action" value="deactivate"
+									data-confirm="<?php esc_attr_e( 'Deactivate this license? The PRO fields stay locked until you activate the key again.', 'fsweb-ai-automated-contact' ); ?>">
 									<?php esc_html_e( 'Deactivate', 'fsweb-ai-automated-contact' ); ?>
 								</button>
 							<?php endif; ?>

@@ -111,7 +111,8 @@ jobs:
             - 🤖 **Multi-IA** — OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq e endpoints compatíveis com OpenAI
             - 🛒 **WooCommerce** — busca de produtos, detalhes, carrinho e link de checkout
             - 🎨 **Widget próprio** — chat flutuante com aparência configurável
-            - 🔑 **Licença e atualização automática** — updates direto do servidor
+                        - 💬 **Conversas e custos** — histórico local com tokens e custo estimado
+            - ⚙️ **Configurações completas** — nome, textos, limites, temperatura, tokens e paleta editáveis
 
             ## 🔖 Changelog
 

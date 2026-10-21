@@ -140,10 +140,6 @@ class Fsweb_Ai_Automated_Contact_Public {
 			return false;
 		}
 
-		if ( ! fsweb_ai_automated_contact_license_is_active() ) {
-			return false;
-		}
-
 		if ( is_admin() || wp_doing_ajax() || is_feed() || is_embed() ) {
 			return false;
 		}

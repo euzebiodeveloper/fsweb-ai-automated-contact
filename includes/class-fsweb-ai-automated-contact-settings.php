@@ -254,12 +254,18 @@ class Fsweb_Ai_Automated_Contact_Settings {
 			$output[ $flag ] = ( isset( $input[ $flag ] ) && 'yes' === $input[ $flag ] ) ? 'yes' : 'no';
 		}
 
-		// Identity, welcome text and privacy note are PRO features: the free
-		// edition always keeps the shipped values and the PRO add-on filters
-		// them at runtime through `fsweb_aic_settings_all`.
-		$output['agent_name']      = $defaults['agent_name'];
-		$output['welcome_message'] = $defaults['welcome_message'];
-		$output['privacy_note']    = $defaults['privacy_note'];
+		// Identity and welcome texts are plain merchant input: sanitize them
+		// like any other field, with the shipped value as the empty fallback.
+		$agent_name = isset( $input['agent_name'] ) ? sanitize_text_field( (string) $input['agent_name'] ) : '';
+		$output['agent_name'] = '' !== $agent_name ? $agent_name : $defaults['agent_name'];
+
+		$output['welcome_message'] = isset( $input['welcome_message'] )
+			? sanitize_textarea_field( (string) $input['welcome_message'] )
+			: $defaults['welcome_message'];
+
+		$output['privacy_note'] = isset( $input['privacy_note'] )
+			? sanitize_textarea_field( (string) $input['privacy_note'] )
+			: $defaults['privacy_note'];
 
 		// The context is a free-form prompt: keep line breaks, strip tags.
 		$output['context'] = isset( $input['context'] ) ? wp_kses_post( trim( (string) $input['context'] ) ) : '';
@@ -276,16 +282,17 @@ class Fsweb_Ai_Automated_Contact_Settings {
 		$output['model']   = isset( $input['model'] ) ? sanitize_text_field( $input['model'] ) : $defaults['model'];
 		$output['context'] = isset( $output['context'] ) ? $output['context'] : '';
 
-		// Temperature and max tokens are PRO features: the free edition keeps
-		// the shipped values and the add-on filters them at runtime.
-		$output['temperature'] = (float) $defaults['temperature'];
-		$output['max_tokens']  = (int) $defaults['max_tokens'];
+		$temperature = isset( $input['temperature'] ) ? (float) $input['temperature'] : (float) $defaults['temperature'];
+		$output['temperature'] = max( 0, min( 2, round( $temperature, 2 ) ) );
+
+		$max_tokens = isset( $input['max_tokens'] ) ? absint( $input['max_tokens'] ) : (int) $defaults['max_tokens'];
+		$output['max_tokens'] = max( 64, min( 32000, $max_tokens ) );
 
 		$limit = isset( $input['product_limit'] ) ? absint( $input['product_limit'] ) : (int) $defaults['product_limit'];
 		$output['product_limit'] = max( 1, min( 10, $limit ) );
 
-		// The free edition keeps a fixed limit; PRO filters this value.
-		$output['rate_limit'] = max( 1, min( 300, (int) apply_filters( 'fsweb_aic_rate_limit', (int) $defaults['rate_limit'] ) ) );
+		$rate_limit = isset( $input['rate_limit'] ) ? absint( $input['rate_limit'] ) : (int) $defaults['rate_limit'];
+		$output['rate_limit'] = max( 1, min( 300, (int) apply_filters( 'fsweb_aic_rate_limit', $rate_limit ) ) );
 
 		$output['debug_log'] = ( isset( $input['debug_log'] ) && 'yes' === $input['debug_log'] ) ? 'yes' : 'no';
 
@@ -300,14 +307,13 @@ class Fsweb_Ai_Automated_Contact_Settings {
 
 		$output['position'] = ( isset( $input['position'] ) && 'left' === $input['position'] ) ? 'left' : 'right';
 
-		// Only the primary colour is editable in the free edition.
 		$accent = isset( $input['accent_color'] ) ? sanitize_hex_color( $input['accent_color'] ) : '';
 		$output['accent_color'] = $accent ? $accent : $defaults['accent_color'];
 
-		// The rest of the palette is a PRO feature: keep the shipped values
-		// here and let the add-on filter them at runtime.
+		// The rest of the palette uses the same sanitizer as the accent.
 		foreach ( array( 'color_title', 'color_icon', 'chat_background', 'chat_text', 'bubble_agent' ) as $color_key ) {
-			$output[ $color_key ] = $defaults[ $color_key ];
+			$color = isset( $input[ $color_key ] ) ? sanitize_hex_color( $input[ $color_key ] ) : '';
+			$output[ $color_key ] = $color ? $color : $defaults[ $color_key ];
 		}
 
 		$avatar_types        = array( 'initials', 'chat' );

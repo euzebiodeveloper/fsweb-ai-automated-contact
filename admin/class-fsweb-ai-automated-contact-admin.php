@@ -60,23 +60,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	private $conversations_page_hook = '';
 
 	/**
-	 * Hook suffix of the PRO license screen.
-	 *
-	 * @since 1.0.0
-	 * @var   string
-	 */
-	private $license_page_hook = '';
-
-	/**
-	 * License client shared with the PRO add-on.
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 * @var      Fsweb_Ai_Automated_Contact_License
-	 */
-	private $license;
-
-	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -86,7 +69,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	public function __construct( $plugin_name, $version ) {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
-		$this->license     = new Fsweb_Ai_Automated_Contact_License();
 	}
 
 	/**
@@ -97,20 +79,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	 */
 	public function is_pro_active() {
 		return defined( 'FSWEB_AIC_PRO_VERSION' ) || class_exists( 'Fsweb_Aic_Pro_Settings' );
-	}
-
-	/**
-	 * Whether the PRO fields may be edited and saved.
-	 *
-	 * Both halves are required: an active license and the add-on running.
-	 *
-	 * @since  1.0.0
-	 * @return bool
-	 */
-	public function is_unlocked() {
-		$dev = defined( 'FSWEB_AIC_PRO_DEV' ) && FSWEB_AIC_PRO_DEV;
-
-		return $this->is_pro_active() && ( $dev || $this->license->is_active() );
 	}
 
 	/**
@@ -260,7 +228,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	private function is_plugin_screen( $hook_suffix ) {
 		return ( $this->settings_page_hook === $hook_suffix )
 			|| ( $this->conversations_page_hook === $hook_suffix )
-			|| ( $this->license_page_hook === $hook_suffix )
 			|| $this->is_tutorial_page();
 	}
 
@@ -292,16 +259,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			'fsweb-ai-automated-contact-conversations',
 			array( $this, 'render_conversations_page' )
 		);
-
-		$this->license_page_hook = add_submenu_page(
-			'fsweb-ai-automated-contact',
-			__( 'AI Contact — PRO license', 'fsweb-ai-automated-contact' ),
-			__( 'PRO license', 'fsweb-ai-automated-contact' ),
-			'manage_options',
-			'fsweb-ai-automated-contact-license',
-			array( $this, 'render_license_page' )
-		);
-
 	}
 
 	/**
@@ -318,8 +275,8 @@ class Fsweb_Ai_Automated_Contact_Admin {
 	/**
 	 * Whether the shared admin stylesheet belongs on this screen.
 	 *
-	 * The license screen and the PRO add-on live under the same menu and use
-	 * the same hero, cards and form controls.
+	 * The PRO add-on lives under the same menu and uses the same hero, cards
+	 * and form controls, so its screen needs this stylesheet too.
 	 *
 	 * @since  1.0.0
 	 * @param  string $hook_suffix Current admin page hook.
@@ -659,6 +616,60 @@ class Fsweb_Ai_Automated_Contact_Admin {
 						</div>
 					</div>
 
+					<?php if ( ! defined( 'FSWEB_AIC_PRO_VERSION' ) ) : ?>
+					<div class="fsweb-aic-card fsweb-aic-card--wide">
+						<div class="fsweb-aic-card__header">
+							<h2>
+								<span class="dashicons dashicons-edit"></span>
+								<?php esc_html_e( 'Assistant text and limits', 'fsweb-ai-automated-contact' ); ?>
+							</h2>
+						</div>
+						<div class="fsweb-aic-card__body">
+							<table class="form-table" role="presentation">
+								<tr>
+									<th scope="row"><label for="fsweb-aic-agent-name"><?php esc_html_e( 'Assistant name', 'fsweb-ai-automated-contact' ); ?></label></th>
+									<td>
+										<input type="text" class="regular-text" id="fsweb-aic-agent-name" name="<?php echo esc_attr( $option ); ?>[agent_name]" value="<?php echo esc_attr( $settings['agent_name'] ); ?>">
+										<p class="description"><?php esc_html_e( 'Shown in the chat header and on the floating button when the initial avatar is selected.', 'fsweb-ai-automated-contact' ); ?></p>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row"><label for="fsweb-aic-welcome"><?php esc_html_e( 'Welcome message', 'fsweb-ai-automated-contact' ); ?></label></th>
+									<td><textarea class="large-text" rows="3" id="fsweb-aic-welcome" name="<?php echo esc_attr( $option ); ?>[welcome_message]"><?php echo esc_textarea( $settings['welcome_message'] ); ?></textarea></td>
+								</tr>
+								<tr>
+									<th scope="row"><label for="fsweb-aic-privacy"><?php esc_html_e( 'Privacy note', 'fsweb-ai-automated-contact' ); ?></label></th>
+									<td>
+										<input type="text" class="large-text" id="fsweb-aic-privacy" name="<?php echo esc_attr( $option ); ?>[privacy_note]" value="<?php echo esc_attr( $settings['privacy_note'] ); ?>">
+										<p class="description"><?php esc_html_e( 'Short notice printed under the chat input, e.g. a warning about automated answers.', 'fsweb-ai-automated-contact' ); ?></p>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row"><label for="fsweb-aic-temperature"><?php esc_html_e( 'Temperature', 'fsweb-ai-automated-contact' ); ?></label></th>
+									<td>
+										<input type="number" class="small-text" step="0.1" min="0" max="2" id="fsweb-aic-temperature" name="<?php echo esc_attr( $option ); ?>[temperature]" value="<?php echo esc_attr( (string) $settings['temperature'] ); ?>">
+										<p class="description"><?php esc_html_e( 'Lower values keep the assistant factual; higher values make it more creative. 0.3 works well for support.', 'fsweb-ai-automated-contact' ); ?></p>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row"><label for="fsweb-aic-max-tokens"><?php esc_html_e( 'Maximum tokens per reply', 'fsweb-ai-automated-contact' ); ?></label></th>
+									<td>
+										<input type="number" class="small-text" min="64" max="32000" step="1" id="fsweb-aic-max-tokens" name="<?php echo esc_attr( $option ); ?>[max_tokens]" value="<?php echo esc_attr( (string) $settings['max_tokens'] ); ?>">
+										<p class="description"><?php esc_html_e( 'Caps the size of each answer and therefore the cost of each request.', 'fsweb-ai-automated-contact' ); ?></p>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row"><label for="fsweb-aic-rate-limit"><?php esc_html_e( 'Messages per visitor', 'fsweb-ai-automated-contact' ); ?></label></th>
+									<td>
+										<input type="number" class="small-text" min="1" max="300" step="1" id="fsweb-aic-rate-limit" name="<?php echo esc_attr( $option ); ?>[rate_limit]" value="<?php echo esc_attr( (string) $settings['rate_limit'] ); ?>">
+										<p class="description"><?php esc_html_e( 'Maximum messages each visitor can send every 10 minutes. Use a low value to protect your API budget.', 'fsweb-ai-automated-contact' ); ?></p>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<?php endif; ?>
+
 					<div class="fsweb-aic-card">
 						<div class="fsweb-aic-card__header">
 							<h2>
@@ -685,8 +696,18 @@ class Fsweb_Ai_Automated_Contact_Admin {
 										<div class="fsweb-aic-colors">
 											<label><span><?php esc_html_e( 'Primary', 'fsweb-ai-automated-contact' ); ?></span>
 												<input type="color" id="fsweb-aic-color-primary" name="<?php echo esc_attr( $option ); ?>[accent_color]" value="<?php echo esc_attr( $settings['accent_color'] ); ?>"></label>
+											<label><span><?php esc_html_e( 'Header text', 'fsweb-ai-automated-contact' ); ?></span>
+												<input type="color" id="fsweb-aic-color-title" name="<?php echo esc_attr( $option ); ?>[color_title]" value="<?php echo esc_attr( $settings['color_title'] ); ?>"></label>
+											<label><span><?php esc_html_e( 'Icon', 'fsweb-ai-automated-contact' ); ?></span>
+												<input type="color" id="fsweb-aic-color-icon" name="<?php echo esc_attr( $option ); ?>[color_icon]" value="<?php echo esc_attr( $settings['color_icon'] ); ?>"></label>
+											<label><span><?php esc_html_e( 'Chat background', 'fsweb-ai-automated-contact' ); ?></span>
+												<input type="color" id="fsweb-aic-color-chat-bg" name="<?php echo esc_attr( $option ); ?>[chat_background]" value="<?php echo esc_attr( $settings['chat_background'] ); ?>"></label>
+											<label><span><?php esc_html_e( 'Chat text', 'fsweb-ai-automated-contact' ); ?></span>
+												<input type="color" id="fsweb-aic-color-chat-text" name="<?php echo esc_attr( $option ); ?>[chat_text]" value="<?php echo esc_attr( $settings['chat_text'] ); ?>"></label>
+											<label><span><?php esc_html_e( 'Assistant bubble', 'fsweb-ai-automated-contact' ); ?></span>
+												<input type="color" id="fsweb-aic-color-bubble" name="<?php echo esc_attr( $option ); ?>[bubble_agent]" value="<?php echo esc_attr( $settings['bubble_agent'] ); ?>"></label>
 										</div>
-										<p class="description"><?php esc_html_e( 'The free edition ships the primary colour. The rest of the palette is part of the PRO add-on.', 'fsweb-ai-automated-contact' ); ?></p>
+										<p class="description"><?php esc_html_e( 'The palette is applied to the widget through CSS variables.', 'fsweb-ai-automated-contact' ); ?></p>
 																			</td>
 								</tr>
 								<tr>
@@ -793,173 +814,6 @@ class Fsweb_Ai_Automated_Contact_Admin {
 			</div>
 		</div>
 		<?php
-	}
-
-	/**
-	 * Render the PRO license screen.
-	 *
-	 * The free edition owns this screen: the key can be activated before the
-	 * add-on is installed and the add-on reads the very same options.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function render_license_page() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		$key      = $this->license->get_key();
-		$status   = $this->license->get_status();
-		$expires  = $this->license->format_expires();
-		$active   = ( 'active' === $status );
-		$settings = admin_url( 'admin.php?page=fsweb-ai-automated-contact' );
-		$notice   = get_transient( 'fsweb_aic_license_notice_' . get_current_user_id() );
-
-		if ( false !== $notice ) {
-			delete_transient( 'fsweb_aic_license_notice_' . get_current_user_id() );
-		}
-		?>
-		<div class="wrap fsweb-aic-wrap fsweb-aic-license-wrap">
-			<hr class="wp-header-end">
-
-			<div class="fsweb-aic-hero fsweb-aic-hero--split">
-				<div>
-					<h1><?php esc_html_e( 'PRO license', 'fsweb-ai-automated-contact' ); ?></h1>
-					<p><?php esc_html_e( 'Activate the key you received with the PRO add-on. The extra fields on the AI Contact screen unlock only with an active license and the add-on running.', 'fsweb-ai-automated-contact' ); ?></p>
-				</div>
-				<div class="fsweb-aic-hero__actions">
-					<a class="button" href="<?php echo esc_url( $settings ); ?>">
-						<span class="dashicons dashicons-admin-settings"></span>
-						<?php esc_html_e( 'Go to settings', 'fsweb-ai-automated-contact' ); ?>
-					</a>
-				</div>
-			</div>
-
-			<?php if ( is_array( $notice ) ) : ?>
-				<div class="notice notice-<?php echo ! empty( $notice['success'] ) ? 'success' : 'error'; ?> is-dismissible">
-					<p><?php echo esc_html( isset( $notice['message'] ) ? $notice['message'] : '' ); ?></p>
-				</div>
-			<?php endif; ?>
-
-			<div class="fsweb-aic-card">
-				<div class="fsweb-aic-card__header">
-					<h2>
-						<span class="dashicons dashicons-awards"></span>
-						<?php esc_html_e( 'License', 'fsweb-ai-automated-contact' ); ?>
-					</h2>
-				</div>
-				<div class="fsweb-aic-card__body">
-					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-						<input type="hidden" name="action" value="fsweb_aic_license">
-						<?php wp_nonce_field( 'fsweb_aic_license' ); ?>
-
-						<div class="fsweb-aic-grid">
-							<div class="fsweb-aic-field fsweb-aic-field--full">
-								<label for="fsweb-aic-license-key"><?php esc_html_e( 'License key', 'fsweb-ai-automated-contact' ); ?></label>
-								<input type="text" class="regular-text" id="fsweb-aic-license-key" name="license_key"
-									value="<?php echo esc_attr( $key ); ?>" autocomplete="off" spellcheck="false"
-									<?php echo $active ? 'readonly' : ''; ?>>
-								<p class="description"><?php esc_html_e( 'Paste the key exactly as you received it. Activation binds it to this domain.', 'fsweb-ai-automated-contact' ); ?></p>
-							</div>
-
-							<div class="fsweb-aic-field">
-								<span class="fsweb-aic-field__label"><?php esc_html_e( 'Status', 'fsweb-ai-automated-contact' ); ?></span>
-								<span class="fsweb-aic-pill <?php echo $active ? 'is-on' : 'is-off'; ?>">
-									<?php echo esc_html( $this->license->status_message( $status ) ); ?>
-								</span>
-							</div>
-
-							<?php if ( '' !== $expires ) : ?>
-							<div class="fsweb-aic-field">
-								<span class="fsweb-aic-field__label"><?php esc_html_e( 'Expires on', 'fsweb-ai-automated-contact' ); ?></span>
-								<span class="fsweb-aic-field__value"><?php echo esc_html( $expires ); ?></span>
-							</div>
-							<?php endif; ?>
-						</div>
-
-						<div class="fsweb-aic-license-actions">
-							<?php if ( ! $active ) : ?>
-								<button type="submit" class="button button-primary" name="license_action" value="activate">
-									<span class="dashicons dashicons-yes-alt"></span>
-									<?php esc_html_e( 'Activate license', 'fsweb-ai-automated-contact' ); ?>
-								</button>
-							<?php endif; ?>
-
-							<?php if ( $active ) : ?>
-								<button type="submit" class="button" name="license_action" value="check">
-									<?php esc_html_e( 'Recheck status', 'fsweb-ai-automated-contact' ); ?>
-								</button>
-								<button type="submit" class="button fsweb-aic-button--danger" name="license_action" value="deactivate"
-									data-confirm="<?php esc_attr_e( 'Deactivate this license? The PRO fields stay locked until you activate the key again.', 'fsweb-ai-automated-contact' ); ?>">
-									<?php esc_html_e( 'Deactivate', 'fsweb-ai-automated-contact' ); ?>
-								</button>
-							<?php endif; ?>
-						</div>
-					</form>
-				</div>
-			</div>
-
-			<div class="fsweb-aic-card">
-				<div class="fsweb-aic-card__header">
-					<h2>
-						<span class="dashicons dashicons-lightbulb"></span>
-						<?php esc_html_e( 'How it works', 'fsweb-ai-automated-contact' ); ?>
-					</h2>
-				</div>
-				<div class="fsweb-aic-card__body">
-					<ul class="fsweb-aic-list fsweb-aic-list--icons">
-						<li><span class="dashicons dashicons-clipboard"></span><?php esc_html_e( 'Paste the key you received with the PRO add-on and click Activate.', 'fsweb-ai-automated-contact' ); ?></li>
-						<li><span class="dashicons dashicons-lock"></span><?php esc_html_e( 'The key is bound to this domain and unlocks the extra options on the AI Contact screen.', 'fsweb-ai-automated-contact' ); ?></li>
-						<li><span class="dashicons dashicons-update"></span><?php esc_html_e( 'The status is checked on the license server every time you open this screen.', 'fsweb-ai-automated-contact' ); ?></li>
-						<li><span class="dashicons dashicons-dismiss"></span><?php esc_html_e( 'Use Deactivate to release the key and activate it on another site.', 'fsweb-ai-automated-contact' ); ?></li>
-					</ul>
-
-					<div class="fsweb-aic-hint">
-						<span class="dashicons dashicons-info-outline"></span>
-						<p><?php esc_html_e( 'The free plugin keeps working without a key. While the license is active, the PRO fields appear on the AI Contact screen.', 'fsweb-ai-automated-contact' ); ?></p>
-					</div>
-				</div>
-			</div>
-		</div>
-		<?php
-	}
-
-	/**
-	 * Handle activate, deactivate and recheck from the license screen.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function handle_license_action() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to manage the license.', 'fsweb-ai-automated-contact' ) );
-		}
-
-		check_admin_referer( 'fsweb_aic_license' );
-
-		$license_action = isset( $_POST['license_action'] ) ? sanitize_key( wp_unslash( $_POST['license_action'] ) ) : 'activate';
-		$license_key    = isset( $_POST['license_key'] ) ? sanitize_text_field( wp_unslash( $_POST['license_key'] ) ) : '';
-
-		if ( 'deactivate' === $license_action ) {
-			$result = $this->license->deactivate();
-		} elseif ( 'check' === $license_action ) {
-			$result = $this->license->validate( $license_key );
-		} else {
-			$result = $this->license->activate( $license_key );
-		}
-
-		set_transient(
-			'fsweb_aic_license_notice_' . get_current_user_id(),
-			array(
-				'success' => ! empty( $result['success'] ),
-				'message' => isset( $result['message'] ) ? (string) $result['message'] : '',
-			),
-			60
-		);
-
-		wp_safe_redirect( add_query_arg( 'page', 'fsweb-ai-automated-contact-license', admin_url( 'admin.php' ) ) );
-		exit;
 	}
 
 	/**

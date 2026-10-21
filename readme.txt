@@ -5,7 +5,7 @@ Tags: woocommerce, chat, ai, virtual assistant, customer support
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ AI-powered virtual assistant for WooCommerce: answers questions, finds products 
 == Description ==
 
 > <strong>FSWEB AI Automated Contact PRO</strong><br />
-> This plugin is the free version. The PRO add-on adds the assistant name, an editable welcome message and privacy notice, a full colour palette, a custom message limit, a custom avatar image, temperature and token controls, auto-open with delay, custom CSS and automatic updates. The free version is complete on its own — the add-on only adds options. [Get the PRO version](https://flowsyncweb.com/produto/ai-automated-contact-pro/)
+> This plugin is the free, fully functional version: the assistant name, welcome message, privacy note, temperature, token and message limits, the colour palette and everything below are editable here. The separate PRO add-on adds a custom avatar image, auto-open with delay, custom CSS and automatic updates. [Get the PRO version](https://flowsyncweb.com/produto/ai-automated-contact-pro/)
 
 FSWEB AI Automated Contact puts an AI virtual assistant on your store. A visitor opens the chat, describes what they are looking for, and the assistant searches the catalogue, shows the products with price and availability, answers questions about delivery, payment and returns, and walks the customer to the cart and the checkout.
 
@@ -33,7 +33,7 @@ You bring the AI: connect your own account with OpenAI, Anthropic (Claude), Deep
 * **Show product details**, including variations, attributes and stock.
 * **Add to cart** after the customer confirms, and hand off to the checkout inside the chat.
 * **Answer store questions** — delivery, shipping, payment, returns and opening hours — using the context you write in the settings.
-* **Stay inside the limits** — a fixed rate limit of 30 messages per visitor every 10 minutes protects your API budget.
+* **Stay inside the limits** — a configurable message limit (30 messages per visitor every 10 minutes by default) protects your API budget.
 
 = What it never does =
 
@@ -47,11 +47,11 @@ The whole setup happens on one screen, **AI Contact** in the admin menu, and tak
 
 = Free and PRO =
 
-This free version is complete and does not expire. It has no trial period, no license requirement and no disabled buttons: every feature listed above works on its own, forever.
+This free version is complete and does not expire. It has no trial period, no license requirement and no disabled fields: every option in the settings screen works on its own, forever.
 
-Extra options are provided by the separate **FSWEB AI Automated Contact PRO** add-on, installed alongside this plugin: assistant name, editable welcome message, editable privacy notice, a full colour palette, a custom message limit, a custom avatar image, temperature and token limits, auto-open with delay, custom CSS, and automatic updates.
+Extra options are provided by the separate **FSWEB AI Automated Contact PRO** add-on, installed alongside this plugin: a custom avatar image, auto-open with delay, custom CSS and automatic updates.
 
-The license screen lives in this plugin (**AI Contact → PRO license**), so a key can be activated before the add-on is installed. No premium code is bundled here — the free version keeps working if the add-on is never installed or is deactivated.
+No premium code is bundled here. The free version keeps working if the add-on is never installed or is deactivated. The add-on owns its own license screen, **AI Contact → PRO license**, which appears only while the add-on is active.
 
 = Requirements =
 
@@ -83,11 +83,15 @@ Yes. The plugin does not include AI credits: it connects to the provider you cho
 
 = How much does it cost to run? =
 
-Only what your provider charges for the tokens used. The plugin does not add a markup, sell credits or share a key — the account and the bill are yours. The built-in rate limit of 30 messages per visitor every 10 minutes caps accidental spending. In **Settings → Usage and spending** you can enter the provider's price per one million tokens, see the total spent per conversation and set a maximum spend per conversation. The amounts are estimates based on the prices you enter; the provider's invoice is the source of truth.
+Only what your provider charges for the tokens used. The plugin does not add a markup, sell credits or share a key — the account and the bill are yours. The configurable message limit (30 messages per visitor every 10 minutes by default) caps accidental spending. In **Settings → Usage and spending** you can enter the provider's price per one million tokens, see the total spent per conversation and set a maximum spend per conversation. The amounts are estimates based on the prices you enter; the provider's invoice is the source of truth.
 
 = Which providers are supported? =
 
 OpenAI, Anthropic (Claude), DeepSeek, xAI (Grok), Groq, and any endpoint that speaks the OpenAI chat completions API. You can keep keys for all of them and switch providers at any time without losing the configuration.
+
+= Why does the plugin call the AI provider directly instead of using the WordPress AI Client? =
+
+The core AI Client ships with WordPress 7.0 and uses a site-wide provider configuration. This plugin supports WordPress 6.0 and newer and lets each merchant pick one of five providers — or any OpenAI-compatible endpoint — with their own key, so it calls the provider HTTP API directly. No request is made until a visitor sends a chat message.
 
 = Is WooCommerce required? =
 
@@ -103,15 +107,15 @@ The plugin reads the token usage returned by the provider and multiplies it by t
 
 = Does the free version stop working after a while? =
 
-No. The free version has no trial, no expiry date and no license requirement. The only limit is the fixed message rate limit of 30 messages per visitor every 10 minutes, which protects your API budget.
+No. The free version has no trial, no expiry date and no license requirement. The message limit defaults to 30 per visitor every 10 minutes and can be changed in **AI Contact → Assistant text and limits**.
 
 = Can I change the assistant name, the welcome message or the colours? =
 
-The free version ships with a fixed assistant name, a fixed welcome message and one brand colour, plus the launcher position. Assistant name, welcome message, privacy notice, the full colour palette, a custom avatar and a custom message limit are part of the separate PRO add-on.
+Yes. The assistant name, the welcome message, the privacy note, the temperature, the token limit, the message limit and the full colour palette are editable in the free plugin, under **AI Contact**. The PRO add-on adds a custom avatar image, auto-open with delay and custom CSS.
 
 = Can I change the message limit? =
 
-In the free version the limit is fixed at 30 messages per visitor every 10 minutes. The PRO add-on lets you set it from 1 to 300.
+Yes. Under **AI Contact → Assistant text and limits** you can set it from 1 to 300 messages per visitor every 10 minutes. The default is 30.
 
 = Will it work with my theme? =
 
@@ -127,9 +131,9 @@ No. The assistant can only read the catalogue and add items to the cart. It cann
 
 = Is there a PRO version? =
 
-Yes. **FSWEB AI Automated Contact PRO** is a separate add-on that expands the assistant with the name, welcome message, privacy notice, the full colour palette, a custom message limit (1 to 300), an avatar from your media library, temperature and token limits, auto-open with delay, custom CSS and automatic updates. Details and purchase: https://flowsyncweb.com/produto/ai-automated-contact-pro/
+Yes. **FSWEB AI Automated Contact PRO** is a separate add-on that expands the assistant with an avatar from your media library, auto-open with delay, custom CSS and automatic updates. Details and purchase: https://flowsyncweb.com/produto/ai-automated-contact-pro/
 
-It is an add-on, not a locked feature: the free version is complete, has no trial period and never stops working. A license key is entered on the **AI Contact → PRO license** screen, which is why you can buy and activate before installing the add-on.
+It is an add-on, not a locked feature: the free version is complete, has no trial period and never stops working. The add-on's license is activated on its own screen, **AI Contact → PRO license**, which is registered by the add-on itself.
 
 = What happens when I uninstall the plugin? =
 
@@ -158,11 +162,23 @@ This plugin connects to the AI provider selected by the merchant to generate the
 **When:** only when a visitor sends a message to the chat and the widget is enabled.
 **Authentication:** the merchant's own API key for the chosen provider, stored in the WordPress options table.
 
-Provider policies: https://openai.com/policies/privacy-policy/ · https://www.anthropic.com/legal/privacy · https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html · https://x.ai/legal/privacy-policy · https://groq.com/privacy-policy/
+Provider terms of use and privacy policies:
 
-The plugin itself does not send store data to the plugin author. The only other external contact is the optional PRO license check: when the merchant clicks Activate or Recheck on the license screen, the plugin sends the license key, the site URL and the plugin slug to https://api.flowsyncweb.com/api/license. No chat content, customer data or store data is included in that request, and it never runs on its own.
+* OpenAI — https://openai.com/policies/terms-of-use/ · https://openai.com/policies/privacy-policy/
+* Anthropic — https://www.anthropic.com/legal/commercial-terms · https://www.anthropic.com/legal/privacy
+* DeepSeek — https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html · https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html
+* xAI — https://x.ai/legal/terms-of-service · https://x.ai/legal/privacy-policy
+* Groq — https://groq.com/terms-of-use/ · https://groq.com/privacy-policy/
+
+The plugin itself does not send store data to the plugin author. This free plugin performs no license check, telemetry or usage reporting.
 
 == Changelog ==
+
+= 1.0.1 =
+* Fixed: removed the unused license client from the free plugin; the PRO add-on owns its license screen.
+* Fixed: every setting accepted by the sanitizer (assistant name, welcome and privacy texts, temperature, token and message limits, palette) is now editable in the free settings screen.
+* Fixed: settings are read lazily, so no translated default is loaded before the `init` hook (WordPress 6.7+ "translation loading too early" notice).
+* Improved: the external services section documents the AI provider terms of use and privacy policies.
 
 = 1.0.0 =
 * New: conversation ledger — stores each conversation and its messages with token counts and estimated cost.
@@ -183,6 +199,9 @@ The plugin itself does not send store data to the plugin author. The only other 
 * Fixed rate limit of 30 messages per visitor every 10 minutes.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Removed the unused license client and unlocked every setting in the free edition.
 
 = 1.0.0 =
 First release. No action needed, just install and add your API key.

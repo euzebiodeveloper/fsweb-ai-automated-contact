@@ -113,9 +113,9 @@ class Fsweb_Ai_Automated_Contact_Rest {
 	 * @return bool|\WP_Error
 	 */
 	public function can_chat() {
-		if ( ! fsweb_ai_automated_contact_license_is_active() ) {
+		if ( ! fsweb_ai_automated_contact_features_enabled() ) {
 			return new WP_Error(
-				'fsweb_aic_license_inactive',
+				'fsweb_aic_features_disabled',
 				__( 'The virtual assistant is not active in this store.', 'fsweb-ai-automated-contact' ),
 				array( 'status' => 403 )
 			);
@@ -165,7 +165,7 @@ class Fsweb_Ai_Automated_Contact_Rest {
 
 		return new WP_REST_Response(
 			array(
-				'enabled'    => ( 'yes' === $settings['enabled'] && fsweb_ai_automated_contact_license_is_active() ),
+				'enabled'    => ( 'yes' === $settings['enabled'] && fsweb_ai_automated_contact_features_enabled() ),
 				'agent_name' => $settings['agent_name'],
 				'welcome'    => $settings['welcome_message'],
 				'privacy'    => $settings['privacy_note'],

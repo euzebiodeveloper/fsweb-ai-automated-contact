@@ -11,7 +11,7 @@
  * Plugin Name:       FSWEB AI Automated Contact
  * Plugin URI:        https://flowsyncweb.com/ai-automated-contact/
  * Description:       AI-powered virtual assistant for WooCommerce: answers questions, finds products and guides the customer to the cart and checkout.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.0
  * Requires PHP:      8.1
  * Author:            Flow Sync Web
@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Currently plugin version.
  */
-define( 'FSWEB_AI_AUTOMATED_CONTACT_VERSION', '1.0.0' );
+define( 'FSWEB_AI_AUTOMATED_CONTACT_VERSION', '1.0.1' );
 
 /**
  * Plugin slug. Used for the settings page and the text domain.
@@ -81,19 +81,19 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-fsweb-ai-automated-contact
 /**
  * Whether the plugin features are enabled.
  *
- * The free version has no license gate: it is fully functional with the
- * basic feature set. The PRO add-on can hook this filter if it needs a
- * different behaviour.
+ * The free version has no license gate and no locked functionality: every
+ * feature in the shipped code is available. Extensions may hook the filter
+ * to turn the chat off for their own reasons.
  *
  * @since 1.0.0
  * @return bool
  */
-function fsweb_ai_automated_contact_license_is_active() {
+function fsweb_ai_automated_contact_features_enabled() {
 	/**
 	 * Filter whether the plugin features are enabled.
 	 *
 	 * @since 1.0.0
-	 * @param bool $active Always true in the free version.
+	 * @param bool $enabled Always true in the free version.
 	 */
 	return (bool) apply_filters( 'fsweb_ai_automated_contact_features_enabled', true );
 }

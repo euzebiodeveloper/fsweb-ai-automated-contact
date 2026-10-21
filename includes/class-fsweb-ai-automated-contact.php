@@ -17,8 +17,9 @@
  * The core plugin class.
  *
  * Wires internationalization, admin hooks, REST routes and the public chat
- * widget. The free version has no license gate: the basic feature set is
- * always available. The PRO add-on extends it through the plugin's filters.
+ * widget. The free version has no license gate and no locked code: the whole
+ * feature set is available. The PRO add-on is a separate plugin that extends
+ * this one through filters.
  *
  * @since      1.0.0
  * @package    Fsweb_Ai_Automated_Contact
@@ -98,11 +99,6 @@ class Fsweb_Ai_Automated_Contact {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-settings.php';
 
 		/**
-		 * License client for the PRO add-on (the screen lives in this plugin).
-		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-license.php';
-
-		/**
 		 * Provider-agnostic chat client.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-fsweb-ai-automated-contact-ai-client.php';
@@ -161,9 +157,6 @@ class Fsweb_Ai_Automated_Contact {
 
 		// Provider connectivity test.
 		$this->loader->add_action( 'wp_ajax_fsweb_aic_test_provider', $plugin_admin, 'ajax_test_provider' );
-
-		// License screen actions (activate, deactivate, recheck).
-		$this->loader->add_action( 'admin_post_fsweb_aic_license', $plugin_admin, 'handle_license_action' );
 
 		// Conversation screen: delete one stored conversation.
 		$this->loader->add_action( 'admin_post_fsweb_aic_delete_conversation', $plugin_admin, 'handle_delete_conversation' );

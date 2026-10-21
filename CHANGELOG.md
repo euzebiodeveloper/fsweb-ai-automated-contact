@@ -1,3 +1,9 @@
+# 1.0.1 - 20/10/2026
+  * Fixed: removed the unused PRO license client from the free plugin; the add-on now owns its license screen.
+  * Fixed: assistant name, welcome/privacy texts, temperature, token and message limits and the full palette are editable in the free settings screen.
+  * Fixed: settings are loaded lazily, so translated defaults are not read before `init` (WordPress 6.7+ notice on activation).
+  * Improved: readme documents the AI provider terms and privacy policies and no longer points at the license API.
+
 # 1.0.0 - 18/10/2026
   * New: conversation ledger — one table for conversations and one for messages, with token counts and estimated cost.
   * New: Conversations screen with total spent per conversation, transcript view and delete action.

@@ -55,13 +55,17 @@ class Fsweb_Ai_Automated_Contact_Public {
 	private $should_render = false;
 
 	/**
-	 * Settings resolved once per request.
+	 * Settings resolved lazily on first use.
 	 *
-	 * @since    1.0.0
+	 * Reading the settings here would call the translated defaults during
+	 * plugin loading, before the `init` hook — which WordPress 6.7+ reports
+	 * as "translation loading was triggered too early".
+	 *
+	 * @since    1.0.1
 	 * @access   private
-	 * @var      array
+	 * @var      array|null
 	 */
-	private $settings = array();
+	private $settings = null;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -73,7 +77,20 @@ class Fsweb_Ai_Automated_Contact_Public {
 	public function __construct( $plugin_name, $version ) {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
-		$this->settings    = Fsweb_Ai_Automated_Contact_Settings::all();
+	}
+
+	/**
+	 * Current settings, loaded on first use.
+	 *
+	 * @since  1.0.1
+	 * @return array<string,mixed>
+	 */
+	private function settings() {
+		if ( null === $this->settings ) {
+			$this->settings = Fsweb_Ai_Automated_Contact_Settings::all();
+		}
+
+		return $this->settings;
 	}
 
 	/**
@@ -134,13 +151,9 @@ class Fsweb_Ai_Automated_Contact_Public {
 	 * @return bool
 	 */
 	private function is_enabled() {
-		$settings = $this->settings;
+		$settings = $this->settings();
 
 		if ( 'yes' !== $settings['enabled'] ) {
-			return false;
-		}
-
-		if ( ! fsweb_ai_automated_contact_license_is_active() ) {
 			return false;
 		}
 
@@ -182,7 +195,7 @@ class Fsweb_Ai_Automated_Contact_Public {
 			'all'
 		);
 
-		$settings = $this->settings;
+		$settings = $this->settings();
 
 		$css = sprintf(
 			'.fsweb-aic-widget{--fsweb-aic-accent:%1$s;--fsweb-aic-title:%2$s;--fsweb-aic-chat-bg:%3$s;--fsweb-aic-chat-text:%4$s;--fsweb-aic-agent-bubble:%5$s;}',
@@ -228,7 +241,7 @@ class Fsweb_Ai_Automated_Contact_Public {
 			true
 		);
 
-		$settings = $this->settings;
+		$settings = $this->settings();
 
 		$data = array(
 				'rest_url'     => esc_url_raw( rest_url( Fsweb_Ai_Automated_Contact_Rest::NAMESPACE_V1 ) ),
@@ -281,7 +294,7 @@ class Fsweb_Ai_Automated_Contact_Public {
 			return;
 		}
 
-		$settings = $this->settings;
+		$settings = $this->settings();
 
 		require plugin_dir_path( __FILE__ ) . 'partials/fsweb-ai-automated-contact-widget.php';
 	}

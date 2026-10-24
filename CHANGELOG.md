@@ -1,9 +1,6 @@
-# 1.0.3 - 24/10/2026
-  * Fixed: `Plugin URI` and `Author URI` no longer share the same value — `Plugin URI` now points to the project repository and `Author URI` to the plugin website, so the header passes the WordPress.org upload validation.
-
 # 1.0.2 - 24/10/2026
   * Fixed: the AI client resolves the endpoint on first use instead of inside the constructor, so no translated setting is read while the plugin file is included; the WordPress 6.7+ "translation loading was triggered too early" notice no longer appears on activation, admin or front-end.
-  * Fixed: the plugin header points to `https://flowsyncweb.com/` instead of an address that redirected.
+  * Fixed: plugin and author URIs are now distinct — `Plugin URI` points to the project repository on GitHub and `Author URI` to https://flowsyncweb.com/, both reachable.
 
 # 1.0.1 - 20/10/2026
   * Fixed: removed the unused PRO license client from the free plugin; the add-on now owns its license screen.

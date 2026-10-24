@@ -9,7 +9,7 @@
  *
  * @wordpress-plugin
  * Plugin Name:       FSWEB AI Automated Contact
- * Plugin URI:        https://flowsyncweb.com/
+ * Plugin URI:        https://github.com/euzebiodeveloper/fsweb-ai-automated-contact
  * Description:       AI-powered virtual assistant for WooCommerce: answers questions, finds products and guides the customer to the cart and checkout.
  * Version:           1.0.2
  * Requires at least: 6.0

@@ -176,7 +176,7 @@ The plugin itself does not send store data to the plugin author. This free plugi
 
 = 1.0.2 =
 * Fixed: the AI client resolves the endpoint on first use, so no translated default is loaded while the plugin file is included — the WordPress 6.7+ "translation loading was triggered too early" notice is gone on activation, admin and front-end.
-* Fixed: plugin header link points to https://flowsyncweb.com/.
+* Fixed: plugin and author URIs are distinct — Plugin URI points to the project repository and Author URI to the plugin website, both reachable pages.
 
 = 1.0.1 =
 * Fixed: removed the unused license client from the free plugin; the PRO add-on owns its license screen.
@@ -205,7 +205,7 @@ The plugin itself does not send store data to the plugin author. This free plugi
 == Upgrade Notice ==
 
 = 1.0.2 =
-Removes the translation-loading notice and fixes the plugin header link. Recommended for every site running 1.0.1.
+Removes the translation-loading notice and fixes the plugin header links. Recommended for every site running 1.0.1.
 
 = 1.0.1 =
 Removed the unused license client and unlocked every setting in the free edition.

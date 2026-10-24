@@ -5,7 +5,7 @@ Tags: woocommerce, chat, ai, virtual assistant, customer support
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -174,10 +174,14 @@ The plugin itself does not send store data to the plugin author. This free plugi
 
 == Changelog ==
 
+= 1.0.2 =
+* Fixed: the AI client resolves the endpoint on first use, so no translated default is loaded while the plugin file is included — the WordPress 6.7+ "translation loading was triggered too early" notice is gone on activation, admin and front-end.
+* Fixed: plugin header link points to https://flowsyncweb.com/.
+
 = 1.0.1 =
 * Fixed: removed the unused license client from the free plugin; the PRO add-on owns its license screen.
 * Fixed: every setting accepted by the sanitizer (assistant name, welcome and privacy texts, temperature, token and message limits, palette) is now editable in the free settings screen.
-* Fixed: settings are read lazily, so no translated default is loaded before the `init` hook (WordPress 6.7+ "translation loading too early" notice).
+* Fixed: settings and the AI endpoint are resolved lazily, so no translated default is loaded before the `init` hook (WordPress 6.7+ "translation loading too early" notice).
 * Improved: the external services section documents the AI provider terms of use and privacy policies.
 
 = 1.0.0 =
@@ -199,6 +203,9 @@ The plugin itself does not send store data to the plugin author. This free plugi
 * Fixed rate limit of 30 messages per visitor every 10 minutes.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Removes the translation-loading notice and fixes the plugin header link. Recommended for every site running 1.0.1.
 
 = 1.0.1 =
 Removed the unused license client and unlocked every setting in the free edition.

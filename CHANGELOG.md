@@ -1,7 +1,11 @@
+# 1.0.2 - 24/10/2026
+  * Fixed: the AI client resolves the endpoint on first use instead of inside the constructor, so no translated setting is read while the plugin file is included; the WordPress 6.7+ "translation loading was triggered too early" notice no longer appears on activation, admin or front-end.
+  * Fixed: the plugin header points to `https://flowsyncweb.com/` instead of an address that redirected.
+
 # 1.0.1 - 20/10/2026
   * Fixed: removed the unused PRO license client from the free plugin; the add-on now owns its license screen.
   * Fixed: assistant name, welcome/privacy texts, temperature, token and message limits and the full palette are editable in the free settings screen.
-  * Fixed: settings are loaded lazily, so translated defaults are not read before `init` (WordPress 6.7+ notice on activation).
+  * Fixed: settings and the AI endpoint are resolved lazily, so translated defaults are not read before `init` (WordPress 6.7+ notice on activation and on every page load).
   * Improved: readme documents the AI provider terms and privacy policies and no longer points at the license API.
 
 # 1.0.0 - 18/10/2026

@@ -30,11 +30,22 @@
 class Fsweb_Ai_Automated_Contact_Ai_Client {
 
 	/**
-	 * Resolved endpoint configuration.
+	 * Endpoint override passed to the constructor, or null.
 	 *
-	 * @var array<string,string>
+	 * @var array<string,string>|null
 	 */
-	private $endpoint;
+	private $endpoint_override = null;
+
+	/**
+	 * Resolved endpoint configuration, built on first use.
+	 *
+	 * Resolving it in the constructor would read the translated defaults while
+	 * plugins are still loading, before `init` — which WordPress 6.7+ reports
+	 * as "translation loading was triggered too early".
+	 *
+	 * @var array<string,string>|null
+	 */
+	private $endpoint = null;
 
 	/**
 	 * Constructor.
@@ -43,7 +54,23 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 	 * @param array<string,string>|null $endpoint Optional endpoint override.
 	 */
 	public function __construct( $endpoint = null ) {
-		$this->endpoint = is_array( $endpoint ) ? $endpoint : Fsweb_Ai_Automated_Contact_Settings::active_endpoint();
+		$this->endpoint_override = is_array( $endpoint ) ? $endpoint : null;
+	}
+
+	/**
+	 * Resolved endpoint configuration.
+	 *
+	 * @since  1.0.1
+	 * @return array<string,string>
+	 */
+	private function endpoint() {
+		if ( null === $this->endpoint ) {
+			$this->endpoint = null !== $this->endpoint_override
+				? $this->endpoint_override
+				: Fsweb_Ai_Automated_Contact_Settings::active_endpoint();
+		}
+
+		return $this->endpoint;
 	}
 
 	/**
@@ -53,7 +80,9 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 	 * @return bool
 	 */
 	public function is_ready() {
-		return ( ! empty( $this->endpoint['api_key'] ) && ! empty( $this->endpoint['model'] ) && ! empty( $this->endpoint['base_url'] ) );
+		$endpoint = $this->endpoint();
+
+		return ( ! empty( $endpoint['api_key'] ) && ! empty( $endpoint['model'] ) && ! empty( $endpoint['base_url'] ) );
 	}
 
 	/**
@@ -75,7 +104,7 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 
 		$settings = Fsweb_Ai_Automated_Contact_Settings::all();
 
-		if ( 'anthropic' === $this->endpoint['api'] ) {
+		if ( 'anthropic' === $this->endpoint()['api'] ) {
 			$response = $this->request_anthropic( $messages, $tools, $system, $settings );
 		} else {
 			$response = $this->request_openai( $messages, $tools, $system, $settings );
@@ -99,8 +128,10 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 	 * @return array|\WP_Error
 	 */
 	private function request_openai( array $messages, array $tools, $system, array $settings ) {
+		$endpoint = $this->endpoint();
+
 		$payload = array(
-			'model'       => $this->endpoint['model'],
+			'model'       => $endpoint['model'],
 			'temperature' => (float) $settings['temperature'],
 			'max_tokens'  => (int) $settings['max_tokens'],
 			'messages'    => $this->openai_messages( $messages, $system ),
@@ -112,11 +143,11 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 		}
 
 		$response = wp_remote_post(
-			$this->endpoint['base_url'] . '/chat/completions',
+			$endpoint['base_url'] . '/chat/completions',
 			array(
 				'timeout' => 60,
 				'headers' => array(
-					'Authorization' => 'Bearer ' . $this->endpoint['api_key'],
+					'Authorization' => 'Bearer ' . $endpoint['api_key'],
 					'Content-Type'  => 'application/json',
 				),
 				'body'    => wp_json_encode( $payload ),
@@ -149,8 +180,10 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 	 * @return array|\WP_Error
 	 */
 	private function request_anthropic( array $messages, array $tools, $system, array $settings ) {
+		$endpoint = $this->endpoint();
+
 		$payload = array(
-			'model'       => $this->endpoint['model'],
+			'model'       => $endpoint['model'],
 			'max_tokens'  => (int) $settings['max_tokens'],
 			'temperature' => (float) $settings['temperature'],
 			'messages'    => $this->anthropic_messages( $messages ),
@@ -165,11 +198,11 @@ class Fsweb_Ai_Automated_Contact_Ai_Client {
 		}
 
 		$response = wp_remote_post(
-			$this->endpoint['base_url'] . '/messages',
+			$endpoint['base_url'] . '/messages',
 			array(
 				'timeout' => 60,
 				'headers' => array(
-					'x-api-key'         => $this->endpoint['api_key'],
+					'x-api-key'         => $endpoint['api_key'],
 					'anthropic-version' => '2023-06-01',
 					'Content-Type'      => 'application/json',
 				),

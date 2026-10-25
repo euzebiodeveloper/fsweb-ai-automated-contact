@@ -4,6 +4,11 @@ name: Deploy to WordPress.org
 # Nao dispara em merge de PR, release publicado ou workflow concluido.
 on:
   workflow_dispatch:
+    inputs:
+      assets_only:
+        description: "Publicar apenas a pasta assets/ (icone, banner, screenshots), sem tocar no trunk"
+        type: boolean
+        default: false
 
 concurrency:
   group: wporg-deploy
@@ -61,6 +66,7 @@ jobs:
           fi
 
       - name: Sync plugin files into trunk
+        if: ${{ !inputs.assets_only }}
         run: |
           set -euo pipefail
           rsync -a --delete ./ svn/trunk/ \
@@ -104,6 +110,7 @@ jobs:
           svn status assets
 
       - name: Stage new and deleted files
+        if: ${{ !inputs.assets_only }}
         run: |
           set -euo pipefail
           cd svn
@@ -132,6 +139,7 @@ jobs:
             --no-auth-cache
 
       - name: Tag the version
+        if: ${{ !inputs.assets_only }}
         run: |
           set -euo pipefail
           VERSION="${{ steps.version.outputs.VERSION }}"

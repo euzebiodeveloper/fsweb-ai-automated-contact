@@ -66,6 +66,7 @@ jobs:
           rsync -a --delete ./ svn/trunk/ \
             --exclude='.git/' \
             --exclude='.github/' \
+            --exclude='assets/' \
             --exclude='.gitignore' \
             --exclude='.gitattributes' \
             --exclude='.editorconfig' \
@@ -81,6 +82,26 @@ jobs:
             --exclude='.idea/' \
             --exclude='languages/*.po' \
             --exclude='languages/*.mo'
+
+      # Icone, banner e screenshots do diretorio (pasta assets do SVN, fora do trunk).
+      - name: Sync directory assets
+        run: |
+          set -euo pipefail
+          if [ ! -d assets ]; then
+            echo "Sem pasta assets/ no repositorio; nada a sincronizar."
+            exit 0
+          fi
+          mkdir -p svn/assets
+          rsync -a --delete ./assets/ svn/assets/
+          cd svn
+          svn status assets | awk '$1 == "!" { sub(/^![[:space:]]+/, ""); print }' | while IFS= read -r path; do
+            if [ -n "${path}" ]; then
+              svn delete "${path}"
+            fi
+          done
+          svn add --force assets --no-ignore
+          echo "--- svn status assets ---"
+          svn status assets
 
       - name: Stage new and deleted files
         run: |
@@ -99,11 +120,11 @@ jobs:
         run: |
           set -euo pipefail
           cd svn
-          if [ -z "$(svn status trunk)" ]; then
-            echo "Nada novo no trunk; commit ignorado."
+          if [ -z "$(svn status trunk assets)" ]; then
+            echo "Nada novo no trunk/assets; commit ignorado."
             exit 0
           fi
-          svn commit trunk \
+          svn commit trunk assets \
             -m "Deploy ${SLUG} v${{ steps.version.outputs.VERSION }}" \
             --username "${SVN_USERNAME}" \
             --password "${SVN_PASSWORD}" \
